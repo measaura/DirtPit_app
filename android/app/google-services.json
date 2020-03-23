@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "737191230040",
+    "firebase_url": "https://dirt-pit.firebaseio.com",
+    "project_id": "dirt-pit",
+    "storage_bucket": "dirt-pit.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:737191230040:android:82ccf5e4bebee01fa6a82d",
+        "android_client_info": {
+          "package_name": "com.ftwracing"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "737191230040-qejg7e7aauqrhu1bj3dovkku09folp9s.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAgh39I965um8pn3HT6XToZIoiktbPTi4s"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "737191230040-qejg7e7aauqrhu1bj3dovkku09folp9s.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

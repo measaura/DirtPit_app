@@ -24,6 +24,17 @@ import {
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
 
+import AsyncStorage from '@react-native-community/async-storage'
+import {createAppContainer, createSwitchNavigator} from 'react-navigation'
+import {createStackNavigator} from 'react-navigation-stack'
+import {createBottomTabNavigator} from 'react-navigation-tabs'
+
+
+import Login from './app/auth/login'
+import Register from './app/auth/register'
+import Verify from './app/auth/verify'
+
+
 const App: () => React$Node = () => {
   return (
     <>
