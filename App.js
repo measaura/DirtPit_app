@@ -6,7 +6,7 @@
  * @flow
  */
 
-import React from 'react';
+import React, {Component} from 'react';
 import {
   SafeAreaView,
   StyleSheet,
@@ -14,6 +14,7 @@ import {
   View,
   Text,
   StatusBar,
+  Image,
 } from 'react-native';
 
 import {
@@ -22,66 +23,129 @@ import {
   Colors,
   DebugInstructions,
   ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
+} from './app/NewAppScreen';
 
 import AsyncStorage from '@react-native-community/async-storage'
 import {createAppContainer, createSwitchNavigator} from 'react-navigation'
 import {createStackNavigator} from 'react-navigation-stack'
 import {createBottomTabNavigator} from 'react-navigation-tabs'
+import Ionicons from 'react-native-vector-icons/Ionicons'
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 
 
 import Login from './app/auth/login'
 import Register from './app/auth/register'
 import Verify from './app/auth/verify'
 
+import HomeScreen from './app/main/home'
+import TourScreen from './app/main/tour'
+import Profile from './app/main/profile'
+import Notifications from './app/main/notifications'
 
-const App: () => React$Node = () => {
-  return (
-    <>
-      <StatusBar barStyle="dark-content" />
-      <SafeAreaView>
-        <ScrollView
-          contentInsetAdjustmentBehavior="automatic"
-          style={styles.scrollView}>
-          <Header />
-          {global.HermesInternal == null ? null : (
-            <View style={styles.engine}>
-              <Text style={styles.footer}>Engine: Hermes</Text>
-            </View>
-          )}
-          <View style={styles.body}>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>Step One</Text>
-              <Text style={styles.sectionDescription}>
-                Edit <Text style={styles.highlight}>App.js</Text> to change this
-                screen and then come back to see your edits.
-              </Text>
-            </View>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>See Your Changes</Text>
-              <Text style={styles.sectionDescription}>
-                <ReloadInstructions />
-              </Text>
-            </View>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>Debug</Text>
-              <Text style={styles.sectionDescription}>
-                <DebugInstructions />
-              </Text>
-            </View>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>Learn More</Text>
-              <Text style={styles.sectionDescription}>
-                Read the docs to discover what to do next:
-              </Text>
-            </View>
-            <LearnMoreLinks />
-          </View>
-        </ScrollView>
-      </SafeAreaView>
-    </>
-  );
-};
+
+const AuthStack = createStackNavigator(
+    {
+        Login: Login,
+        Register: Register,
+    },
+    {
+        mode: 'modal',
+        headerMode: 'none',
+    },
+)
+
+const HomeStack = createStackNavigator({
+		Home: {screen: HomeScreen},
+		Tour: {screen: TourScreen},
+},
+{
+		headerMode: 'none',
+})
+
+// const AppModalStack = createStackNavigator(
+//     {
+//         App: Tabs,
+// //         UserList: UserList,
+// //         TrackingHistory: TrackingHistory,
+// //         EditProfile: EditProfile,
+// //         UserSettings: UserSettings,
+// //         Contact: Contact,
+// //         AddContact: AddContact,
+// //         AboutDevice: AboutDevice,
+// //         EditContact: EditContact,
+// //         EditManager: EditManager,
+// //         AddDevice: AddDevice,
+// //         AddDeviceDetail: AddDeviceDetail,
+// //         UserDetailHide: UserDetailHide,
+// //         Geofence: Geofence,
+// //         Login: Login,
+// //         QrScanner: QrScanner,
+// //         TZFlatList: TZFlatList,
+// //         AddZone: AddZone,
+//     },
+//     {
+//         headerMode: 'none',
+//     },
+// )
+
+// const Tabs = createBottomTabNavigator(
+
+export default createAppContainer(createBottomTabNavigator(
+    {
+        Home: HomeStack,
+        Notifications: Notifications,
+        Profile: Profile,
+    },
+    {
+        defaultNavigationOptions: ({navigation}) => ({
+            tabBarIcon: ({focused, horizontal, tintColor}) => {
+                const {routeName} = navigation.state
+                let IconComponent = Ionicons
+                let iconName
+                if (routeName === 'Home') {
+									iconName = `ios-home`;
+                } else if (routeName === 'Notifications') {
+                    iconName = `ios-notifications`;
+                } else if (routeName === 'Profile') {
+                    iconName = `ios-cart`;
+                } 
+                // You can return any component that you like here!
+                return <Ionicons name={iconName} size={35} color={tintColor} style={{paddingTop: 10,}} />;
+            },
+        }),
+        tabBarOptions: {
+            activeTintColor: 'yellow',
+            inactiveTintColor: 'gray',
+            showLabel: false,
+            style: {backgroundColor: 'black'},
+        },
+    },
+));
+
+
+const AppDefault = createSwitchNavigator({
+//     Loading: AuthLoadingScreen,
+//     Auth: AuthStack,
+//     App: Tabs,
+    Home: HomeStack,
+})
+
+// end test code
+
+
+// const AppContainer = createAppContainer(AppDefault)
+
+
+// const App: () => React$Node = () => {
+
+// export default class App extends Component {
+// 	render(){
+// 		return (
+// 					<AppContainer />
+// 		)
+// 	}
+// };
+// 
 
 const styles = StyleSheet.create({
   scrollView: {
@@ -121,5 +185,5 @@ const styles = StyleSheet.create({
     textAlign: 'right',
   },
 });
-
-export default App;
+// 
+// export default App;
