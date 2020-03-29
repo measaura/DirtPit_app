@@ -458,7 +458,6 @@ const styles = StyleSheet.create({
     },
     inputStyles: {
         flex: 2,
-        fontFamily: 'CircularStd-Book',
         fontSize: 18,
         color: '#c40d42',
         paddingLeft: 15,
@@ -478,18 +477,15 @@ const styles = StyleSheet.create({
     },
     signInText: {
         fontSize: 16,
-        fontFamily: 'CircularStd-Bold',
         color: '#ffffff',
     },
     doesntText: {
         marginTop: 30,
-        fontFamily: 'CircularStd-Book',
         fontSize: 16,
         color: '#a0abba',
     },
     signUpButton: {
         marginTop: 8,
-        fontFamily: 'CircularStd-Black',
         fontSize: 16,
         color: '#c40d42',
     },
