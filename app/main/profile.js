@@ -168,23 +168,26 @@ export default class Profile extends React.Component {
                         {this.renderHeaderImg()}
                         <Text style={styles.headerName}>
                             {this.state.fetchedName}
+                            Demo Name
                         </Text>
                         <Text style={styles.headerEmail}>
                             {this.state.fetchedEmail}
+                            demo@email.com
                         </Text>
                         <Text style={styles.headerEmail}>
                             {this.state.fetchedPhone}
+                            01223456789
                         </Text>
                     </View>
 										<Image
 												style={styles.appImage}
-												source={require("../images/adaLogo2.png")}
+												source={require('../NewAppScreen/components/logo.png')}
 										/>
 										<Text style={styles.appVersion}>
 												Version: {VersionNumber.appVersion}
 										</Text>
 										<Text style={styles.appVersion}>
-												support@adamana.my
+												support@dirtpit.my
 										</Text>
                     <TouchableOpacity
                         style={styles.logOutBut}
@@ -209,7 +212,7 @@ const styles = StyleSheet.create({
         top: 60
     },
     doneButton: {
-        color: "#c40d42",
+        color: "#000",
         fontSize: 18,
     },
     headerOuterContainer: {
@@ -221,7 +224,7 @@ const styles = StyleSheet.create({
         backgroundColor: "#ffffff"
     },
     headerNavTitle: {
-        color: "#c40d42",
+        color: "#000",
         fontSize: 16,
         textAlign: "center"
     },
@@ -241,7 +244,7 @@ const styles = StyleSheet.create({
     },
     headerWrap: {
         height: 220,
-        backgroundColor: "#c40d42",
+        backgroundColor: "#0c0c0c",
         alignSelf: "stretch",
         justifyContent: "center",
         alignItems: "center"
@@ -270,7 +273,7 @@ const styles = StyleSheet.create({
         justifyContent: "center"
     },
     logOutButText: {
-        color: "#c40d42",
+        color: "#000",
         fontSize: 18,
         textAlign: "center"
     }

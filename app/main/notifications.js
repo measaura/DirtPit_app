@@ -276,7 +276,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#ffffff',
     },
     headerNavTitle: {
-        color: '#c40d42',
+        color: '#000',
         fontSize: 16,
         textAlign: 'center',
     },

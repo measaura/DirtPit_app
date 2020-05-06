@@ -108,7 +108,7 @@ export default class Register extends React.Component {
                 >
                     <View style={styles.headerLogo}>
                         <Image
-                            source={require("../images/adaLogo2.png")}
+                            source={require("../images/DirtPit_logo-180x35.png")}
                             style={styles.headerImg}
                         />
                     </View>

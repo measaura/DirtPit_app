@@ -355,7 +355,7 @@ export default class Login extends React.Component {
                 <View style={styles.container}>
                     <View style={styles.headerLogo}>
                         <Image
-                            source={require('../images/adaLogo2.png')}
+                            source={require('../NewAppScreen/components/logo.png')}
                             style={styles.headerImg}
                         />
                     </View>
@@ -459,14 +459,14 @@ const styles = StyleSheet.create({
     inputStyles: {
         flex: 2,
         fontSize: 18,
-        color: '#c40d42',
+        color: '#000',
         paddingLeft: 15,
         paddingRight: 15,
         top: 3,
     },
     signInBut: {
         marginTop: 30,
-        backgroundColor: '#c40d42',
+        backgroundColor: '#000',
         height: 50,
         borderRadius: 25,
         alignSelf: 'stretch',

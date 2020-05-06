@@ -58,10 +58,10 @@ export default class HomeScreen extends React.Component {
 									style={{width: '100%', height: '95%'}}
 									imageStyle={{opacity: 0.3}}
 								>
-								<View style={{flexDirection: 'row', justifyContent: 'center', paddingTop: 150, paddingBottom: 20 }}>
+								<View style={{flexDirection: 'row', justifyContent: 'center', paddingTop: 30 }}>
 									<TouchableOpacity
 											style={styles.logOutBut}
-											onPress={()=>console.log('Store')}
+											onPress={()=>navigate('Segment')}
 									>							
 										<View style={styles.menuBox} >
 											<Image source={require('../images/menu-icon-01.png')}
@@ -95,20 +95,8 @@ export default class HomeScreen extends React.Component {
 											</Text>
 										</View>
 									</TouchableOpacity>
-									<TouchableOpacity
-											style={styles.logOutBut}
-											onPress={()=>console.log('Bike')}
-									>							
-										<View style={styles.menuBox} >
-											<Image source={require('../images/menu-icon-07.png')}
-												style={styles.menuButton} />
-											<Text style={styles.menuText}>
-												Community
-											</Text>
-										</View>
-									</TouchableOpacity>
 								</View>
-								<View style={{flex:1,flexDirection: 'row', justifyContent: 'center', position: 'relative', paddingTop: 30}}>
+								<View style={{flexDirection: 'row', justifyContent: 'center',  paddingTop: 20,}}>
 									<TouchableOpacity
 											style={styles.logOutBut}
 											onPress={()=>console.log('Bike')}
@@ -142,6 +130,32 @@ export default class HomeScreen extends React.Component {
 												style={styles.menuButton} />
 											<Text style={styles.menuText}>
 												Dealers
+											</Text>
+										</View>
+									</TouchableOpacity>
+								</View>
+								<View style={{flexDirection: 'row', justifyContent: 'center',  paddingTop: 20 }}>
+									<TouchableOpacity
+											style={styles.logOutBut}
+											onPress={()=>console.log('Bike')}
+									>							
+										<View style={styles.menuBox} >
+											<Image source={require('../images/menu-icon-07.png')}
+												style={styles.menuButton} />
+											<Text style={styles.menuText}>
+												Community
+											</Text>
+										</View>
+									</TouchableOpacity>
+									<TouchableOpacity
+											style={styles.logOutBut}
+											onPress={()=>console.log('Bike')}
+									>							
+										<View style={styles.menuBox} >
+											<Image source={require('../images/menu-icon-06.png')}
+												style={styles.menuButton} />
+											<Text style={styles.menuText}>
+												Concept Store
 											</Text>
 										</View>
 									</TouchableOpacity>

@@ -148,17 +148,17 @@ const styles = StyleSheet.create({
   	paddingBottom: 20
   },
   menuButton: {
-  	width: 150,
-  	height: 150,
+  	width: 100,
+  	height: 100,
   },
   menuBox: {
-  	width: 150,
+  	width: 100,
   	paddingBottom: 20,
   	flexDirection: 'column',
   	alignItems: 'center',
   },
   menuText: {
-  	fontSize: 18,
+  	fontSize: 16,
   	fontWeight: 'bold',
   	marginTop: -10,
   }
