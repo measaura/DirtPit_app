@@ -58,17 +58,10 @@ export default class HomeScreen extends React.Component {
 									style={{width: '100%', height: '95%'}}
 									imageStyle={{opacity: 0.3}}
 								>
-<<<<<<< HEAD
 								<View style={{flexDirection: 'row', justifyContent: 'center', paddingTop: 30 }}>
 									<TouchableOpacity
 											style={styles.logOutBut}
 											onPress={()=>navigate('Segment')}
-=======
-								<View style={{flexDirection: 'row', justifyContent: 'center', paddingTop: 150, paddingBottom: 20 }}>
-									<TouchableOpacity
-											style={styles.logOutBut}
-											onPress={()=>console.log('Store')}
->>>>>>> de9289961d3952c734c7b3c849e77726b33b7f93
 									>							
 										<View style={styles.menuBox} >
 											<Image source={require('../images/menu-icon-01.png')}
@@ -102,17 +95,13 @@ export default class HomeScreen extends React.Component {
 											</Text>
 										</View>
 									</TouchableOpacity>
-<<<<<<< HEAD
 								</View>
 								<View style={{flexDirection: 'row', justifyContent: 'center',  paddingTop: 20,}}>
-=======
->>>>>>> de9289961d3952c734c7b3c849e77726b33b7f93
 									<TouchableOpacity
 											style={styles.logOutBut}
 											onPress={()=>console.log('Bike')}
 									>							
 										<View style={styles.menuBox} >
-<<<<<<< HEAD
 											<Image source={require('../images/menu-icon-05.png')}
 												style={styles.menuButton} />
 											<Text style={styles.menuText}>
@@ -132,23 +121,11 @@ export default class HomeScreen extends React.Component {
 											</Text>
 										</View>
 									</TouchableOpacity>
-=======
-											<Image source={require('../images/menu-icon-07.png')}
-												style={styles.menuButton} />
-											<Text style={styles.menuText}>
-												Community
-											</Text>
-										</View>
-									</TouchableOpacity>
-								</View>
-								<View style={{flex:1,flexDirection: 'row', justifyContent: 'center', position: 'relative', paddingTop: 30}}>
->>>>>>> de9289961d3952c734c7b3c849e77726b33b7f93
 									<TouchableOpacity
 											style={styles.logOutBut}
 											onPress={()=>console.log('Bike')}
 									>							
 										<View style={styles.menuBox} >
-<<<<<<< HEAD
 											<Image source={require('../images/menu-icon-08.png')}
 												style={styles.menuButton} />
 											<Text style={styles.menuText}>
@@ -158,31 +135,15 @@ export default class HomeScreen extends React.Component {
 									</TouchableOpacity>
 								</View>
 								<View style={{flexDirection: 'row', justifyContent: 'center',  paddingTop: 20 }}>
-=======
-											<Image source={require('../images/menu-icon-05.png')}
-												style={styles.menuButton} />
-											<Text style={styles.menuText}>
-												Moto Garage
-											</Text>
-										</View>
-									</TouchableOpacity>
->>>>>>> de9289961d3952c734c7b3c849e77726b33b7f93
 									<TouchableOpacity
 											style={styles.logOutBut}
 											onPress={()=>console.log('Bike')}
 									>							
 										<View style={styles.menuBox} >
-<<<<<<< HEAD
 											<Image source={require('../images/menu-icon-07.png')}
 												style={styles.menuButton} />
 											<Text style={styles.menuText}>
 												Community
-=======
-											<Image source={require('../images/menu-icon-04.png')}
-												style={styles.menuButton} />
-											<Text style={styles.menuText}>
-												Bike Garage
->>>>>>> de9289961d3952c734c7b3c849e77726b33b7f93
 											</Text>
 										</View>
 									</TouchableOpacity>
@@ -191,17 +152,10 @@ export default class HomeScreen extends React.Component {
 											onPress={()=>console.log('Bike')}
 									>							
 										<View style={styles.menuBox} >
-<<<<<<< HEAD
 											<Image source={require('../images/menu-icon-06.png')}
 												style={styles.menuButton} />
 											<Text style={styles.menuText}>
 												Concept Store
-=======
-											<Image source={require('../images/menu-icon-08.png')}
-												style={styles.menuButton} />
-											<Text style={styles.menuText}>
-												Dealers
->>>>>>> de9289961d3952c734c7b3c849e77726b33b7f93
 											</Text>
 										</View>
 									</TouchableOpacity>

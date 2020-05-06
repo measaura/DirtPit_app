@@ -39,14 +39,11 @@ import Verify from './app/auth/verify'
 
 import HomeScreen from './app/main/home'
 import TourScreen from './app/main/tour'
-<<<<<<< HEAD
 import ShopScreen from './app/main/shop/retail'
 import SegmentScreen from './app/main/shop/segment'
 import CategoryScreen from './app/main/shop/category'
 import ProductScreen from './app/main/shop/product'
 import DetailScreen from './app/main/shop/details'
-=======
->>>>>>> de9289961d3952c734c7b3c849e77726b33b7f93
 import Profile from './app/main/profile'
 import Notifications from './app/main/notifications'
 
@@ -62,7 +59,6 @@ const AuthStack = createStackNavigator(
     },
 )
 
-<<<<<<< HEAD
 const ShopStack = createStackNavigator({
 		Segment: {screen: SegmentScreen},
 		Category: {screen: CategoryScreen},
@@ -79,47 +75,6 @@ const Tabs = createBottomTabNavigator(
 // export default createAppContainer(createBottomTabNavigator(
     {
         Home: HomeScreen,
-=======
-const HomeStack = createStackNavigator({
-		Home: {screen: HomeScreen},
-		Tour: {screen: TourScreen},
-},
-{
-		headerMode: 'none',
-})
-
-// const AppModalStack = createStackNavigator(
-//     {
-//         App: Tabs,
-// //         UserList: UserList,
-// //         TrackingHistory: TrackingHistory,
-// //         EditProfile: EditProfile,
-// //         UserSettings: UserSettings,
-// //         Contact: Contact,
-// //         AddContact: AddContact,
-// //         AboutDevice: AboutDevice,
-// //         EditContact: EditContact,
-// //         EditManager: EditManager,
-// //         AddDevice: AddDevice,
-// //         AddDeviceDetail: AddDeviceDetail,
-// //         UserDetailHide: UserDetailHide,
-// //         Geofence: Geofence,
-// //         Login: Login,
-// //         QrScanner: QrScanner,
-// //         TZFlatList: TZFlatList,
-// //         AddZone: AddZone,
-//     },
-//     {
-//         headerMode: 'none',
-//     },
-// )
-
-// const Tabs = createBottomTabNavigator(
-
-export default createAppContainer(createBottomTabNavigator(
-    {
-        Home: HomeStack,
->>>>>>> de9289961d3952c734c7b3c849e77726b33b7f93
         Notifications: Notifications,
         Profile: Profile,
     },
@@ -134,7 +89,6 @@ export default createAppContainer(createBottomTabNavigator(
                 } else if (routeName === 'Notifications') {
                     iconName = `ios-notifications`;
                 } else if (routeName === 'Profile') {
-<<<<<<< HEAD
                     iconName = `ios-person`;
                 } 
                 // You can return any component that you like here!
@@ -143,22 +97,11 @@ export default createAppContainer(createBottomTabNavigator(
         }),
         tabBarOptions: {
             activeTintColor: Colors.primary,
-=======
-                    iconName = `ios-cart`;
-                } 
-                // You can return any component that you like here!
-                return <Ionicons name={iconName} size={35} color={tintColor} style={{paddingTop: 10,}} />;
-            },
-        }),
-        tabBarOptions: {
-            activeTintColor: 'yellow',
->>>>>>> de9289961d3952c734c7b3c849e77726b33b7f93
             inactiveTintColor: 'gray',
             showLabel: false,
             style: {backgroundColor: 'black'},
         },
     },
-<<<<<<< HEAD
 // )
 );
 
@@ -199,35 +142,21 @@ const AppModalStack = createStackNavigator(
         headerMode: 'none',
     },
 )
-=======
-));
-
->>>>>>> de9289961d3952c734c7b3c849e77726b33b7f93
 
 const AppDefault = createSwitchNavigator({
 //     Loading: AuthLoadingScreen,
 //     Auth: AuthStack,
-<<<<<<< HEAD
     App: AppModalStack,
-=======
-//     App: Tabs,
-    Home: HomeStack,
->>>>>>> de9289961d3952c734c7b3c849e77726b33b7f93
 })
 
 // end test code
 
 
-<<<<<<< HEAD
 const AppContainer = createAppContainer(AppDefault)
-=======
-// const AppContainer = createAppContainer(AppDefault)
->>>>>>> de9289961d3952c734c7b3c849e77726b33b7f93
 
 
 // const App: () => React$Node = () => {
 
-<<<<<<< HEAD
 export default class App extends Component {
 	render(){
 		return (
@@ -235,15 +164,6 @@ export default class App extends Component {
 		)
 	}
 };
-=======
-// export default class App extends Component {
-// 	render(){
-// 		return (
-// 					<AppContainer />
-// 		)
-// 	}
-// };
->>>>>>> de9289961d3952c734c7b3c849e77726b33b7f93
 // 
 
 const styles = StyleSheet.create({
