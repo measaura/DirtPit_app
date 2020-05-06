@@ -168,6 +168,7 @@ export default class Profile extends React.Component {
                         {this.renderHeaderImg()}
                         <Text style={styles.headerName}>
                             {this.state.fetchedName}
+<<<<<<< HEAD
                             Demo Name
                         </Text>
                         <Text style={styles.headerEmail}>
@@ -177,17 +178,33 @@ export default class Profile extends React.Component {
                         <Text style={styles.headerEmail}>
                             {this.state.fetchedPhone}
                             01223456789
+=======
+                        </Text>
+                        <Text style={styles.headerEmail}>
+                            {this.state.fetchedEmail}
+                        </Text>
+                        <Text style={styles.headerEmail}>
+                            {this.state.fetchedPhone}
+>>>>>>> de9289961d3952c734c7b3c849e77726b33b7f93
                         </Text>
                     </View>
 										<Image
 												style={styles.appImage}
+<<<<<<< HEAD
 												source={require('../NewAppScreen/components/logo.png')}
+=======
+												source={require("../images/adaLogo2.png")}
+>>>>>>> de9289961d3952c734c7b3c849e77726b33b7f93
 										/>
 										<Text style={styles.appVersion}>
 												Version: {VersionNumber.appVersion}
 										</Text>
 										<Text style={styles.appVersion}>
+<<<<<<< HEAD
 												support@dirtpit.my
+=======
+												support@adamana.my
+>>>>>>> de9289961d3952c734c7b3c849e77726b33b7f93
 										</Text>
                     <TouchableOpacity
                         style={styles.logOutBut}
@@ -212,7 +229,11 @@ const styles = StyleSheet.create({
         top: 60
     },
     doneButton: {
+<<<<<<< HEAD
         color: "#000",
+=======
+        color: "#c40d42",
+>>>>>>> de9289961d3952c734c7b3c849e77726b33b7f93
         fontSize: 18,
     },
     headerOuterContainer: {
@@ -224,7 +245,11 @@ const styles = StyleSheet.create({
         backgroundColor: "#ffffff"
     },
     headerNavTitle: {
+<<<<<<< HEAD
         color: "#000",
+=======
+        color: "#c40d42",
+>>>>>>> de9289961d3952c734c7b3c849e77726b33b7f93
         fontSize: 16,
         textAlign: "center"
     },
@@ -244,7 +269,11 @@ const styles = StyleSheet.create({
     },
     headerWrap: {
         height: 220,
+<<<<<<< HEAD
         backgroundColor: "#0c0c0c",
+=======
+        backgroundColor: "#c40d42",
+>>>>>>> de9289961d3952c734c7b3c849e77726b33b7f93
         alignSelf: "stretch",
         justifyContent: "center",
         alignItems: "center"
@@ -273,7 +302,11 @@ const styles = StyleSheet.create({
         justifyContent: "center"
     },
     logOutButText: {
+<<<<<<< HEAD
         color: "#000",
+=======
+        color: "#c40d42",
+>>>>>>> de9289961d3952c734c7b3c849e77726b33b7f93
         fontSize: 18,
         textAlign: "center"
     }

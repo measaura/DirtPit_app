@@ -30,8 +30,11 @@
     "react-native-screens": "^1.0.0-alpha.23",
     "react-native-vector-icons": "^6.6.0",
     "react-native-version-number": "^0.3.6",
+<<<<<<< HEAD
     "react-native-webview": "^9.2.2",
     "react-native-windows": "^0.61.6",
+=======
+>>>>>>> de9289961d3952c734c7b3c849e77726b33b7f93
     "react-navigation": "^4.2.2",
     "react-navigation-stack": "^2.2.3",
     "react-navigation-tabs": "^2.8.2",
