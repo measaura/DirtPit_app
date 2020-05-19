@@ -22,12 +22,6 @@ var iPhoneX = DeviceInfo.hasNotch()
 
 const {width, height} = Dimensions.get('window')
 
-const randomHexColor = () => {
-  return '#000000'.replace(/0/g, function() {
-    return (~~(Math.random() * 16)).toString(16);
-  });
-};
-
 export default class ProductScreen extends Component {
 	constructor(props) {
 		super(props);
@@ -40,7 +34,7 @@ export default class ProductScreen extends Component {
 
 	componentDidMount(){
 	console.log(this.state.segId)
-		fetch("http://demo.shortcircuitworks.com/dirtpit23/index.php?route=api/product")
+		fetch("http://demo.shortcircuitworks.com/dirtpit23/index.php?route=api/product&category="+ this.state.catId)
 			.then(response => response.json())
 			.then((responseJson)=> {
 				this.setState({
@@ -100,9 +94,9 @@ export default class ProductScreen extends Component {
 				</View>
 			)
 		}else if (this.state.dataSource){
-// 		var list = this.state.dataSource.filter(item => item.top === "1")
+// 		var list = this.state.dataSource.filter(item => item.category_id === this.state.catId)
 // 		console.log('-------------------- ')
-// 		console.log(list)
+// 		console.log(this.state.dataSource)
 // 		console.log('=====================')
 			return(
 				<View style={styles.MainContainer}>
@@ -122,9 +116,8 @@ export default class ProductScreen extends Component {
 					/>
 					<FlatList
 						data={this.state.dataSource}
-// 						renderItem={item => this.renderItem(item)}
 						renderItem={item => (
-// 							if ({item.item.top} == 1){
+
 								<View style={{ flex: 1, flexDirection: 'column', margin: 1}}>
 									<TouchableOpacity
 											onPress={() =>
@@ -136,10 +129,10 @@ export default class ProductScreen extends Component {
 											>
 											{this.renderThumbs(item)}
 											<View style={styles.rowTextContent}>
-													<Text style={styles.rowMessage}>
+													<Text allowFontScaling={false} style={styles.rowMessage}>
 														{item.item.name}
 													</Text>
-													<Text style={styles.rowPrice}>
+													<Text allowFontScaling={false} style={styles.rowPrice}>
 														{item.item.price}
 													</Text>
 											</View>
@@ -176,8 +169,8 @@ export default class ProductScreen extends Component {
                             source={require('../../images/noNoti.png')}
                             style={styles.cantLocateImg}
                         />
-                        <Text style={styles.cantLocateText}>
-                            More Categories soon...
+                        <Text allowFontScaling={false} style={styles.cantLocateText}>
+                            More Products soon...
                         </Text>
                     </View>
                 </View>
@@ -188,25 +181,25 @@ export default class ProductScreen extends Component {
 //     	<ScrollView >
 //       <View style={styles.flexContainer}>
 //         <View style={styles.testBox} >
-//         	<Text style={styles.sectionTitle} > title </Text>
+//         	<Text allowFontScaling={false} style={styles.sectionTitle} > title </Text>
 //         </View>
 //         <View style={styles.testBox} >
-//         	<Text style={styles.sectionTitle} > title </Text>
+//         	<Text allowFontScaling={false} style={styles.sectionTitle} > title </Text>
 //         </View>
 //         <View style={styles.testBox} >
-//         	<Text style={styles.sectionTitle} > title </Text>
+//         	<Text allowFontScaling={false} style={styles.sectionTitle} > title </Text>
 //         </View>
 //         <View style={styles.testBox} >
-//         	<Text style={styles.sectionTitle} > title </Text>
+//         	<Text allowFontScaling={false} style={styles.sectionTitle} > title </Text>
 //         </View>
 //         <View style={styles.testBox} >
-//         	<Text style={styles.sectionTitle} > title </Text>
+//         	<Text allowFontScaling={false} style={styles.sectionTitle} > title </Text>
 //         </View>
 //         <View style={styles.testBox} >
-//         	<Text style={styles.sectionTitle} > title </Text>
+//         	<Text allowFontScaling={false} style={styles.sectionTitle} > title </Text>
 //         </View>
 //         <View style={styles.testBox} >
-//         	<Text style={styles.sectionTitle} > title </Text>
+//         	<Text allowFontScaling={false} style={styles.sectionTitle} > title </Text>
 //         </View>
 //       </View>
 //       </ScrollView>

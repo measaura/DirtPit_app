@@ -8,13 +8,13 @@ import {
   Text,
   StatusBar,
   Image,
-  Dimensions,
   ImageBackground,
+  Dimensions,
   TouchableOpacity,
   ActivityIndicator,
 } from 'react-native';
-import {Colors} from '../../NewAppScreen';
-import {Header} from 'react-native-elements'
+import {Colors} from '../NewAppScreen';
+import { Header } from "react-native-elements";
 import Ionicons from 'react-native-vector-icons/Ionicons'
 
 import DeviceInfo from 'react-native-device-info'
@@ -28,19 +28,66 @@ const randomHexColor = () => {
   });
 };
 
-export default class CategoryScreen extends Component {
+const DATA = [
+        {
+            "store_id":"1",
+            "image":"http://demo.shortcircuitworks.com/dirtpit23/image/catalog/app/kuantan.png",
+            "parent_id":"0",
+            "top":"1",
+            "column":"1",
+            "sort_order":"0",
+            "status":"1",
+            "name":"FTW Racing Kuantan",
+            "description":"FTW Racing Kuantan",
+            "meta_title":"Kuantan",
+            "meta_description":"No 9, Jalan Bukit Sekilau, 25300 Kuantan, Pahang",
+            "meta_keyword":"",
+        },
+        {
+            "store_id":"2",
+            "image":"http://demo.shortcircuitworks.com/dirtpit23/image/catalog/app/johor.jpg",
+            "parent_id":"0",
+            "top":"1",
+            "column":"1",
+            "sort_order":"0",
+            "status":"1",
+            "name":"FTW Racing Johor Bahru",
+            "description":"FTW Racing Johor Bahru",
+            "meta_title":"Johor Bahru",
+            "meta_description":"Lot L1.23 & L1.24, Plaza Angsana, Jalan Skudai, Pusat Bandar Tampoi, 81200 Johor Bharu, Johor",
+            "meta_keyword":"",
+        },
+        {
+            "store_id":"3",
+            "image":"http://demo.shortcircuitworks.com/dirtpit23/image/catalog/app/penang.jpg",
+            "parent_id":"0",
+            "top":"1",
+            "column":"1",
+            "sort_order":"0",
+            "status":"1",
+            "name":"FTW Racing Penang",
+            "description":"FTW Racing Penang",
+            "meta_title":"Penang",
+            "meta_description":"170-01-05/06/07/08, Plaza Gurney, Persiaran Gurney, Pulau Tikus, 10250 George Town, Penang",
+            "meta_keyword":"",
+        }
+];
+
+const datArr = DATA.length;
+
+console.log(datArr)
+
+export default class ConceptList extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
 			loading: true,
-			dataSource: [],
-			segId: this.props.navigation.state.params.segId
+			dataSource: []
 		};
 	}
 
 	componentDidMount(){
-// 	console.log(this.state.segId)
-		fetch("http://demo.shortcircuitworks.com/dirtpit23/index.php?route=api/category&parent="+this.state.segId)
+		fetch("https://demo.shortcircuitworks.com/dirtpit23/index.php?route=api/category")
 			.then(response => response.json())
 			.then((responseJson)=> {
 				this.setState({
@@ -65,14 +112,14 @@ export default class CategoryScreen extends Component {
 	renderLeft() {
 			const {navigate} = this.props.navigation
 			return (
-					<TouchableOpacity onPress={() => this.props.navigation.goBack()}>
-							<Ionicons name={'ios-arrow-dropleft-circle'} size={30} color={'yellow'} style={{paddingTop: 0}} />
+					<TouchableOpacity onPress={() => navigate('Home')}>
+							<Ionicons name={'ios-home'} size={30} color={'yellow'} style={{paddingTop: 0}} />
 					</TouchableOpacity>
 			);
 	}
 
 	renderCenter() {
-			return <Image source={require('../../images/DirtPit_logo-180x35.png')} />
+			return <Image source={require('../images/DirtPit_logo-180x35.png')} />
 	}
 
   render() {
@@ -80,14 +127,28 @@ export default class CategoryScreen extends Component {
 		if (this.state.loading){
 			return(
 				<View style={styles.loader}>
+					<Header
+							innerContainerStyles={styles.headerInnerContainer}
+							outerContainerStyles={styles.headerOuterContainer}
+							leftComponent={this.renderLeft()}
+							centerComponent={this.renderCenter()}
+							containerStyle={{
+									backgroundColor: '#000',
+									marginTop:
+											Platform.OS == 'ios' ? 0 : -20,
+									top:
+											Platform.OS == 'ios' ? (iPhoneX ? -10 : 0) : -10,
+									height: Platform.OS == 'ios' ? (iPhoneX ? 90 : 0) : 70,
+							}}
+					/>
 					<ActivityIndicator size="large" color="#0c9" />
 				</View>
 			)
-		}else if (this.state.dataSource){
+		}else{
 // 		var list = this.state.dataSource.filter(item => item.top === "1")
-// 		console.log('-------------------- ')
-// 		console.log(list)
-// 		console.log('=====================')
+		console.log('-------------------- ')
+		console.log(DATA)
+		console.log('=====================')
 			return(
 				<View style={styles.container}>
 					<Header
@@ -105,69 +166,44 @@ export default class CategoryScreen extends Component {
 							}}
 					/>
 					<FlatList
-						data={this.state.dataSource}
+						data={DATA}
 // 						renderItem={item => this.renderItem(item)}
+						contentContainerStyle={{ flexGrow: 1 }}
+						keyExtractor={item=>item.store_id.toString()}
 						renderItem={item => (
 // 							if ({item.item.top} == 1){
+
 									<TouchableOpacity
 											onPress={() =>
-													navigate('Product', {
-															prevScreenTitle: 'Product',
-															catId: item.item.category_id,
+													navigate('ConceptScreen', {
+															prevScreenTitle: 'ConceptScreen',
+															storeId: item.item.store_id,
 													})
 											}
-											style={styles.rowWrap}>
-											<Image
+											>
+											<ImageBackground
 													source={{uri: item.item.image}}
-													style={styles.rowIcon}
-											/>
+													style={styles.rowBg}
+											>
 											<View style={styles.rowTextContent}>
-													<Text allowFontScaling={false} style={styles.rowMessage}>
-														{item.item.name}{' '}
+													<Text style={styles.rowMessage}>
+														{item.item.name}
 													</Text>
-													<Text allowFontScaling={false} style={styles.rowTime}>
+													<Text style={styles.rowTime}>
 														{item.item.description}{' '}
 													</Text>
 											</View>
-
+											</ImageBackground>
 									</TouchableOpacity>
+
 // 								}									
-									
+
 							)}
-						keyExtractor={item=>item.category_id.toString()}
 					/>
 				</View>
 			)
-		}else{
-            return (
-                <View style={styles.container}>
-										<Header
-												innerContainerStyles={styles.headerInnerContainer}
-												outerContainerStyles={styles.headerOuterContainer}
-												leftComponent={this.renderLeft()}
-												centerComponent={this.renderCenter()}
-												containerStyle={{
-														backgroundColor: '#000',
-														marginTop:
-																Platform.OS == 'ios' ? (iPhoneX ? 20 : 0) : -20,
-														top:
-																Platform.OS == 'ios' ? (iPhoneX ? -15 : 0) : -5,
-														height: 70,
-												}}
-										/>
-                    <View style={styles.cantLocate}>
-                        <Image
-                            source={require('../../images/noNoti.png')}
-                            style={styles.cantLocateImg}
-                        />
-                        <Text allowFontScaling={false} style={styles.cantLocateText}>
-                            More Categories soon...
-                        </Text>
-                    </View>
-                </View>
-            )
 		}
-		
+
   }
 };
 
@@ -291,29 +327,37 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         borderBottomWidth: 1,
         borderColor: '#dedede',
-        height: 125,
+        height: '25%',
         backgroundColor: '#ffffff',
         alignSelf: 'stretch',
         alignItems: 'center',
     },
     rowIcon: {
-        width: 120,
-        height: 120,
+        width: 100,
+        height: 100,
         marginLeft: 20,
+    },
+    rowBg: {
+        flexGrow:1, 
+        height: Platform.OS == 'ios' ? (iPhoneX ? (height-90)/datArr : (height-60)/datArr) : (height-50)/datArr,
     },
     rowTextContent: {
         alignSelf: 'stretch',
-        height: 125,
-        marginLeft: 10,
-        justifyContent: 'center',
-        flex: 1,
+        flex:1,
+        justifyContent: 'flex-end',
     },
     rowMessage: {
-        color: '#3f3f3f',
-        fontSize: 25,
+        color: 'yellow',
+        fontFamily: 'Gotham Bold',
+        fontSize: 30,
+        paddingRight: 10,
+        paddingLeft: 25,
+        backgroundColor: 'rgba(0,0,0,0.5)',
     },
     rowTime: {
-        color: '#a0abba',
-        fontSize: 15,
+        color: '#fff',
+        fontSize: 13,
+        paddingLeft: 25,
+        backgroundColor: 'rgba(0,0,0,0.7)',
     },
 });

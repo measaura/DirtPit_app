@@ -15,39 +15,24 @@ import {
   Text,
   StatusBar,
   Image,
-  Dimensions,
   ImageBackground,
   TouchableOpacity,
 } from 'react-native';
 
-import { Colors } from '../NewAppScreen';
-import { Header } from "react-native-elements";
+import {
+  Header,
+  LearnMoreLinks,
+  Colors,
+  DebugInstructions,
+  ReloadInstructions,
+} from '../../NewAppScreen';
 
 import AsyncStorage from '@react-native-community/async-storage'
 import {createAppContainer, createSwitchNavigator} from 'react-navigation'
 import {createStackNavigator} from 'react-navigation-stack'
 import {createBottomTabNavigator} from 'react-navigation-tabs'
-import Ionicons from 'react-native-vector-icons/Ionicons'
-import DeviceInfo from 'react-native-device-info'
-var iPhoneX = DeviceInfo.hasNotch()
-
-const {width, height} = Dimensions.get('window')
 
 export default class TourScreen extends React.Component  {
-
-	renderLeft() {
-			const {navigate} = this.props.navigation
-			return (
-					<TouchableOpacity onPress={() => navigate('Home')}>
-							<Ionicons name={'ios-home'} size={30} color={'yellow'} style={{paddingTop: 0}} />
-					</TouchableOpacity>
-			);
-	}
-
-	renderCenter() {
-			return <Image source={require('../images/DirtPit_logo-180x35.png')} />
-	}
-
   render() {  
     return (
       <>
@@ -57,25 +42,12 @@ export default class TourScreen extends React.Component  {
           <View
             contentInsetAdjustmentBehavior="automatic"
             style={styles.scrollView}>
-						<Header
-								innerContainerStyles={styles.headerInnerContainer}
-								outerContainerStyles={styles.headerOuterContainer}
-								leftComponent={this.renderLeft()}
-								centerComponent={this.renderCenter()}
-								containerStyle={{
-										backgroundColor: '#000',
-										marginTop:
-												Platform.OS == 'ios' ? 0 : -20,
-										top:
-												Platform.OS == 'ios' ? (iPhoneX ? -10 : 0) : -5,
-										height: Platform.OS == 'ios' ? (iPhoneX ? 90 : 0) : 70,
-								}}
-						/>
+            <Header style={{height: 150,}}/>
             <View style={styles.body}>
               <View style={styles.sectionContainer}>
 
                 <ImageBackground
-                  source={require('../images/MotoManiac08.png')}
+                  source={require('../../images/MotoManiac08.png')}
                   style={{width: '100%', height: '95%'}}
                   imageStyle={{opacity: 0.3}}
                 >
@@ -85,7 +57,7 @@ export default class TourScreen extends React.Component  {
                       onPress={()=>console.log('Bike Tour')}
                   >							
                     <View style={styles.menuBox} >
-                      <Image source={require('../images/menu-icon-09.png')}
+                      <Image source={require('../../images/menu-icon-09.png')}
                         style={styles.menuButton} />
                       <Text style={styles.menuText}>
                         Bike Tour
@@ -94,10 +66,10 @@ export default class TourScreen extends React.Component  {
                   </TouchableOpacity>
                   <TouchableOpacity
                       style={styles.logOutBut}
-                      onPress={()=>console.warn('Moto Tour')}
+                      onPress={()=>alert('Moto Tour')}
                   >							
                     <View style={styles.menuBox} >
-                      <Image source={require('../images/menu-icon-10.png')}
+                      <Image source={require('../../images/menu-icon-10.png')}
                         style={styles.menuButton} />
                       <Text style={styles.menuText}>
                         Moto Tour
@@ -109,7 +81,7 @@ export default class TourScreen extends React.Component  {
                       onPress={()=>console.log('4x4 Tour')}
                   >							
                     <View style={styles.menuBox} >
-                      <Image source={require('../images/menu-icon-11.png')}
+                      <Image source={require('../../images/menu-icon-11.png')}
                         style={styles.menuButton} />
                       <Text style={styles.menuText}>
                         4x4 Tour

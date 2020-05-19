@@ -8,8 +8,8 @@ import {
   Text,
   StatusBar,
   Image,
-  Dimensions,
   ImageBackground,
+  Dimensions,
   TouchableOpacity,
   ActivityIndicator,
 } from 'react-native';
@@ -38,7 +38,7 @@ export default class SegmentScreen extends Component {
 	}
 
 	componentDidMount(){
-		fetch("http://demo.shortcircuitworks.com/dirtpit23/index.php?route=api/category")
+		fetch("https://demo.shortcircuitworks.com/dirtpit23/index.php?route=api/category&segment")
 			.then(response => response.json())
 			.then((responseJson)=> {
 				this.setState({
@@ -52,9 +52,9 @@ export default class SegmentScreen extends Component {
 	FlatListItemSeparator = () => {
 		return (
 			<View style={{
-				 height: .5,
+				 height: 5,
 				 width:"100%",
-				 backgroundColor:"rgba(0,0,0,0.5)",
+				 backgroundColor: '#fff',
 				}}
 			/>
 		);
@@ -78,6 +78,20 @@ export default class SegmentScreen extends Component {
 		if (this.state.loading){
 			return(
 				<View style={styles.loader}>
+					<Header
+							innerContainerStyles={styles.headerInnerContainer}
+							outerContainerStyles={styles.headerOuterContainer}
+							leftComponent={this.renderLeft()}
+							centerComponent={this.renderCenter()}
+							containerStyle={{
+									backgroundColor: '#000',
+									marginTop:
+											Platform.OS == 'ios' ? 0 : -20,
+									top:
+											Platform.OS == 'ios' ? (iPhoneX ? -10 : 0) : -5,
+									height: Platform.OS == 'ios' ? (iPhoneX ? 90 : 0) : 70,
+							}}
+					/>
 					<ActivityIndicator size="large" color="#0c9" />
 				</View>
 			)
@@ -104,7 +118,9 @@ export default class SegmentScreen extends Component {
 					/>
 					<FlatList
 						data={list}
-// 						renderItem={item => this.renderItem(item)}
+						contentContainerStyle={{ flexGrow: 1 }}
+						keyExtractor={item=>item.category_id.toString()}
+						ItemSeparatorComponent = { this.FlatListItemSeparator }
 						renderItem={item => (
 // 							if ({item.item.top} == 1){
 
@@ -115,62 +131,28 @@ export default class SegmentScreen extends Component {
 															segId: item.item.category_id,
 													})
 											}
-											style={styles.rowWrap}>
-											<Image
+											>
+											<ImageBackground
 													source={{uri: item.item.image}}
-													style={styles.rowIcon}
-											/>
+													style={styles.rowBg}
+											>
 											<View style={styles.rowTextContent}>
-													<Text style={styles.rowMessage}>
-														{item.item.name}{' '}
+													<Text allowFontScaling={false}  
+														style={styles.rowMessage}>
+														{item.item.name}
 													</Text>
-													<Text style={styles.rowTime}>
-														{item.item.description}{' '}
-													</Text>
+
 											</View>
-											<Image
-													source={require('../../images/rowNext.png')}
-													style={styles.rowArrow}
-											/>
+											</ImageBackground>
 									</TouchableOpacity>
 
 // 								}									
 
 							)}
-						keyExtractor={item=>item.category_id.toString()}
 					/>
 				</View>
 			)
 		}
-		
-//     return (
-//     	<ScrollView >
-//       <View style={styles.flexContainer}>
-//         <View style={styles.testBox} >
-//         	<Text style={styles.sectionTitle} > title </Text>
-//         </View>
-//         <View style={styles.testBox} >
-//         	<Text style={styles.sectionTitle} > title </Text>
-//         </View>
-//         <View style={styles.testBox} >
-//         	<Text style={styles.sectionTitle} > title </Text>
-//         </View>
-//         <View style={styles.testBox} >
-//         	<Text style={styles.sectionTitle} > title </Text>
-//         </View>
-//         <View style={styles.testBox} >
-//         	<Text style={styles.sectionTitle} > title </Text>
-//         </View>
-//         <View style={styles.testBox} >
-//         	<Text style={styles.sectionTitle} > title </Text>
-//         </View>
-//         <View style={styles.testBox} >
-//         	<Text style={styles.sectionTitle} > title </Text>
-//         </View>
-//       </View>
-//       </ScrollView>
-//     );
-
 
   }
 };
@@ -295,7 +277,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         borderBottomWidth: 1,
         borderColor: '#dedede',
-        height: 105,
+        height: '25%',
         backgroundColor: '#ffffff',
         alignSelf: 'stretch',
         alignItems: 'center',
@@ -305,20 +287,29 @@ const styles = StyleSheet.create({
         height: 100,
         marginLeft: 20,
     },
+    rowBg: {
+        flexGrow:1, 
+        width: width,
+        paddingBottom: 15,
+    },
     rowTextContent: {
         alignSelf: 'stretch',
-        height: 105,
-        marginLeft: 10,
-        justifyContent: 'center',
-        flex: 1,
+        flex:1,
+        justifyContent: 'flex-end',
     },
     rowMessage: {
-        color: '#3f3f3f',
-        fontSize: 20,
-        paddingRight: 10,
+        color: '#ffffff',
+        fontFamily: 'Gotham Bold',
+        fontSize: 18,
+        paddingLeft: 25,
+        paddingTop: 40,
+        paddingBottom: 40,
+        width: width*0.8,
     },
     rowTime: {
-        color: '#a0abba',
+        color: '#fff',
         fontSize: 13,
+        paddingLeft: 25,
+        backgroundColor: 'rgba(0,0,0,0.7)',
     },
 });

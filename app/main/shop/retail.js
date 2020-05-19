@@ -19,7 +19,6 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import {Header} from 'react-native-elements'
-import {WebView} from 'react-native-webview'
 import {Colors} from '../../NewAppScreen';
 
 import AsyncStorage from '@react-native-community/async-storage'

@@ -44,8 +44,11 @@ import SegmentScreen from './app/main/shop/segment'
 import CategoryScreen from './app/main/shop/category'
 import ProductScreen from './app/main/shop/product'
 import DetailScreen from './app/main/shop/details'
+import ConceptList from './app/main/concept'
+import ConceptScreen from './app/main/concept/conceptshop'
 import Profile from './app/main/profile'
 import Notifications from './app/main/notifications'
+// import Slider from './app/main/component'
 
 
 const AuthStack = createStackNavigator(
@@ -72,7 +75,6 @@ const ShopStack = createStackNavigator({
 
 const Tabs = createBottomTabNavigator(
 
-// export default createAppContainer(createBottomTabNavigator(
     {
         Home: HomeScreen,
         Notifications: Notifications,
@@ -107,7 +109,7 @@ const Tabs = createBottomTabNavigator(
 
 const HomeStack = createStackNavigator({
 		Home: Tabs,
-		Tour: {screen: TourScreen},
+		Tour: TourScreen,
 		ShopStack: ShopStack,
 },
 {
@@ -119,6 +121,10 @@ const AppModalStack = createStackNavigator(
     {
         App: Tabs,
         Shop: ShopStack,
+        Tour: TourScreen,
+        Concept: ConceptList,
+        ConceptScreen: ConceptScreen,
+//         Slider: Slider,
 //         UserList: UserList,
 //         TrackingHistory: TrackingHistory,
 //         EditProfile: EditProfile,

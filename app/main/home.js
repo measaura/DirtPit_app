@@ -6,7 +6,7 @@
  * @flow
  */
 
-import React from 'react';
+import React, {Component, createRef} from 'react';
 import {
   SafeAreaView,
   StyleSheet,
@@ -15,29 +15,103 @@ import {
   Text,
   StatusBar,
   Image,
+  Dimensions,
   ImageBackground,
   TouchableOpacity,
+  FlatList,
 } from 'react-native';
 
 import {
-  Header,
   LearnMoreLinks,
   Colors,
   DebugInstructions,
   ReloadInstructions,
 } from '../NewAppScreen';
 
+import { Header } from "react-native-elements";
+import { SliderBox } from "react-native-image-slider-box"
+import Ionicons from 'react-native-vector-icons/Ionicons'
+import Dots from 'react-native-dots-pagination';
 import AsyncStorage from '@react-native-community/async-storage'
 // import {StackActions, NavigationActions} from 'react-navigation'
 import {StackActions, NavigationActionscreateAppContainer, createSwitchNavigator} from 'react-navigation'
 // import {createStackNavigator} from 'react-navigation-stack'
 // import {createBottomTabNavigator} from 'react-navigation-tabs'
 
+let CurrentSlide = 0;
+let IntervalTime = 4000;
+
+const {width, height} = Dimensions.get('window')
+
 export default class HomeScreen extends React.Component {
 	constructor(props) {
 		super(props)
+    this.state = {
+      images: [
+        "https://demo.shortcircuitworks.com/dirtpit23/image/catalog/app/slider/Cafe.png",
+        "https://demo.shortcircuitworks.com/dirtpit23/image/catalog/app/slider/FTWRacingRetail.jpg",
+        "https://demo.shortcircuitworks.com/dirtpit23/image/catalog/app/slider/MotoManiac.jpg",
+      ]
+    };
 	}
 	
+	renderLeft() {
+			const {navigate} = this.props.navigation
+			return (
+					<TouchableOpacity onPress={() => navigate('Home')}>
+							<Ionicons name={'ios-home'} size={30} color={'yellow'} style={{paddingTop: 0}} />
+					</TouchableOpacity>
+			);
+	}
+	
+	flatList = createRef();
+	// TODO _goToNextPage()
+	_goToNextPage = () => {
+		if (CurrentSlide >= this.state.images.length){
+			CurrentSlide = 0;
+
+		}
+// 		console.log(CurrentSlide); 
+		this.flatList.current.scrollToIndex({
+			index: CurrentSlide++,
+			animated: true,
+		});
+	};
+	
+	_startAutoPlay = () => {
+		this._timerId = setInterval(this._goToNextPage, IntervalTime);
+	};
+	
+	_stopAutoPlay = () => {
+		if (this._timerId) {
+			clearInterval(this._timerId);
+			this._timerId = null;
+		}
+	};
+	
+	componentDidMount() {
+		this._stopAutoPlay();
+		this._startAutoPlay();
+	}
+	
+	componentWillUnmount() {
+		this._stopAutoPlay();
+	}
+	// TODO _renderItem()
+	_renderItem({item, index}) {
+// 	console.warn(item);
+		return <Image source={{uri: item}} style={{ width: width}} />
+	}
+	// TODO _keyExtractor()
+	_keyExtractor(item, index) {
+		// console.log(item);
+		return index.toString();
+	}
+	
+	renderCenter() {
+			return <Image source={require('../images/DirtPit_logo-180x35.png')} />
+	}
+
 	
 	render() {
 		const {navigate} = this.props.navigation
@@ -49,16 +123,39 @@ export default class HomeScreen extends React.Component {
 					<View
 						contentInsetAdjustmentBehavior="automatic"
 						style={styles.scrollView}>
-						<Header />
+						<Header
+								innerContainerStyles={styles.headerInnerContainer}
+								outerContainerStyles={styles.headerOuterContainer}
+								centerComponent={this.renderCenter()}
+								containerStyle={{
+										backgroundColor: '#000',
+										marginTop:
+												Platform.OS == 'ios' ? 0 : -20,
+										top:
+												Platform.OS == 'ios' ? (iPhoneX ? -10 : 0) : 0,
+										height: Platform.OS == 'ios' ? (iPhoneX ? 90 : 0) : 70,
+								}}
+						/>
 						<View style={styles.body}>
-							<View style={styles.sectionContainer}>
+			<View style={{height:width}} >
+				<FlatList
+					data={this.state.images}
+					keyExtractor={this._keyExtractor.bind(this)}
+					renderItem={this._renderItem.bind(this)}
+					horizontal={true}
+					flatListRef={React.createRef()}
+					ref={this.flatList}
+				/>
+				
+			</View>
+							<View style={{top:0,}}>
 
 								<ImageBackground
 									source={require('../images/MotoManiac08.png')}
-									style={{width: '100%', height: '95%'}}
+									style={{width: '100%', height: '90%'}}
 									imageStyle={{opacity: 0.3}}
 								>
-								<View style={{flexDirection: 'row', justifyContent: 'center', paddingTop: 30 }}>
+								<View style={{flexDirection: 'row', justifyContent: 'center', paddingTop: 10 }}>
 									<TouchableOpacity
 											style={styles.logOutBut}
 											onPress={()=>navigate('Segment')}
@@ -66,7 +163,7 @@ export default class HomeScreen extends React.Component {
 										<View style={styles.menuBox} >
 											<Image source={require('../images/menu-icon-01.png')}
 												style={styles.menuButton} />
-											<Text style={styles.menuText}>
+											<Text allowFontScaling={false} style={styles.menuText}>
 												Store
 											</Text>
 										</View>
@@ -78,7 +175,7 @@ export default class HomeScreen extends React.Component {
 										<View style={styles.menuBox} >
 											<Image source={require('../images/menu-icon-02.png')}
 												style={styles.menuButton} />
-											<Text style={styles.menuText}>
+											<Text allowFontScaling={false} style={styles.menuText}>
 												Tour
 											</Text>
 										</View>
@@ -90,51 +187,11 @@ export default class HomeScreen extends React.Component {
 										<View style={styles.menuBox} >
 											<Image source={require('../images/menu-icon-03.png')}
 												style={styles.menuButton} />
-											<Text style={styles.menuText}>
+											<Text allowFontScaling={false} style={styles.menuText}>
 												Cafe
 											</Text>
 										</View>
 									</TouchableOpacity>
-								</View>
-								<View style={{flexDirection: 'row', justifyContent: 'center',  paddingTop: 20,}}>
-									<TouchableOpacity
-											style={styles.logOutBut}
-											onPress={()=>console.log('Bike')}
-									>							
-										<View style={styles.menuBox} >
-											<Image source={require('../images/menu-icon-05.png')}
-												style={styles.menuButton} />
-											<Text style={styles.menuText}>
-												Moto Garage
-											</Text>
-										</View>
-									</TouchableOpacity>
-									<TouchableOpacity
-											style={styles.logOutBut}
-											onPress={()=>console.log('Bike')}
-									>							
-										<View style={styles.menuBox} >
-											<Image source={require('../images/menu-icon-04.png')}
-												style={styles.menuButton} />
-											<Text style={styles.menuText}>
-												Bike Garage
-											</Text>
-										</View>
-									</TouchableOpacity>
-									<TouchableOpacity
-											style={styles.logOutBut}
-											onPress={()=>console.log('Bike')}
-									>							
-										<View style={styles.menuBox} >
-											<Image source={require('../images/menu-icon-08.png')}
-												style={styles.menuButton} />
-											<Text style={styles.menuText}>
-												Dealers
-											</Text>
-										</View>
-									</TouchableOpacity>
-								</View>
-								<View style={{flexDirection: 'row', justifyContent: 'center',  paddingTop: 20 }}>
 									<TouchableOpacity
 											style={styles.logOutBut}
 											onPress={()=>console.log('Bike')}
@@ -142,20 +199,58 @@ export default class HomeScreen extends React.Component {
 										<View style={styles.menuBox} >
 											<Image source={require('../images/menu-icon-07.png')}
 												style={styles.menuButton} />
-											<Text style={styles.menuText}>
+											<Text allowFontScaling={false} style={styles.menuText}>
 												Community
+											</Text>
+										</View>
+									</TouchableOpacity>
+								</View>
+								<View style={{flexDirection: 'row', justifyContent: 'center',  paddingTop: 10,}}>
+									<TouchableOpacity
+											style={styles.logOutBut}
+											onPress={()=>console.log('Bike Garrage')}
+									>							
+										<View style={styles.menuBox} >
+											<Image source={require('../images/menu-icon-04.png')}
+												style={styles.menuButton} />
+											<Text allowFontScaling={false} style={styles.menuText}>
+												Bike Garrage
 											</Text>
 										</View>
 									</TouchableOpacity>
 									<TouchableOpacity
 											style={styles.logOutBut}
-											onPress={()=>console.log('Bike')}
+											onPress={()=>console.log('Moto Garrage')}
+									>							
+										<View style={styles.menuBox} >
+											<Image source={require('../images/menu-icon-05.png')}
+												style={styles.menuButton} />
+											<Text allowFontScaling={false} style={styles.menuText}>
+												Moto Garrage
+											</Text>
+										</View>
+									</TouchableOpacity>
+									<TouchableOpacity
+											style={styles.logOutBut}
+											onPress={()=>navigate('Concept')}
 									>							
 										<View style={styles.menuBox} >
 											<Image source={require('../images/menu-icon-06.png')}
 												style={styles.menuButton} />
-											<Text style={styles.menuText}>
+											<Text allowFontScaling={false} style={styles.menuText} numberOfLines={2}>
 												Concept Store
+											</Text>
+										</View>
+									</TouchableOpacity>
+									<TouchableOpacity
+											style={styles.logOutBut}
+											onPress={()=>console.log('Dealer')}
+									>							
+										<View style={styles.menuBox} >
+											<Image source={require('../images/menu-icon-08.png')}
+												style={styles.menuButton} />
+											<Text allowFontScaling={false} style={styles.menuText}>
+												Dealers
 											</Text>
 										</View>
 									</TouchableOpacity>
@@ -190,6 +285,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 0,
   },
   sectionTitle: {
+  	fontFamily: 'Gotham Bold',
     fontSize: 24,
     fontWeight: '600',
     color: Colors.black,
@@ -212,18 +308,28 @@ const styles = StyleSheet.create({
     textAlign: 'right',
   },
   menuButton: {
-  	width: 100,
-  	height: 100,
+  	width: 80,
+  	height: 80,
   },
   menuBox: {
-  	width: 100,
+  	width: 80,
+  	marginLeft: 5,
+  	marginRight: 5,
   	flexDirection: 'column',
   	alignItems: 'center',
   },
   menuText: {
+  	fontFamily: 'Gotham Bold',
   	fontSize: 14,
   	fontWeight: 'bold',
   	marginTop: -10,
-  }
+  	textAlign: 'center',
+  },
+  sliderItems: {
+		marginLeft: 0,
+		marginRight: 0,
+		height: 500,
+		width: width,
+	},
 });
 
