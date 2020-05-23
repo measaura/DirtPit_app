@@ -36,6 +36,7 @@ export default class ProductScreen extends Component {
 			loading: true,
 			dataSource: [],
 			prodimg: [],
+			popupimg:'',
 			prodId: this.props.navigation.state.params.prodId
 		};
 	}
@@ -52,23 +53,18 @@ export default class ProductScreen extends Component {
 					prodimg: [{
 						popup: responseJson.product[0].popup,
 						thumb: responseJson.product[0].thumb,
-					}]
+					}],
+					popupimg: responseJson.product[0].popup,
 				})
 				if(responseJson.product[0].images){
 					this.setState({
-						prodimg: responseJson.product[0].images,
-					})
+						prodimg: [ ...this.state.prodimg, ...responseJson.product[0].images]
+					});
 				}
 // 				console.log('response prodimg iamges '+ JSON.stringify(responseJson.product[0].images))
 			})
 		.catch(error=>console.log(error)) //to catch the errors if any
-		if(this.state.dataSo)
-		this.setState({
-			prodimg: [{
-				popup: this.state.dataSource.popup,
-				thumb: this.state.dataSource.thumb,
-			}]
-		})
+
 	}
 
 	FlatListItemSeparator = () => {
@@ -94,23 +90,14 @@ export default class ProductScreen extends Component {
 	}
 
 	renderPopup(item) {
-		if (item.popup == 'placeholder.png'||item.popup == ''){
-			return (
-			<Image
-					source={require('../../images/no-image-icon.png')}
-					style={styles.imageLarge}
-			/>
-		)}else{
-			return (
-			<Image
-					source={{uri: item.popup}}
-					style={styles.imageLarge}
-			/>
-		)}
+// 		console.warn(item)
+		this.setState({
+			popupimg: item.popup,
+		})
 	}
 	
 	renderThumbs() {
-console.log('renderThumb: '+this.state.prodimg)
+// console.log('renderThumb: '+this.state.prodimg)
 
 // 		if (item.image == 'placeholder.png'){
 // 			return (
@@ -189,7 +176,6 @@ console.log('renderThumb: '+this.state.prodimg)
 // 						thumb: this.state.dataSource.thumb,
 // 					}]
 // 			})
-// console.log(this.state.prodimg)
 			return(
 
 				<View style={styles.container}>
@@ -215,26 +201,32 @@ console.log('renderThumb: '+this.state.prodimg)
 								style={styles.scrollStyle}
 								contentContainerStyle={styles.scrollContent}
 							>
-							{this.renderPopup(item)}
-							<View style={{height:80}} >
+							<Image
+									source={{uri: this.state.popupimg}}
+									style={styles.imageLarge}
+							/>
+							<View style={{height:(height*0.15)+10}} >
 								<FlatList
 										style={{flex:1, flexDirection: 'row', width: width, paddingTop: 0, paddingBottom: 0, backgroundColor: "#CED0CE"}}
 										horizontal={true}
 										data={this.state.prodimg}
-										renderItem={({item}) => 
+										renderItem={({item,index}) => 
+                    	<TouchableOpacity 
+                    		onPress={()=>this.renderPopup(item,index)}>
 																			<Image
 																					source={{uri: item.thumb}}
 																					style={styles.imageThumb}
 																			/>
+                      </TouchableOpacity>
 										}
 
 										ItemSeparatorComponent={() => {
 												return (
 														<View
 																style={{
-																height: 80,
+																height: (height*0.15)+10,
 																width: 5,
-																backgroundColor: "red",
+																backgroundColor: "#CED0CE",
 
 																}}
 														/>
@@ -289,6 +281,7 @@ console.log('renderThumb: '+this.state.prodimg)
 												}}
 										/>
                     <View style={styles.cantLocate}>
+
                         <Image
                             source={require('../../images/noNoti.png')}
                             style={styles.cantLocateImg}
@@ -296,6 +289,7 @@ console.log('renderThumb: '+this.state.prodimg)
                         <Text allowFontScaling={false} style={styles.cantLocateText}>
                             More Categories soon...
                         </Text>
+
                     </View>
                 </View>
             )
@@ -327,10 +321,12 @@ const styles = StyleSheet.create({
   imageThumb: {
     justifyContent: 'center',
     alignItems: 'center',
-    height: height*0.1,
-    width: height*0.1,
+    height: height*0.15,
+    width: height*0.15,
     padding: 2,
-    margin: 8
+    marginTop: 5,
+    borderWidth: 5,
+    borderColor: '#fff',
   },
   scrollView: {
   	flex: 1,

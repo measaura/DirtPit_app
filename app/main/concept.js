@@ -87,7 +87,7 @@ export default class ConceptList extends Component {
 	}
 
 	componentDidMount(){
-		fetch("https://demo.shortcircuitworks.com/dirtpit23/index.php?route=api/category")
+		fetch("http://demo.shortcircuitworks.com/dirtpit23/index.php?route=api/category&concept")
 			.then(response => response.json())
 			.then((responseJson)=> {
 				this.setState({
@@ -101,9 +101,9 @@ export default class ConceptList extends Component {
 	FlatListItemSeparator = () => {
 		return (
 			<View style={{
-				 height: .5,
+				 height: 5,
 				 width:"100%",
-				 backgroundColor:"rgba(0,0,0,0.5)",
+				 backgroundColor: '#fff',
 				}}
 			/>
 		);
@@ -146,9 +146,6 @@ export default class ConceptList extends Component {
 			)
 		}else{
 // 		var list = this.state.dataSource.filter(item => item.top === "1")
-		console.log('-------------------- ')
-		console.log(DATA)
-		console.log('=====================')
 			return(
 				<View style={styles.container}>
 					<Header
@@ -166,10 +163,11 @@ export default class ConceptList extends Component {
 							}}
 					/>
 					<FlatList
-						data={DATA}
+						data={this.state.dataSource}
 // 						renderItem={item => this.renderItem(item)}
 						contentContainerStyle={{ flexGrow: 1 }}
 						keyExtractor={item=>item.store_id.toString()}
+						ItemSeparatorComponent = { this.FlatListItemSeparator }
 						renderItem={item => (
 // 							if ({item.item.top} == 1){
 
@@ -186,11 +184,8 @@ export default class ConceptList extends Component {
 													style={styles.rowBg}
 											>
 											<View style={styles.rowTextContent}>
-													<Text style={styles.rowMessage}>
+													<Text allowFontScaling={false} style={styles.rowMessage}>
 														{item.item.name}
-													</Text>
-													<Text style={styles.rowTime}>
-														{item.item.description}{' '}
 													</Text>
 											</View>
 											</ImageBackground>
@@ -339,25 +334,20 @@ const styles = StyleSheet.create({
     },
     rowBg: {
         flexGrow:1, 
-        height: Platform.OS == 'ios' ? (iPhoneX ? (height-90)/datArr : (height-60)/datArr) : (height-50)/datArr,
+        height: Platform.OS == 'ios' ? (iPhoneX ? (height-90)/datArr : (height-60)/datArr) : (height-65)/datArr,
     },
     rowTextContent: {
         alignSelf: 'stretch',
         flex:1,
         justifyContent: 'flex-end',
+        backgroundColor: 'rgba(0,0,0,0.3)',
     },
     rowMessage: {
-        color: 'yellow',
+        color: '#fff',
         fontFamily: 'Gotham Bold',
-        fontSize: 30,
+        fontSize: 18,
         paddingRight: 10,
         paddingLeft: 25,
-        backgroundColor: 'rgba(0,0,0,0.5)',
-    },
-    rowTime: {
-        color: '#fff',
-        fontSize: 13,
-        paddingLeft: 25,
-        backgroundColor: 'rgba(0,0,0,0.7)',
+        marginBottom: 80,
     },
 });

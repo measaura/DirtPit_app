@@ -47,11 +47,8 @@ export default class HomeScreen extends React.Component {
 	constructor(props) {
 		super(props)
     this.state = {
-      images: [
-        "https://demo.shortcircuitworks.com/dirtpit23/image/catalog/app/slider/Cafe.png",
-        "https://demo.shortcircuitworks.com/dirtpit23/image/catalog/app/slider/FTWRacingRetail.jpg",
-        "https://demo.shortcircuitworks.com/dirtpit23/image/catalog/app/slider/MotoManiac.jpg",
-      ]
+    	loading: true,
+      images: []
     };
 	}
 	
@@ -90,6 +87,16 @@ export default class HomeScreen extends React.Component {
 	};
 	
 	componentDidMount() {
+		fetch("https://demo.shortcircuitworks.com/dirtpit23/index.php?route=api/banner&id=9")
+			.then(response => response.json())
+			.then((responseJson)=> {
+				this.setState({
+					loading: false,
+					images: responseJson.banner
+				})
+			})
+		.catch(error=>console.log(error)) //to catch the errors if any
+		
 		this._stopAutoPlay();
 		this._startAutoPlay();
 	}
@@ -99,8 +106,8 @@ export default class HomeScreen extends React.Component {
 	}
 	// TODO _renderItem()
 	_renderItem({item, index}) {
-// 	console.warn(item);
-		return <Image source={{uri: item}} style={{ width: width}} />
+	console.warn(item.image);
+		return <Image source={{uri: item.image}} style={{ width: width}} />
 	}
 	// TODO _keyExtractor()
 	_keyExtractor(item, index) {
@@ -114,6 +121,7 @@ export default class HomeScreen extends React.Component {
 
 	
 	render() {
+	console.log(this.state.images['image'])
 		const {navigate} = this.props.navigation
 		return (
 			<>
@@ -155,7 +163,8 @@ export default class HomeScreen extends React.Component {
 									style={{width: '100%', height: '90%'}}
 									imageStyle={{opacity: 0.3}}
 								>
-								<View style={{flexDirection: 'row', justifyContent: 'center', paddingTop: 10 }}>
+								
+								<View style={{flexDirection: 'row', justifyContent: 'center', paddingTop: 5 }}>
 									<TouchableOpacity
 											style={styles.logOutBut}
 											onPress={()=>navigate('Segment')}
@@ -165,68 +174,6 @@ export default class HomeScreen extends React.Component {
 												style={styles.menuButton} />
 											<Text allowFontScaling={false} style={styles.menuText}>
 												Store
-											</Text>
-										</View>
-									</TouchableOpacity>
-									<TouchableOpacity
-											style={styles.logOutBut}
-											onPress={()=>navigate('Tour')}
-									>							
-										<View style={styles.menuBox} >
-											<Image source={require('../images/menu-icon-02.png')}
-												style={styles.menuButton} />
-											<Text allowFontScaling={false} style={styles.menuText}>
-												Tour
-											</Text>
-										</View>
-									</TouchableOpacity>
-									<TouchableOpacity
-											style={styles.logOutBut}
-											onPress={()=>console.log('Cafe')}
-									>							
-										<View style={styles.menuBox} >
-											<Image source={require('../images/menu-icon-03.png')}
-												style={styles.menuButton} />
-											<Text allowFontScaling={false} style={styles.menuText}>
-												Cafe
-											</Text>
-										</View>
-									</TouchableOpacity>
-									<TouchableOpacity
-											style={styles.logOutBut}
-											onPress={()=>console.log('Bike')}
-									>							
-										<View style={styles.menuBox} >
-											<Image source={require('../images/menu-icon-07.png')}
-												style={styles.menuButton} />
-											<Text allowFontScaling={false} style={styles.menuText}>
-												Community
-											</Text>
-										</View>
-									</TouchableOpacity>
-								</View>
-								<View style={{flexDirection: 'row', justifyContent: 'center',  paddingTop: 10,}}>
-									<TouchableOpacity
-											style={styles.logOutBut}
-											onPress={()=>console.log('Bike Garrage')}
-									>							
-										<View style={styles.menuBox} >
-											<Image source={require('../images/menu-icon-04.png')}
-												style={styles.menuButton} />
-											<Text allowFontScaling={false} style={styles.menuText}>
-												Bike Garrage
-											</Text>
-										</View>
-									</TouchableOpacity>
-									<TouchableOpacity
-											style={styles.logOutBut}
-											onPress={()=>console.log('Moto Garrage')}
-									>							
-										<View style={styles.menuBox} >
-											<Image source={require('../images/menu-icon-05.png')}
-												style={styles.menuButton} />
-											<Text allowFontScaling={false} style={styles.menuText}>
-												Moto Garrage
 											</Text>
 										</View>
 									</TouchableOpacity>
@@ -251,6 +198,68 @@ export default class HomeScreen extends React.Component {
 												style={styles.menuButton} />
 											<Text allowFontScaling={false} style={styles.menuText}>
 												Dealers
+											</Text>
+										</View>
+									</TouchableOpacity>
+									<TouchableOpacity
+											style={styles.logOutBut}
+											onPress={()=>navigate('Tour')}
+									>							
+										<View style={styles.menuBox} >
+											<Image source={require('../images/menu-icon-02.png')}
+												style={styles.menuButton} />
+											<Text allowFontScaling={false} style={styles.menuText}>
+												Tour
+											</Text>
+										</View>
+									</TouchableOpacity>
+								</View>
+								<View style={{flexDirection: 'row', justifyContent: 'center',  paddingTop: 5,}}>
+									<TouchableOpacity
+											style={styles.logOutBut}
+											onPress={()=>console.log('Moto Garrage')}
+									>							
+										<View style={styles.menuBox} >
+											<Image source={require('../images/menu-icon-05.png')}
+												style={styles.menuButton} />
+											<Text allowFontScaling={false} style={styles.menuText}>
+												Moto Garrage
+											</Text>
+										</View>
+									</TouchableOpacity>
+									<TouchableOpacity
+											style={styles.logOutBut}
+											onPress={()=>console.log('Bike Garrage')}
+									>							
+										<View style={styles.menuBox} >
+											<Image source={require('../images/menu-icon-04.png')}
+												style={styles.menuButton} />
+											<Text allowFontScaling={false} style={styles.menuText}>
+												Bike Garrage
+											</Text>
+										</View>
+									</TouchableOpacity>
+									<TouchableOpacity
+											style={styles.logOutBut}
+											onPress={()=>console.log('Cafe')}
+									>							
+										<View style={styles.menuBox} >
+											<Image source={require('../images/menu-icon-03.png')}
+												style={styles.menuButton} />
+											<Text allowFontScaling={false} style={styles.menuText}>
+												Cafe
+											</Text>
+										</View>
+									</TouchableOpacity>
+									<TouchableOpacity
+											style={styles.logOutBut}
+											onPress={()=>console.log('Bike')}
+									>							
+										<View style={styles.menuBox} >
+											<Image source={require('../images/menu-icon-07.png')}
+												style={styles.menuButton} />
+											<Text allowFontScaling={false} style={styles.menuText}>
+												Community
 											</Text>
 										</View>
 									</TouchableOpacity>
