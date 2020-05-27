@@ -23,6 +23,10 @@ var iPhoneX = DeviceInfo.hasNotch()
 
 const {width, height} = Dimensions.get('window')
 
+const screenHeight = Dimensions.get('screen').height;
+const windowHeight = Dimensions.get('window').height;
+const navbarHeight = screenHeight - windowHeight + StatusBar.currentHeight;
+
 const randomHexColor = () => {
   return '#000000'.replace(/0/g, function() {
     return (~~(Math.random() * 16)).toString(16);
@@ -521,7 +525,7 @@ const styles = StyleSheet.create({
 		},
 		footerBar: {
 			left: 0,
-			bottom: 0,
+			bottom: 26,
 			height: Platform.OS == 'ios' ? 70 : 50,
 			flexDirection: 'row',
 			justifyContent: 'space-between',
