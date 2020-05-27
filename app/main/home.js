@@ -37,12 +37,20 @@ import AsyncStorage from '@react-native-community/async-storage'
 import {StackActions, NavigationActionscreateAppContainer, createSwitchNavigator} from 'react-navigation'
 // import {createStackNavigator} from 'react-navigation-stack'
 // import {createBottomTabNavigator} from 'react-navigation-tabs'
+import DeviceInfo from "react-native-device-info";
+var notch = DeviceInfo.hasNotch();
 
 let CurrentSlide = 0;
 let IntervalTime = 4000;
 
+const screenHeight = Dimensions.get('screen').height;
+const windowHeight = Dimensions.get('window').height;
+const navbarHeight = screenHeight - windowHeight + StatusBar.currentHeight;
+
 const {width, height} = Dimensions.get('window')
 
+console.log('\nwidth: '+width+'\nheight: '+height)
+console.log('statusbar height'+StatusBar.currentHeight+', navbarHeight: '+navbarHeight)
 export default class HomeScreen extends React.Component {
 	constructor(props) {
 		super(props)
@@ -94,11 +102,13 @@ export default class HomeScreen extends React.Component {
 					loading: false,
 					images: responseJson.banner
 				})
+						this._stopAutoPlay();
+		this._startAutoPlay();
 			})
 		.catch(error=>console.log(error)) //to catch the errors if any
 		
-		this._stopAutoPlay();
-		this._startAutoPlay();
+
+
 	}
 	
 	componentWillUnmount() {
@@ -106,7 +116,7 @@ export default class HomeScreen extends React.Component {
 	}
 	// TODO _renderItem()
 	_renderItem({item, index}) {
-	console.warn(item.image);
+// 	console.warn(item.image); 
 		return <Image source={{uri: item.image}} style={{ width: width}} />
 	}
 	// TODO _keyExtractor()
@@ -140,8 +150,8 @@ export default class HomeScreen extends React.Component {
 										marginTop:
 												Platform.OS == 'ios' ? 0 : -20,
 										top:
-												Platform.OS == 'ios' ? (iPhoneX ? -10 : 0) : 0,
-										height: Platform.OS == 'ios' ? (iPhoneX ? 90 : 0) : 70,
+												Platform.OS == 'ios' ? (notch ? -10 : 0) : 0,
+										height: Platform.OS == 'ios' ? (notch ? 90 : 0) : 70,
 								}}
 						/>
 						<View style={styles.body}>
@@ -156,15 +166,9 @@ export default class HomeScreen extends React.Component {
 				/>
 				
 			</View>
-							<View style={{top:0,}}>
+							<View style={{ height: navbarHeight < 100 ?  (windowHeight-width-navbarHeight-48):(windowHeight-width-navbarHeight+6), justifyContent: 'space-around', backgroundColor: '#c0c0c0' }}>
 
-								<ImageBackground
-									source={require('../images/MotoManiac08.png')}
-									style={{width: '100%', height: '90%'}}
-									imageStyle={{opacity: 0.3}}
-								>
-								
-								<View style={{flexDirection: 'row', justifyContent: 'center', paddingTop: 5 }}>
+								<View style={{flexDirection: 'row', justifyContent: 'space-around', flexWrap: 'wrap',}}>
 									<TouchableOpacity
 											style={styles.logOutBut}
 											onPress={()=>navigate('Segment')}
@@ -213,29 +217,27 @@ export default class HomeScreen extends React.Component {
 											</Text>
 										</View>
 									</TouchableOpacity>
-								</View>
-								<View style={{flexDirection: 'row', justifyContent: 'center',  paddingTop: 5,}}>
 									<TouchableOpacity
 											style={styles.logOutBut}
-											onPress={()=>console.log('Moto Garrage')}
+											onPress={()=>console.log('Moto Garage')}
 									>							
 										<View style={styles.menuBox} >
 											<Image source={require('../images/menu-icon-05.png')}
 												style={styles.menuButton} />
 											<Text allowFontScaling={false} style={styles.menuText}>
-												Moto Garrage
+												Moto Garage
 											</Text>
 										</View>
 									</TouchableOpacity>
 									<TouchableOpacity
 											style={styles.logOutBut}
-											onPress={()=>console.log('Bike Garrage')}
+											onPress={()=>console.log('Bike Garage')}
 									>							
 										<View style={styles.menuBox} >
 											<Image source={require('../images/menu-icon-04.png')}
 												style={styles.menuButton} />
 											<Text allowFontScaling={false} style={styles.menuText}>
-												Bike Garrage
+												Bike Garage
 											</Text>
 										</View>
 									</TouchableOpacity>
@@ -264,8 +266,6 @@ export default class HomeScreen extends React.Component {
 										</View>
 									</TouchableOpacity>
 								</View>
-						
-								</ImageBackground>
 
 							</View>
 
@@ -287,6 +287,7 @@ const styles = StyleSheet.create({
     right: 0,
   },
   body: {
+    height: height,
     backgroundColor: Colors.white,
   },
   sectionContainer: {
