@@ -243,7 +243,7 @@ export default class HomeScreen extends React.Component {
 									</TouchableOpacity>
 									<TouchableOpacity
 											style={styles.logOutBut}
-											onPress={()=>console.log('Cafe')}
+											onPress={()=>navigate('Cafe')}
 									>							
 										<View style={styles.menuBox} >
 											<Image source={require('../images/menu-icon-03.png')}
@@ -255,7 +255,7 @@ export default class HomeScreen extends React.Component {
 									</TouchableOpacity>
 									<TouchableOpacity
 											style={styles.logOutBut}
-											onPress={()=>console.log('Bike')}
+											onPress={()=>navigate('Community')}
 									>							
 										<View style={styles.menuBox} >
 											<Image source={require('../images/menu-icon-07.png')}
