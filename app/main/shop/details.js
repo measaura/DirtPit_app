@@ -148,6 +148,17 @@ export default class ProductScreen extends Component {
 // 		}
 	}
 	
+	renderOptions(item){
+		console.log(JSON.stringify(item.options))
+		if(item.options[0]){
+		
+			console.warn(item.options[0].name)
+			return(
+				<Text allowFontScaling={false} style={styles.sectionPrice} style={{paddingBottom:30, paddingLeft: 15,}}>Options: {'\n'}{item.options[0].name}{': '}{item.options[0].product_option_value[0].name}</Text>
+			);
+		}
+	}
+	
 	renderLeft() {
 			const {navigate} = this.props.navigation
 			return (
@@ -244,6 +255,7 @@ export default class ProductScreen extends Component {
 									<Text allowFontScaling={false} style={styles.sectionTitle} >{item.heading_title}</Text>
 									<Text allowFontScaling={false} style={styles.sectionPrice} >{item.manufacturer}</Text>
 									<Text allowFontScaling={false} style={styles.sectionPrice} >{item.price}</Text>
+									{this.renderOptions(item)}
 									<View style={styles.decriptionContainer} >
 										<HTML
 											html={item.description}
@@ -256,9 +268,12 @@ export default class ProductScreen extends Component {
 								</View>
 						</ScrollView>
 						<View style={styles.footerBar}>
-							<View style={{flex:1, flexDirection:'row',justifyContent: 'center', alignItems: 'center',}} >
-								<Text allowFontScaling={false} style={{color: 'white'}}>ADD TO CART</Text>
+						<TouchableOpacity 
+							onPress={()=>console.log('Add to cart: '+this.state.prodId)}>
+							<View style={{flex:1, width: width,  flexDirection:'row',justifyContent: 'space-around', alignItems: 'center',}} >
+								<Text allowFontScaling={false} style={{fontFamily: 'Gotham Bold', color: 'white'}}>ADD TO CART</Text>
 							</View>
+						</TouchableOpacity>
 						</View>
 						
 					</View>
