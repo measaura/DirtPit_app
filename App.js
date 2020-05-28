@@ -44,6 +44,9 @@ import SegmentScreen from './app/main/shop/segment'
 import CategoryScreen from './app/main/shop/category'
 import ProductScreen from './app/main/shop/product'
 import DetailScreen from './app/main/shop/details'
+import DealersScreen from './app/main/dealers'
+import MotoGarageScreen from './app/main/motogarage'
+import BikeGarageScreen from './app/main/bikegarage'
 import ConceptList from './app/main/concept'
 import ConceptScreen from './app/main/concept/conceptshop'
 import Profile from './app/main/profile'
@@ -124,6 +127,9 @@ const AppModalStack = createStackNavigator(
         Tour: TourScreen,
         Concept: ConceptList,
         ConceptScreen: ConceptScreen,
+        Dealers: DealersScreen,
+        MotoGarage: MotoGarageScreen,
+        BikeGarage: BikeGarageScreen,
 //         Slider: Slider,
 //         UserList: UserList,
 //         TrackingHistory: TrackingHistory,

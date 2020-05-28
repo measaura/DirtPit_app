@@ -8,15 +8,16 @@ import {
   Text,
   StatusBar,
   Image,
-  ImageBackground,
   Dimensions,
+  ImageBackground,
   TouchableOpacity,
   ActivityIndicator,
 } from 'react-native';
 import {Colors} from '../NewAppScreen';
-import { Header } from "react-native-elements";
+import {Header} from 'react-native-elements'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 
+import {showLocation} from 'react-native-map-link'
 import DeviceInfo from 'react-native-device-info'
 var iPhoneX = DeviceInfo.hasNotch()
 
@@ -28,24 +29,23 @@ const randomHexColor = () => {
   });
 };
 
-const datArr = 4;
-
-export default class ConceptList extends Component {
+export default class MotoGarageScreen extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
 			loading: true,
-			dataSource: []
+			dataSource: [],
 		};
 	}
 
 	componentDidMount(){
-		fetch("http://demo.shortcircuitworks.com/dirtpit23/index.php?route=api/category&concept")
+// 	console.log(this.state.segId)
+		fetch("http://demo.shortcircuitworks.com/dirtpit23/index.php?route=api/garage&moto")
 			.then(response => response.json())
 			.then((responseJson)=> {
 				this.setState({
 					loading: false,
-					dataSource: responseJson.categories
+					dataSource: responseJson.dealers
 				})
 			})
 		.catch(error=>console.log(error)) //to catch the errors if any
@@ -54,9 +54,9 @@ export default class ConceptList extends Component {
 	FlatListItemSeparator = () => {
 		return (
 			<View style={{
-				 height: 5,
+				 height: .5,
 				 width:"100%",
-				 backgroundColor: '#fff',
+				 backgroundColor:"rgba(0,0,0,0.5)",
 				}}
 			/>
 		);
@@ -65,8 +65,8 @@ export default class ConceptList extends Component {
 	renderLeft() {
 			const {navigate} = this.props.navigation
 			return (
-					<TouchableOpacity onPress={() => navigate('Home')}>
-							<Ionicons name={'ios-home'} size={30} color={'yellow'} style={{paddingTop: 0}} />
+					<TouchableOpacity onPress={() => this.props.navigation.goBack()}>
+							<Ionicons name={'ios-arrow-dropleft-circle'} size={30} color={'yellow'} style={{paddingTop: 0}} />
 					</TouchableOpacity>
 			);
 	}
@@ -80,25 +80,14 @@ export default class ConceptList extends Component {
 		if (this.state.loading){
 			return(
 				<View style={styles.loader}>
-					<Header
-							innerContainerStyles={styles.headerInnerContainer}
-							outerContainerStyles={styles.headerOuterContainer}
-							leftComponent={this.renderLeft()}
-							centerComponent={this.renderCenter()}
-							containerStyle={{
-									backgroundColor: '#000',
-									marginTop:
-											Platform.OS == 'ios' ? 0 : -20,
-									top:
-											Platform.OS == 'ios' ? (iPhoneX ? -10 : 0) : -10,
-									height: Platform.OS == 'ios' ? (iPhoneX ? 90 : 0) : 70,
-							}}
-					/>
 					<ActivityIndicator size="large" color="#0c9" />
 				</View>
 			)
-		}else{
+		}else if (this.state.dataSource){
 // 		var list = this.state.dataSource.filter(item => item.top === "1")
+// 		console.log('-------------------- ')
+// 		console.log(list)
+// 		console.log('=====================')
 			return(
 				<View style={styles.container}>
 					<Header
@@ -118,43 +107,73 @@ export default class ConceptList extends Component {
 					<FlatList
 						data={this.state.dataSource}
 // 						renderItem={item => this.renderItem(item)}
-						contentContainerStyle={{ flexGrow: 1 }}
-						keyExtractor={item=>item.store_id.toString()}
-						ItemSeparatorComponent = { this.FlatListItemSeparator }
 						renderItem={item => (
 // 							if ({item.item.top} == 1){
-
 									<TouchableOpacity
 											onPress={() =>
-													navigate('ConceptScreen', {
-															prevScreenTitle: 'ConceptScreen',
-															storeId: item.item.store_id,
-													})
+												showLocation({
+														dialogTitle: 'Open map application',
+														dialogMessage:
+																'Get directions to "' +
+																item.item.dealer_name +
+																'" using selected app',
+														latitude: item.item.latitude,
+														longitude: item.item.longitude,
+												})
 											}
-											>
-											<ImageBackground
-													source={{uri: item.item.image}}
-													style={styles.rowBg}
-											>
+											style={styles.rowWrap}>
 											<View style={styles.rowTextContent}>
 													<Text allowFontScaling={false} style={styles.rowMessage}>
-														{item.item.name}
+														{item.item.dealer_name}
+													</Text>
+													<Text allowFontScaling={false} style={styles.rowTime}>
+														{item.item.address}
+													</Text>
+													<Text allowFontScaling={false} style={styles.rowTime}>
+														{item.item.in_charge}{': '}{item.item.contact_no}
 													</Text>
 											</View>
-											</ImageBackground>
+
 									</TouchableOpacity>
-
 // 								}									
-
+									
 							)}
+						keyExtractor={item=>item.store_id.toString()}
 					/>
 				</View>
 			)
+		}else{
+            return (
+                <View style={styles.container}>
+										<Header
+												innerContainerStyles={styles.headerInnerContainer}
+												outerContainerStyles={styles.headerOuterContainer}
+												leftComponent={this.renderLeft()}
+												centerComponent={this.renderCenter()}
+												containerStyle={{
+														backgroundColor: '#000',
+														marginTop:
+																Platform.OS == 'ios' ? (iPhoneX ? 20 : 0) : -20,
+														top:
+																Platform.OS == 'ios' ? (iPhoneX ? -15 : 0) : -5,
+														height: 70,
+												}}
+										/>
+                    <View style={styles.cantLocate}>
+                        <Image
+                            source={require('../images/DirtPit_icon_1024.png')}
+                            style={styles.cantLocateImg}
+                        />
+                        <Text allowFontScaling={false} style={styles.cantLocateText}>
+                            More Contents soon...
+                        </Text>
+                    </View>
+                </View>
+            )
 		}
-
+		
   }
 };
-
 
 const styles = StyleSheet.create({
   scrollView: {
@@ -276,32 +295,29 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         borderBottomWidth: 1,
         borderColor: '#dedede',
-        height: '25%',
+        height: 125,
         backgroundColor: '#ffffff',
         alignSelf: 'stretch',
         alignItems: 'center',
     },
     rowIcon: {
-        width: 100,
-        height: 100,
+        width: 120,
+        height: 120,
         marginLeft: 20,
-    },
-    rowBg: {
-        flexGrow:1, 
-        height: Platform.OS == 'ios' ? (iPhoneX ? (height-90)/datArr : (height-60)/datArr) : (height-65)/datArr,
     },
     rowTextContent: {
         alignSelf: 'stretch',
-        flex:1,
-        justifyContent: 'flex-end',
-        backgroundColor: 'rgba(0,0,0,0.3)',
+        height: 125,
+        marginLeft: 10,
+        justifyContent: 'center',
+        flex: 1,
     },
     rowMessage: {
-        color: '#fff',
-        fontFamily: 'Gotham Bold',
-        fontSize: 18,
-        paddingRight: 10,
-        paddingLeft: 25,
-        bottom: '40%',
+        color: '#3f3f3f',
+        fontSize: 25,
+    },
+    rowTime: {
+        color: '#a0abba',
+        fontSize: 15,
     },
 });
