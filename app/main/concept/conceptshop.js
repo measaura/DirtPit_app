@@ -92,12 +92,22 @@ export default class ConceptScreen extends Component {
 	}
 
 	componentDidMount(){
-	console.log(this.state.storeId)
-
+		fetch("http://demo.shortcircuitworks.com/dirtpit23/index.php?route=api/category&concept")
+			.then(response => response.json())
+			.then((responseJson)=> {
 				this.setState({
 					loading: false,
-					dataSource: DATA,
+					dataSource: responseJson.categories
 				})
+			})
+		.catch(error=>console.log(error)) //to catch the errors if any
+
+// 	console.log(this.state.storeId)
+// 
+// 				this.setState({
+// 					loading: false,
+// 					dataSource: DATA,
+// 				})
 	}
 
 	FlatListItemSeparator = () => {
@@ -201,7 +211,7 @@ export default class ConceptScreen extends Component {
 												longitude: item.longitude,
 										})
 								}>
-									<Text style={{color: 'white'}}>GO TO CONCEPT STORE</Text>
+									<Text style={{fontFamily: 'Gotham Bold', fontSize: 18, color: 'black'}}>NAVIGATE TO CONCEPT STORE</Text>
 							</TouchableOpacity>
 						</View>
 					</View>
@@ -462,7 +472,9 @@ const styles = StyleSheet.create({
 			height: Platform.OS == 'ios' ? 70 : 50,
 			flexDirection: 'row',
 			justifyContent: 'space-between',
-			backgroundColor: 'green',
+			backgroundColor: 'yellow',
+			borderWidth: 3,
+			borderColor: 'black',
 		},
 		mainContainer: {
 			height:Platform.OS == 'ios' ? height-80 : height-40,
