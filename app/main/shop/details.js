@@ -14,10 +14,12 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import {Colors} from '../../NewAppScreen';
-import {Header} from 'react-native-elements'
+import {Header, Icon, withBadge} from 'react-native-elements'
+import AsyncStorage from '@react-native-community/async-storage'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import HTML from 'react-native-render-html'
 import { IGNORED_TAGS } from 'react-native-render-html/src/HTMLUtils'
+import Toast, {DURATION} from 'react-native-easy-toast'
 import DeviceInfo from 'react-native-device-info'
 var iPhoneX = DeviceInfo.hasNotch()
 
@@ -41,8 +43,18 @@ export default class ProductScreen extends Component {
 			dataSource: [],
 			prodimg: [],
 			popupimg:'',
+			items:0,
 			prodId: this.props.navigation.state.params.prodId
-		};
+		}
+		this.toaster = this.toaster.bind(this)
+	}
+
+	toaster(message, duration) {
+			try {
+					this.refs.toast.show(message, duration)
+			} catch (err) {
+					// alert(err);
+			}
 	}
 
 	componentDidMount(){
@@ -69,17 +81,83 @@ export default class ProductScreen extends Component {
 			})
 		.catch(error=>console.log(error)) //to catch the errors if any
 
+	this.updateCount()
+		 
 	}
 
+	updateCount =() =>{
+		AsyncStorage.getItem('cart').then((datacart)=>{
+			 if (datacart !== null) {
+				 // We have data!!
+				 const cart = JSON.parse(datacart)
+				const itemCount = cart.reduce((itemTotal, item) => itemTotal + Number(item.quantity), 0)
+				console.log('items: '+itemCount)
+				this.setState({items:itemCount})
+			 }
+			 else{
+
+			 }
+
+		 })
+		 .catch((err)=>{
+			 alert(err)
+		 })	
+	}
+	
 	FlatListItemSeparator = () => {
 		return (
 			<View style={{
 				 height: .5,
 				 width:"100%",
-				 backgroundColor:"rgba(0,0,0,0.5)",
+				 backgroundColor:"#fff",
 				}}
 			/>
 		);
+	}
+	
+	addToCart(data){
+		var currency = data.price;
+		var number = Number(currency.replace(/[^\d\.]/g,""));
+		var itemprice = (number).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&');
+		const itemcart = {
+			shop: data,
+			quantity:  1,
+			price: itemprice
+		}
+
+		AsyncStorage.getItem('cart').then((datacart)=>{
+			 if (datacart !== null) {
+				 // We have data!!
+				 const cart = JSON.parse(datacart)
+					const existingItem = cart.find((item) => {
+						return itemcart.shop.product_id === item.shop.product_id;
+					});
+
+					if(existingItem) {
+						 existingItem.quantity++;
+					} else {
+						// Push the item into the cart
+						cart.push(itemcart);
+					}
+					
+// 				 cart.push(itemcart)
+				 AsyncStorage.setItem('cart',JSON.stringify(cart));
+// 				 			 console.log(JSON.stringify(cart))
+			 }
+			 else{
+				 const cart  = []
+				 cart.push(itemcart)
+				 AsyncStorage.setItem('cart',JSON.stringify(cart));
+			 }
+				this.updateCount()
+				this.toaster(
+						'Added to cart',
+						2000,
+				)
+		 })
+		 .catch((err)=>{
+			 alert(err)
+		 })
 	}
 
 	itemSeparatorComponent = () => {
@@ -169,10 +247,31 @@ export default class ProductScreen extends Component {
 	}
 
 	renderCenter() {
-			return <Image source={require('../../images/DirtPit_logo-180x35.png')} />
+			return <Image source={require('../../images/dirtpit-logo-181x43.png')} />
+	}
+
+	renderRight() {
+			const {navigate} = this.props.navigation
+			const BadgedIcon = withBadge(this.state.items)(Icon)
+			if (this.state.isMonitor) {
+					return ''
+			} else {
+					return (
+							<TouchableOpacity
+									onPress={() =>
+											navigate('Cart')
+									}>
+									<View style={{ paddingRight: 15}} >
+
+										<BadgedIcon type='ionicon' name="ios-cart" size={28} color={"yellow"} />
+									</View>
+							</TouchableOpacity>
+					)
+			}
 	}
 
   render() {
+		const {navigate} = this.props.navigation
 		if (this.state.loading){
 			return(
 				<View style={styles.loader}>
@@ -199,6 +298,7 @@ export default class ProductScreen extends Component {
 							outerContainerStyles={styles.headerOuterContainer}
 							leftComponent={this.renderLeft()}
 							centerComponent={this.renderCenter()}
+							rightComponent={this.renderRight()}
 							containerStyle={{
 									backgroundColor: '#000',
 									marginTop:
@@ -211,7 +311,7 @@ export default class ProductScreen extends Component {
 					{this.state.dataSource.map((item) => {
 						return (
 						<View style={styles.mainContainer}>
-
+							<Toast ref="toast" position="top" />
 							<ScrollView
 								style={styles.scrollStyle}
 								contentContainerStyle={styles.scrollContent}
@@ -222,7 +322,7 @@ export default class ProductScreen extends Component {
 							/>
 							<View style={{height:(height*0.15)+10}} >
 								<FlatList
-										style={{flex:1, flexDirection: 'row', width: width, paddingTop: 0, paddingBottom: 0, backgroundColor: "#CED0CE"}}
+										style={{flex:1, flexDirection: 'row', width: width, paddingTop: 0, paddingBottom: 0, backgroundColor: "#ffffff"}}
 										horizontal={true}
 										data={this.state.prodimg}
 										renderItem={({item,index}) => 
@@ -241,7 +341,7 @@ export default class ProductScreen extends Component {
 																style={{
 																height: (height*0.15)+10,
 																width: 5,
-																backgroundColor: "#CED0CE",
+																backgroundColor: "#fff",
 
 																}}
 														/>
@@ -269,7 +369,7 @@ export default class ProductScreen extends Component {
 						</ScrollView>
 						<View style={styles.footerBar}>
 						<TouchableOpacity 
-							onPress={()=>console.log('Add to cart: '+this.state.prodId)}>
+							onPress={()=>this.addToCart(item)} >
 							<View style={{flex:1, width: width,  flexDirection:'row',justifyContent: 'space-around', alignItems: 'center',}} >
 								<Text allowFontScaling={false} style={{fontFamily: 'Gotham Bold', color: 'white'}}>ADD TO CART</Text>
 							</View>
@@ -540,7 +640,7 @@ const styles = StyleSheet.create({
 		},
 		footerBar: {
 			left: 0,
-			bottom: 26,
+			bottom: 0,
 			height: Platform.OS == 'ios' ? 70 : 50,
 			flexDirection: 'row',
 			justifyContent: 'space-between',
