@@ -4,6 +4,7 @@ import {
   StyleSheet,
   ScrollView,
   FlatList,
+  SectionList,
   View,
   Text,
   StatusBar,
@@ -22,6 +23,73 @@ import DeviceInfo from 'react-native-device-info'
 var iPhoneX = DeviceInfo.hasNotch()
 
 const {width, height} = Dimensions.get('window')
+
+// const DATA = [
+// 	{
+// 			"state": "SELANGOR",
+// 			"dealers": [
+// 					{
+// 							"store_id": "1",
+// 							"image": "http://demo.shortcircuitworks.com/dirtpit23/image/catalog/app/kota.jpg",
+// 							"category": "moto",
+// 							"dealer_name": "FUNSPORTZ CYCLE",
+// 							"retail_name": "FUNSPORTZ CYCLE SDN BHD",
+// 							"description": "",
+// 							"in_charge": "CHEAH ING SHERN",
+// 							"contact_no": "016-2633003",
+// 							"email": "",
+// 							"city": "Petaling Jaya",
+// 							"state": "Selangor",
+// 							"address": "B-G 20, 10 BOULEVARD, JALAN PJU 6A, 47400 Petaling Jaya, Selangor",
+// 							"meta_keyword": "",
+// 							"latitude": "3.111399",
+// 							"longitude": "101.639474"
+// 					},
+// 					{
+// 							"store_id": "2",
+// 							"image": "http://demo.shortcircuitworks.com/dirtpit23/image/catalog/app/kota.jpg",
+// 							"category": "moto",
+// 							"dealer_name": "AWANG TUM TUM CYCLES",
+// 							"retail_name": "AWANG TUM TUM CYCLES",
+// 							"description": "",
+// 							"in_charge": "RADZUAN ABD JALIL",
+// 							"contact_no": "+673 899 3659",
+// 							"email": "",
+// 							"city": "BANDAR SERI BEGAWAN",
+// 							"state": "BRUNEI",
+// 							"address": "NO. , SIMPANG 709, JERUDONG, BANDAR SERI BEGAWAN, BRUNEI",
+// 							"meta_keyword": "",
+// 							"latitude": "3.111399",
+// 							"longitude": "101.639474"
+// 					}
+// 			]
+// 	}
+// ];
+
+const DATA = [
+  {
+    title: "Main dishes",
+    data: ["Pizza", "Burger", "Risotto"]
+  },
+  {
+    title: "Sides",
+    data: ["French Fries", "Onion Rings", "Fried Shrimps"]
+  },
+  {
+    title: "Drinks",
+    data: ["Water", "Coke", "Beer"]
+  },
+  {
+    title: "Desserts",
+    data: ["Cheese Cake", "Ice Cream"]
+  }
+];
+
+const Item = ({ title }) => (
+  <View style={styles.item}>
+    <Text style={styles.title}>{title}</Text>
+  </View>
+);
 
 const randomHexColor = () => {
   return '#000000'.replace(/0/g, function() {
@@ -104,42 +172,14 @@ export default class DealersScreen extends Component {
 									height: Platform.OS == 'ios' ? (iPhoneX ? 90 : 0) : 70,
 							}}
 					/>
-					<FlatList
-						data={this.state.dataSource}
-// 						renderItem={item => this.renderItem(item)}
-						renderItem={item => (
-// 							if ({item.item.top} == 1){
-									<TouchableOpacity
-											onPress={() =>
-												showLocation({
-														dialogTitle: 'Open map application',
-														dialogMessage:
-																'Get directions to "' +
-																item.item.dealer_name +
-																'" using selected app',
-														latitude: item.item.latitude,
-														longitude: item.item.longitude,
-												})
-											}
-											style={styles.rowWrap}>
-											<View style={styles.rowTextContent}>
-													<Text allowFontScaling={false} style={styles.rowMessage}>
-														{item.item.dealer_name}
-													</Text>
-													<Text allowFontScaling={false} style={styles.rowTime}>
-														{item.item.address}
-													</Text>
-													<Text allowFontScaling={false} style={styles.rowTime}>
-														{item.item.in_charge}{': '}{item.item.contact_no}
-													</Text>
-											</View>
-
-									</TouchableOpacity>
-// 								}									
-									
-							)}
-						keyExtractor={item=>item.store_id.toString()}
-					/>
+    <SectionList
+      sections={DATA}
+      keyExtractor={(item, index) => item + index}
+      renderItem={({ item }) => <Item title={item} />}
+      renderSectionHeader={({ section: { title } }) => (
+        <Text style={styles.header}>{title}</Text>
+      )}
+    />
 				</View>
 			)
 		}else{
@@ -320,4 +360,16 @@ const styles = StyleSheet.create({
         color: '#a0abba',
         fontSize: 15,
     },
+  item: {
+    backgroundColor: "#f9c2ff",
+    padding: 20,
+    marginVertical: 8
+  },
+  header: {
+    fontSize: 32,
+    backgroundColor: "#fff"
+  },
+  title: {
+    fontSize: 24
+  },
 });
