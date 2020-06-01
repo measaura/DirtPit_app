@@ -122,21 +122,21 @@ export default class Notifications extends React.Component {
         if (item.type === 'lowbattery') {
             return (
                 <Image
-                    source={require('../images/icoBattery.png')}
+                    source={require('../images/noNoti.png')}
                     style={styles.rowIcon}
                 />
             )
         } else if (item.type === 'alarm') {
             return (
                 <Image
-                    source={require('../images/icoSOS.png')}
+                    source={require('../images/noNoti.png')}
                     style={styles.rowIcon}
                 />
             )
         } else if (item.type === 'zone') {
             return (
                 <Image
-                    source={require('../images/locPin.png')}
+                    source={require('../images/noNoti.png')}
                     style={styles.rowIcon}
                 />
             )

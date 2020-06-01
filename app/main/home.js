@@ -126,7 +126,7 @@ export default class HomeScreen extends React.Component {
 	}
 	
 	renderCenter() {
-			return <Image source={require('../images/DirtPit_logo-180x35.png')} />
+			return <Image source={require('../images/dirtpit-logo-181x43.png')} />
 	}
 
 	
@@ -166,7 +166,7 @@ export default class HomeScreen extends React.Component {
 				/>
 				
 			</View>
-							<View style={{ height: navbarHeight < 100 ?  (windowHeight-width-navbarHeight-48):(windowHeight-width-navbarHeight+6), justifyContent: 'space-around', backgroundColor: '#c0c0c0' }}>
+							<View style={{ height: navbarHeight < 100 ?  (windowHeight-width-navbarHeight-48):(windowHeight-width-navbarHeight+6), justifyContent: 'space-around', backgroundColor: '#ffffff',}}>
 
 								<View style={{flexDirection: 'row', justifyContent: 'space-around', flexWrap: 'wrap',}}>
 									<TouchableOpacity
