@@ -87,7 +87,7 @@ export default class Notifications extends React.Component {
         this.didFocusListener = this.props.navigation.addListener(
             'didFocus',
             () => {
-                this.connectAPI()
+//                 this.connectAPI()
             },
         )
 
