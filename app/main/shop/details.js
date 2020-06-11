@@ -20,6 +20,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons'
 import HTML from 'react-native-render-html'
 import { IGNORED_TAGS } from 'react-native-render-html/src/HTMLUtils'
 import Toast, {DURATION} from 'react-native-easy-toast'
+import OptionButton from '../../components/optionbutton.js'
 import DeviceInfo from 'react-native-device-info'
 var iPhoneX = DeviceInfo.hasNotch()
 
@@ -42,9 +43,47 @@ export default class ProductScreen extends Component {
 			loading: true,
 			dataSource: [],
 			prodimg: [],
+			optionItems: [],
+			optionName: [],
+			optionSelected: [],
 			popupimg:'',
 			items:0,
-			prodId: this.props.navigation.state.params.prodId
+			prodId: this.props.navigation.state.params.prodId,
+      radioItems:
+        [
+          {
+            label: 'S',
+            size: 30,
+            color: 'grey',
+            textColor: 'black',
+            selected: false
+          },
+
+          {
+            label: 'M',
+            color: 'yellow',
+            textColor: 'black',
+            size: 30,
+            selected: false,
+          },
+
+          {
+            label: 'L',
+            size: 30,
+            color: 'yellow',
+            textColor: 'black',
+            selected: false
+          },
+
+          {
+            label: 'XL',
+            size: 30,
+            color: 'yellow',
+            textColor: 'black',
+            selected: false
+          }
+        ], 
+      selectedItem: ''
 		}
 		this.toaster = this.toaster.bind(this)
 	}
@@ -77,12 +116,24 @@ export default class ProductScreen extends Component {
 						prodimg: [ ...this.state.prodimg, ...responseJson.product[0].images]
 					});
 				}
+				if(responseJson.product[0].options){
+					this.setState({
+						optionName: responseJson.product[0].options[0].name,
+						optionItems: responseJson.product[0].options[0].product_option_value,
+					})
+				}
 // 				console.log('response prodimg iamges '+ JSON.stringify(responseJson.product[0].images))
 			})
 		.catch(error=>console.log(error)) //to catch the errors if any
 
 	this.updateCount()
-		 
+
+    this.state.radioItems.map((item) => {
+      if (item.selected == true) {
+        this.setState({ selectedItem: item.label });
+      }
+    });		 
+    
 	}
 
 	updateCount =() =>{
@@ -91,7 +142,7 @@ export default class ProductScreen extends Component {
 				 // We have data!!
 				 const cart = JSON.parse(datacart)
 				const itemCount = cart.reduce((itemTotal, item) => itemTotal + Number(item.quantity), 0)
-				console.log('items: '+itemCount)
+// 				console.log('items: '+itemCount)
 				this.setState({items:itemCount})
 			 }
 			 else{
@@ -103,7 +154,7 @@ export default class ProductScreen extends Component {
 			 alert(err)
 		 })	
 	}
-	
+  
 	FlatListItemSeparator = () => {
 		return (
 			<View style={{
@@ -143,8 +194,7 @@ export default class ProductScreen extends Component {
 // 				 cart.push(itemcart)
 				 AsyncStorage.setItem('cart',JSON.stringify(cart));
 // 				 			 console.log(JSON.stringify(cart))
-			 }
-			 else{
+			 }else{
 				 const cart  = []
 				 cart.push(itemcart)
 				 AsyncStorage.setItem('cart',JSON.stringify(cart));
@@ -228,15 +278,44 @@ export default class ProductScreen extends Component {
 	
 	renderOptions(item){
 		console.log(JSON.stringify(item.options))
-		if(item.options[0]){
-		
-			console.warn(item.options[0].name)
-			return(
-				<Text allowFontScaling={false} style={styles.sectionPrice} style={{paddingBottom:30, paddingLeft: 15,}}>Options: {'\n'}{item.options[0].name}{': '}{item.options[0].product_option_value[0].name}</Text>
-			);
-		}
+// 		if(item.options[0]){
+// 		
+// 			console.warn(item.options[0].name)
+// 			return(
+// 				<Text allowFontScaling={false} style={styles.sectionPrice} style={{paddingBottom:30, paddingLeft: 15,}}>Options: {'\n'}{item.options[0].name}{': '}{item.options[0].product_option_value[0].name}</Text>
+// 			);
+// 		}
+console.info(this.state.optionName.length)
+			if (this.state.optionName.length > 0) {			
+				return (
+					<View style={{ flexDirection: 'row', flexWrap: 'wrap', marginLeft: 10,alignItems:'center'}} >
+						<Text style={{fontSize:18,}}>{this.state.optionName}</Text>
+						{
+							this.state.optionItems.map((item, key) =>
+								(
+									<OptionButton key={key} button={item} style={{height:30, color:'yellow'}} onClick={this.changeActiveRadioButton.bind(this, key)} />
+								))
+						}
+					</View>
+				);
+			}
 	}
-	
+
+  changeActiveRadioButton(index) {
+    this.state.optionItems.map((item) => {
+      item.selected = false;
+    });
+
+    this.state.optionItems[index].selected = true;
+
+    this.setState({ optionItems: this.state.optionItems }, () => {
+      this.setState({ 
+      	selectedItem: this.state.optionItems[index].name,
+      	optionSelected: this.state.optionItems[index] 
+      });
+    });
+  }
+  
 	renderLeft() {
 			const {navigate} = this.props.navigation
 			return (
@@ -290,6 +369,7 @@ export default class ProductScreen extends Component {
 // 						thumb: this.state.dataSource.thumb,
 // 					}]
 // 			})
+console.warn('selected: '+ JSON.stringify(this.state.optionSelected))
 			return(
 
 				<View style={styles.container}>
@@ -353,15 +433,15 @@ export default class ProductScreen extends Component {
 							</View>
 								<View style={styles.testBox} >
 									<Text allowFontScaling={false} style={styles.sectionTitle} >{item.heading_title}</Text>
-									<Text allowFontScaling={false} style={styles.sectionPrice} >{item.manufacturer}</Text>
+									<Text allowFontScaling={false} style={styles.rowPrice} >{item.manufacturer}</Text>
 									<Text allowFontScaling={false} style={styles.sectionPrice} >{item.price}</Text>
-									{this.renderOptions(item)}
+									{this.renderOptions(this.state.optionItems)}
+
 									<View style={styles.decriptionContainer} >
 										<HTML
-											html={item.description}
-											ignoredTags={[ ...IGNORED_TAGS, 'blockquote', 'h1', 'br']}
-											containerStyle={{padding: 10}}
-											ignoredStyles={['font-family','margin-bottom','font-size','outline']}
+											html={item.description?item.description:'No description.'}
+											containerStyle={{paddingLeft:5, paddingRight:5, paddingBottom:15}}
+											ignoredStyles={['height', 'width', 'font-family', 'letter-spacing', 'font-style', 'font-variant', 'font-weight', 'font-stretch', 'line-height']}
 											allowFontScaling={false}
 										/>
 									</View>
@@ -464,6 +544,7 @@ const styles = StyleSheet.create({
   },
   sectionTitle: {
     fontSize: 24,
+    fontFamily: 'Gotham Bold',
     fontWeight: 'bold',
     color: Colors.black,
     marginLeft: 8,
@@ -477,10 +558,11 @@ const styles = StyleSheet.create({
   },
   sectionPrice: {
     marginLeft: 8,
-    marginBottom: 10,
+    marginBottom: 5,
+    fontFamily: 'Gotham Bold',
     fontSize: 18,
     fontWeight: '800',
-    color: 'green',
+    color: 'black',
   },
   highlight: {
     fontWeight: '700',
@@ -598,9 +680,9 @@ const styles = StyleSheet.create({
         paddingRight: 10,
     },
     rowPrice: {
-        color: '#3f3f3f',
-        fontSize: 13,
-        paddingRight: 10,
+        fontFamily: 'Gotham Bold',
+        fontSize: 15,
+        paddingLeft: 8,
         color: 'green',
     },
     rowTime: {
@@ -616,28 +698,10 @@ const styles = StyleSheet.create({
     },
     descriptionContainer: {
     	paddingLeft: 10,
-        flexGrow: 1,
-        alignItems: "center",
+			flexGrow: 1,
+			alignItems: "center",
+			paddingBottom: 20,
     },
-    ul: {
-    	marginTop: 10,
-    	marginBottom: 10,
-    	paddingTop: 10,
-    	paddingBottom: 0,
-    	paddingLeft: 5,
-    	fontSize: 14,
-    },
-    li: {
-    	paddingTop: 0,
-    	paddingBottom: 0,
-    	paddingLeft: 5,
-			fontSize: 14,
-    },
-		p: {
-				marginTop: 5,
-				marginBottom: 0,
-				paddingLeft: 10,
-		},
 		footerBar: {
 			left: 0,
 			bottom: 0,
