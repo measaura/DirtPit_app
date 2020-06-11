@@ -4,7 +4,7 @@ import * as RNLocalize from 'react-native-localize'
 import DeviceInfo from 'react-native-device-info'
 
 // var base_url = 'http://192.168.0.100:8000/api'
-var base_url = 'http://iot.adamana.my/api'
+var base_url = 'https://demo.shortcircuitworks.com/dirtpit23/index.php?route='
 var tz = RNLocalize.getTimeZone()
 let iPhoneX = DeviceInfo.hasNotch()
 
@@ -82,15 +82,17 @@ export default API = {
 
     // all api declare here
 
-    login(email, password) {
+    login(data) {
+    console.log(data)
         return new Promise(resolve => {
-            this.fetchHandler('POST', base_url + '/login', {
-                email: email,
-                password: password,
-            }).then(([code, response]) => {
+            this.fetchHandlerMultiPart('POST', base_url + 'api/userlogin', data).then(
+            	([code, response]) => {
                 if (code === 200) {
-                    AsyncStorage.setItem('tokenKey', response.access_token)
-                    resolve(response)
+                console.log(response)
+                    if (!response.error_warning){
+											AsyncStorage.setItem('tokenKey', response.access_token)
+											resolve(response)
+                    }
                 } else if (code === 401) {
                     alert('Wrong email or password!')
                 }
@@ -100,7 +102,7 @@ export default API = {
 
     logout() {
         return new Promise(resolve => {
-            this.fetchHandler('POST', base_url + '/update', {
+            this.fetchHandler('POST', base_url + 'api/userlogout', {
                 device_token: '-',
             }).then(([code, response]) => {
                 if (code === 200) {
@@ -113,7 +115,7 @@ export default API = {
 
     userDetail() {
         return new Promise(resolve => {
-            this.fetchHandler('GET', base_url + '/details').then(
+            this.fetchHandler('GET', base_url + 'api/userdetail').then(
                 ([code, response]) => {
                     if (code === 200) {
                         resolve(response)

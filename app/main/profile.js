@@ -35,7 +35,7 @@ export default class Profile extends React.Component {
     }
 
     handleTabFocus = () => {
-        this4.connectAPI();
+//         this4.connectAPI();
     };
 
     componentDidMount() {
@@ -55,7 +55,7 @@ export default class Profile extends React.Component {
     connectAPI() {
         API.userDetail().then(response => {
             data = response.items;
-            // console.log(data);
+            console.log(data);
             this.setState({
                 fetchedName: data.name,
                 fetchedEmail: data.email,

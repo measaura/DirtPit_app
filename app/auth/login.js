@@ -8,6 +8,7 @@ import {
     TextInput,
     Alert,
     Platform,
+    Dimensions,
     ActivityIndicator,
 } from 'react-native'
 import AsyncStorage from '@react-native-community/async-storage'
@@ -18,6 +19,8 @@ import {Permissions, request} from 'react-native-permissions'
 import firebase from 'react-native-firebase'
 import API from '../helper/APIController'
 
+const {width, height} = Dimensions.get('window')
+
 export default class Login extends React.Component {
     constructor(props) {
         super(props)
@@ -26,6 +29,7 @@ export default class Login extends React.Component {
             passwordfield: '',
             fcm_token: '',
             tokenKey: '',
+            customerId: '',
             visible: false,
             isLogin: false,
         }
@@ -208,12 +212,13 @@ export default class Login extends React.Component {
     }
 
     componentDidMount() {
-        AsyncStorage.getItem('isLocationSet', (err, value) => {
-            if (!err && value != null) {
-            } else {
-                this.requestLocation()
-            }
-        })
+//         AsyncStorage.getItem('isLocationSet', (err, value) => {
+//             if (!err && value != null) {
+//             } else {
+//                 this.requestLocation()
+//             }
+//         })
+// 				this.requestCall()
         this.setState({
             visible: !this.state.visible,
         })
@@ -247,6 +252,7 @@ export default class Login extends React.Component {
     }
 
     proceedLogin() {
+        const {navigate} = this.props.navigation
         const {
             state: {params},
         } = this.props.navigation
@@ -258,10 +264,18 @@ export default class Login extends React.Component {
         } else if (passwordfieldpassed === '') {
             Alert.alert('Please enter your password.')
         } else {
-            API.login(emailfieldpassed, passwordfieldpassed).then(response => {
-                this.setState({isLogin: true})
-                this.setState({tokenKey: response.access_token})
+        const formData = new FormData();
+
+        formData.append("email", emailfieldpassed);
+        formData.append("password", passwordfieldpassed);
+            API.login(formData).then(response => {
+                this.setState({
+                		isLogin: true,
+                		tokenKey: response.access_token,
+                })
+                AsyncStorage.setItem('customerId', response.customer_id)
                 this.fetchProfile()
+								navigate('Home', {prevScreenTitle: 'Home'})
             })
         }
     }
@@ -347,18 +361,21 @@ export default class Login extends React.Component {
                         backgroundColor: '#fff',
                         justifyContent: 'center',
                     }}>
-                    <ActivityIndicator size="large" color="#C40D42" />
+                    <ActivityIndicator size="large" color="yellow" />
                 </View>
             )
         } else {
             return (
                 <View style={styles.container}>
+                	<View style={{justifyContent:'center', height:200, width:width, backgroundColor:'black'}} >
                     <View style={styles.headerLogo}>
                         <Image
-                            source={require('../NewAppScreen/components/logo.png')}
+                            source={require('../../app/images/dirtpit-logo.png')}
                             style={styles.headerImg}
                         />
                     </View>
+                	</View>
+
                     <View style={styles.wrapField}>
                         <Image
                             source={require('../images/icoEmail.png')}
@@ -375,7 +392,7 @@ export default class Login extends React.Component {
                             style={styles.inputStyles}
                             placeholder="Email"
                             underlineColorAndroid="transparent"
-                            placeholderTextColor="#a0abba"
+                            placeholderTextColor="dark-grey"
                             keyboardType="email-address"
                             returnKeyType="next"
                         />
@@ -397,7 +414,7 @@ export default class Login extends React.Component {
                             style={styles.inputStyles}
                             placeholder="Password"
                             underlineColorAndroid="transparent"
-                            placeholderTextColor="#a0abba"
+                            placeholderTextColor="dark-grey"
                         />
                     </View>
                     <TouchableOpacity
@@ -412,7 +429,7 @@ export default class Login extends React.Component {
                         onPress={() =>
                             navigate('Register', {screen: 'Register'})
                         }>
-                        <Text style={styles.signUpButton}>SIGN UP NOW</Text>
+                        <Text style={styles.signUpButton}>REGISTER</Text>
                     </TouchableOpacity>
                 </View>
             )
@@ -423,17 +440,14 @@ export default class Login extends React.Component {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#fafafa',
+        backgroundColor: 'white',
         alignItems: 'center',
     },
     headerLogo: {
-        marginTop: 150,
-        marginRight: 30,
-        marginLeft: 30,
-        marginBottom: 50,
         alignSelf: 'center',
-        height: 48,
+        height: 55,
         width: 300,
+        backgroundColor:'black',
     },
     headerImg: {
         flex: 1,
@@ -466,7 +480,7 @@ const styles = StyleSheet.create({
     },
     signInBut: {
         marginTop: 30,
-        backgroundColor: '#000',
+        backgroundColor: 'yellow',
         height: 50,
         borderRadius: 25,
         alignSelf: 'stretch',
@@ -476,8 +490,9 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     signInText: {
+    		fontFamily: 'Gotham Bold',
         fontSize: 16,
-        color: '#ffffff',
+        color: 'black',
     },
     doesntText: {
         marginTop: 30,
@@ -486,7 +501,8 @@ const styles = StyleSheet.create({
     },
     signUpButton: {
         marginTop: 8,
+        fontFamily: 'Gotham Bold',
         fontSize: 16,
-        color: '#c40d42',
+        color: 'black',
     },
 })
