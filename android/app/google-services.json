@@ -8,6 +8,43 @@
   "client": [
     {
       "client_info": {
+        "mobilesdk_app_id": "1:737191230040:android:2e17b4efd13871b0a6a82d",
+        "android_client_info": {
+          "package_name": "com.dirtpit_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "737191230040-0j2uvsb06mlanmtgegsp3tu5okjndvrd.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.dirtpit_app",
+            "certificate_hash": "186c67b25ef8e6a8df2621e0383e86e383f249b5"
+          }
+        },
+        {
+          "client_id": "737191230040-qejg7e7aauqrhu1bj3dovkku09folp9s.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAgh39I965um8pn3HT6XToZIoiktbPTi4s"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "737191230040-qejg7e7aauqrhu1bj3dovkku09folp9s.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
         "mobilesdk_app_id": "1:737191230040:android:82ccf5e4bebee01fa6a82d",
         "android_client_info": {
           "package_name": "com.ftwracing"

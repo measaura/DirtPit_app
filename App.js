@@ -11,6 +11,7 @@ import {
   SafeAreaView,
   StyleSheet,
   ScrollView,
+  Alert,
   View,
   Text,
   StatusBar,
@@ -32,6 +33,7 @@ import {createStackNavigator} from 'react-navigation-stack'
 import {createBottomTabNavigator} from 'react-navigation-tabs'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
+import firebase from 'react-native-firebase'
 
 
 import Login from './app/auth/login'
@@ -94,7 +96,14 @@ class AuthLoadingScreen extends React.Component {
     }
 }
 
-
+const defaultChannel = new firebase.notifications.Android.Channel(
+    'default-channel',
+    'Default Notification',
+    firebase.notifications.Android.Importance.High,
+	)
+	.setDescription('Default notification for general information')
+	.setSound('default')
+    
 const AuthStack = createStackNavigator(
     {
         Login: Login,
@@ -216,6 +225,173 @@ const AppContainer = createAppContainer(AppDefault)
 
 
 export default class App extends Component {
+    async componentDidMount() {
+        // Create the channel
+        firebase
+            .notifications()
+            .android.createChannels([
+                defaultChannel,
+            ])
+        // 		this.checkUserSignedIn();
+        // 		this.checkPermission();
+        this.createNotificationListeners()
+    }
+
+    componentWillUnmount() {
+        // 		this.notificationListener();
+        this.notificationOpenedListener()
+    }
+
+    async createNotificationListeners() {
+        /*
+         * Triggered when a particular notification has been received in foreground
+         * */
+        this.notificationListener = firebase
+            .notifications()
+            .onNotification(notification => {
+                console.log('onNotification')
+                console.log('Title: ', notification.title)
+//                 if (notification.title == 'Notification') {
+                    notification.android.setChannelId('default-channel')
+//                 }//  else if (notification.title == 'SOS!') {
+//                     notification.android.setChannelId('sos-channel')
+//                 } else if (notification.title == 'Safe Zone') {
+//                     notification.android.setChannelId('safezone-channel')
+//                 }
+                notification.android.setSmallIcon('ic_launcher_foreground')
+
+                const {title, body} = notification
+                console.log(notification)
+
+                firebase.notifications().displayNotification(notification)
+                //       this.showAlert(title, body);
+            })
+
+        /*
+         * If your app is in background, you can listen for when a notification is clicked / tapped / opened as follows:
+         * */
+        this.notificationOpenedListener = firebase
+            .notifications()
+            .onNotificationOpened(notificationOpen => {
+                console.log('onNotificationOpened')
+                const {title, body} = notificationOpen.notification
+//                 firebase.notifications().displayNotification(notificationOpen)
+                      this.showAlert(title, body);
+            })
+
+        /*
+         * If your app is closed, you can check if it was opened by a notification being clicked / tapped / opened as follows:
+         * */
+        const notificationOpen = await firebase
+            .notifications()
+            .getInitialNotification()
+        console.log('getInitialNotification')
+        if (notificationOpen) {
+            const {title, body} = notificationOpen.notification
+        }
+        /*
+         * Triggered for data only payload in foreground
+         * */
+        // 		this.messageListener = firebase.messaging().onMessage((message) => {
+        // 		console.log("App.js onMessage");
+        // 			//process data message
+        // 			console.log(JSON.stringify(message));
+        // 		});
+
+        // Temporary solution using onMessage for foreground data only message from server.
+        // To remove and use Notification on both server and app.
+
+        this.messageListener = firebase.messaging().onMessage(message => {
+            console.log('App.js METHOD: onMessage')
+            // Process your message as required
+            console.log('message: ', message)
+
+            const newNotification = new firebase.notifications.Notification()
+                .setNotificationId(message.messageId)
+                .setTitle(message.data.title)
+                .setBody(message.data.body)
+                .setData(message.data)
+                .android.setSmallIcon('ic_notif')
+
+            if (message.data.bigpic) {
+                newNotification.android.setBigPicture(
+                    message.data.bigpic,
+                    message.data.lgicon,
+                    message.data.title,
+                    message.data.bigsummary,
+                )
+            }
+            //.android.setChannelId('default-channel')
+            if (Platform.OS === 'android') {
+                newNotification
+                    .setSound('default')
+                    .android.setChannelId('default-channel')
+            } else {
+                newNotification.setSound('default')
+            }
+
+            if (message.data.title === 'SOS!') {
+                if (Platform.OS === 'android') {
+                    newNotification
+                        .setSound(sosChannel.sound)
+                        .android.setChannelId(sosChannel.channelId)
+                } else {
+                    newNotification.setSound('sos.wav')
+                }
+            }
+            
+            if (message.data.title === 'ALERT!') {
+                if (Platform.OS === 'android') {
+                    newNotification
+                        .setSound(sosChannel.sound)
+                        .android.setChannelId(geofenceChannel.channelId)
+                } else {
+                    newNotification.setSound('geofence.wav')
+                }
+            }
+
+            if (message.data.bigpic) {
+                newNotification.android.setBigPicture(
+                    message.data.bigpic,
+                    message.data.lgicon,
+                    message.data.title,
+                    message.data.bigsummary,
+                )
+            }
+            if (message.data.lgicon) {
+                newNotification.android.setLargeIcon(message.data.lgicon)
+            }
+            if (message.data.color) {
+                newNotification.android.setColor(message.data.color)
+            }
+
+            console.log(
+                'App.js displayNotification foreground:',
+                newNotification,
+            )
+
+            if (
+                message.data.title === 'SOS!' ||
+                message.data.title === 'ALERT!' ||
+                message.data.title === 'Notification' ||
+                message.data.title === 'Device Manager' ||
+                message.data.title === 'RequestMonitor'
+            ) {
+                firebase.notifications().displayNotification(newNotification)
+            }
+        })
+        // end onMessage
+    }
+
+    showAlert(title, body) {
+        Alert.alert(
+            title,
+            body,
+            [{text: 'OK', onPress: () => console.log('OK Pressed')}],
+            {cancelable: false},
+        )
+    }
+    
 	render(){
 		return (
 					<AppContainer />

@@ -153,63 +153,63 @@ export default class Login extends React.Component {
         )
     }
     
-    _askPermission() {
-    console.log('ask permission')
-            firebase
-                .messaging()
-                .hasPermission()
-                .then(enabled => {
-//                     if (enabled) {
+//     _askPermission() {
+//     console.log('ask permission')
+//             firebase
+//                 .messaging()
+//                 .hasPermission()
+//                 .then(enabled => {
+// //                     if (enabled) {
+// //                         firebase
+// //                             .messaging()
+// //                             .getToken()
+// //                             .then(token => {
+// //                                 console.log('login.js FCM TOKEN: ', token)
+// //                                 this.setState({fcm_token: token})
+// //                                 this.updateProfile(response)
+// //                             })
+// //                         // user has permissions
+// //                     } else {
 //                         firebase
 //                             .messaging()
-//                             .getToken()
-//                             .then(token => {
-//                                 console.log('login.js FCM TOKEN: ', token)
-//                                 this.setState({fcm_token: token})
-//                                 this.updateProfile(response)
+//                             .requestPermission()
+//                             .then(() => {
+//                                 console.log('User Now Has Permission')
+//                                 firebase
+//                                     .messaging()
+//                                     .getToken()
+//                                     .then(token => {
+//                                         console.log(
+//                                             'login.js FCM TOKEN: ',
+//                                             token,
+//                                         )
+//                                         this.setState({fcm_token: token})
+//                                         this.updateProfile(response)
+//                                     })
 //                             })
-//                         // user has permissions
-//                     } else {
-                        firebase
-                            .messaging()
-                            .requestPermission()
-                            .then(() => {
-                                console.log('User Now Has Permission')
-                                firebase
-                                    .messaging()
-                                    .getToken()
-                                    .then(token => {
-                                        console.log(
-                                            'login.js FCM TOKEN: ',
-                                            token,
-                                        )
-                                        this.setState({fcm_token: token})
-                                        this.updateProfile(response)
-                                    })
-                            })
-                            .catch(error => {
-                                console.log('Error', error)
-                                // User has rejected permissions
-// 																Alert.alert(
-// 																		'Limited functionality warning.',
-// 																		'You might not get the full experience from this app if you disallow notifications. Are you sure to continue?',
-// 																		[
-// 																				{
-// 																						text: 'No',
-// 																						onPress: () => this._askPermission(),
-// 																						style: 'cancel',
-// 																				},
-// 																				{
-// 																						text: 'Okay',
-// 																						onPress: () => this.updateProfile(response),
-// 																						style: 'cancel',
-// 																				},
-// 																		],
-// 																)
-                            })
-//                     }
-                })
-    }
+//                             .catch(error => {
+//                                 console.log('Error', error)
+//                                 // User has rejected permissions
+// // 																Alert.alert(
+// // 																		'Limited functionality warning.',
+// // 																		'You might not get the full experience from this app if you disallow notifications. Are you sure to continue?',
+// // 																		[
+// // 																				{
+// // 																						text: 'No',
+// // 																						onPress: () => this._askPermission(),
+// // 																						style: 'cancel',
+// // 																				},
+// // 																				{
+// // 																						text: 'Okay',
+// // 																						onPress: () => this.updateProfile(response),
+// // 																						style: 'cancel',
+// // 																				},
+// // 																		],
+// // 																)
+//                             })
+// //                     }
+//                 })
+//     }
 
     componentDidMount() {
 //         AsyncStorage.getItem('isLocationSet', (err, value) => {
@@ -234,7 +234,7 @@ export default class Login extends React.Component {
         try {
             let value = await AsyncStorage.getItem('tokenKey')
             if (value != null) {
-                navigate('UserDetail', {prevScreenTitle: 'UserDetail'})
+                navigate('Home', {prevScreenTitle: 'Home'})
                 setTimeout(
                     function() {
                         this.setState({
@@ -292,7 +292,7 @@ export default class Login extends React.Component {
                             .messaging()
                             .getToken()
                             .then(token => {
-                                console.log('login.js FCM TOKEN: ', token)
+                                console.log('login.js fetchProfile FCM TOKEN: ', token)
                                 this.setState({fcm_token: token})
                                 this.updateProfile(response)
                             })
@@ -342,11 +342,12 @@ export default class Login extends React.Component {
 
     updateProfile(responseData) {
         const {navigate} = this.props.navigation
-        let dataToShow = responseData.items
+        let dataToShow = responseData
+        console.log(this.state.fcm_token)
         dataToShow.fcm_token = this.state.fcm_token
         API.userUpdate(dataToShow).then(_ => {
             this.setState({isLogin: false})
-            navigate('UserDetail', {prevScreenTitle: 'UserDetail'})
+            navigate('Home', {prevScreenTitle: 'Home'})
         })
         console.log('Profile Updated')
     }
