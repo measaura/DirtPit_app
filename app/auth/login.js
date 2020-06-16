@@ -269,11 +269,13 @@ export default class Login extends React.Component {
         formData.append("email", emailfieldpassed);
         formData.append("password", passwordfieldpassed);
             API.login(formData).then(response => {
+            console.log('API.login',response)
                 this.setState({
                 		isLogin: true,
                 		tokenKey: response.access_token,
                 })
                 AsyncStorage.setItem('customerId', response.customer_id)
+                AsyncStorage.setItem('tokenKey', response.access_token)
                 this.fetchProfile()
 								navigate('Home', {prevScreenTitle: 'Home'})
             })
@@ -282,7 +284,12 @@ export default class Login extends React.Component {
 
     fetchProfile() {
         console.log('fetch profile')
-        API.userDetail().then(response => {
+        const formData = new FormData();
+
+        formData.append("access_token", this.state.tokenKey);
+
+        API.userDetail(formData).then(response => {
+        console.log('fetchprofile log:',response)
             firebase
                 .messaging()
                 .hasPermission()
@@ -343,7 +350,7 @@ export default class Login extends React.Component {
     updateProfile(responseData) {
         const {navigate} = this.props.navigation
         let dataToShow = responseData
-        console.log(this.state.fcm_token)
+//         console.log(this.state.fcm_token)
         dataToShow.fcm_token = this.state.fcm_token
         API.userUpdate(dataToShow).then(_ => {
             this.setState({isLogin: false})

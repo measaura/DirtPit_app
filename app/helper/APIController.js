@@ -113,11 +113,13 @@ export default API = {
         })
     },
 
-    userDetail() {
+    userDetail(data) {
+    console.log('userDetail',data)
         return new Promise(resolve => {
-            this.fetchHandler('GET', base_url + 'api/userdetail').then(
+            this.fetchHandlerMultiPart('POST', base_url + 'api/userdetail',data).then(
                 ([code, response]) => {
                     if (code === 200) {
+                    console.log('userDetail response',response)
                         resolve(response)
                     }
                 },
@@ -126,17 +128,28 @@ export default API = {
     },
 
     userUpdate(data) {
+//     console.log('userUpdate',data)
+			const dataForm = new FormData();
+			if(data.firstname){
+				dataForm.append("firstname", data.firstname);
+			}
+			if(data.lastname){
+				dataForm.append("lastname", data.lastname);
+			}
+			if(data.email){
+				dataForm.append("email", data.email);			
+			}
+			if(data.telephone){
+				dataForm.append("telephone", data.telephone);
+			}
+			if(data.fcm_token){
+				dataForm.append("fcm_token" ,data.fcm_token);
+			}
         return new Promise(resolve => {
-            this.fetchHandler('POST', base_url + '/update', {
-                name: data.name,
-                phone: data.phone,
-                email: data.email,
-                device_token: data.fcm_token,
-                platform: Platform.OS,
-                timezone: tz,
-            }).then(([code, response]) => {
+            this.fetchHandlerMultiPart('POST', base_url + 'api/userupdate',data).then(([code, response]) => {
                 console.log('success userUpdate')
                 if (code === 200) {
+                console.log('userUpdate response',response)
                     resolve(response)
                 }
             })
