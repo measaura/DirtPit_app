@@ -258,7 +258,8 @@ export default class App extends Component {
 //                 } else if (notification.title == 'Safe Zone') {
 //                     notification.android.setChannelId('safezone-channel')
 //                 }
-                notification.android.setSmallIcon('ic_launcher_foreground')
+                notification.android.setSmallIcon('ic_notif')
+                 notification.android.setColor('#0600FF')
 
                 const {title, body} = notification
                 console.log(notification)
@@ -273,10 +274,11 @@ export default class App extends Component {
         this.notificationOpenedListener = firebase
             .notifications()
             .onNotificationOpened(notificationOpen => {
-                console.log('onNotificationOpened')
+                console.log('onBackgroundNotificationOpened')
                 const {title, body} = notificationOpen.notification
-//                 firebase.notifications().displayNotification(notificationOpen)
+//                 firebase.notifications().displayNotification(JSON.stringify(notificationOpen))
                       this.showAlert(title, body);
+								firebase.notifications().removeAllDeliveredNotifications()
             })
 
         /*
@@ -284,11 +286,18 @@ export default class App extends Component {
          * */
         const notificationOpen = await firebase
             .notifications()
-            .getInitialNotification()
-        console.log('getInitialNotification')
-        if (notificationOpen) {
-            const {title, body} = notificationOpen.notification
-        }
+            .getInitialNotification(notificationOpen => {
+							console.log('getInitialNotification: app closed')
+            	 const {title, body} = notificationOpen.notification
+            	 this.showAlert(title, body)
+            })
+//         console.log('getInitialNotification: app closed')
+//         if (notificationOpen) {
+//             const {title, body} = notificationOpen.notification
+//         }
+
+				firebase.notifications().removeAllDeliveredNotifications()
+
         /*
          * Triggered for data only payload in foreground
          * */
@@ -329,26 +338,26 @@ export default class App extends Component {
             } else {
                 newNotification.setSound('default')
             }
-
-            if (message.data.title === 'SOS!') {
-                if (Platform.OS === 'android') {
-                    newNotification
-                        .setSound(sosChannel.sound)
-                        .android.setChannelId(sosChannel.channelId)
-                } else {
-                    newNotification.setSound('sos.wav')
-                }
-            }
-            
-            if (message.data.title === 'ALERT!') {
-                if (Platform.OS === 'android') {
-                    newNotification
-                        .setSound(sosChannel.sound)
-                        .android.setChannelId(geofenceChannel.channelId)
-                } else {
-                    newNotification.setSound('geofence.wav')
-                }
-            }
+// 
+//             if (message.data.title === 'SOS!') {
+//                 if (Platform.OS === 'android') {
+//                     newNotification
+//                         .setSound(sosChannel.sound)
+//                         .android.setChannelId(sosChannel.channelId)
+//                 } else {
+//                     newNotification.setSound('sos.wav')
+//                 }
+//             }
+//             
+//             if (message.data.title === 'ALERT!') {
+//                 if (Platform.OS === 'android') {
+//                     newNotification
+//                         .setSound(sosChannel.sound)
+//                         .android.setChannelId(geofenceChannel.channelId)
+//                 } else {
+//                     newNotification.setSound('geofence.wav')
+//                 }
+//             }
 
             if (message.data.bigpic) {
                 newNotification.android.setBigPicture(
@@ -370,15 +379,15 @@ export default class App extends Component {
                 newNotification,
             )
 
-            if (
-                message.data.title === 'SOS!' ||
-                message.data.title === 'ALERT!' ||
-                message.data.title === 'Notification' ||
-                message.data.title === 'Device Manager' ||
-                message.data.title === 'RequestMonitor'
-            ) {
+//             if (
+//                 message.data.title === 'SOS!' ||
+//                 message.data.title === 'ALERT!' ||
+//                 message.data.title === 'Notification' ||
+//                 message.data.title === 'Device Manager' ||
+//                 message.data.title === 'RequestMonitor'
+//             ) {
                 firebase.notifications().displayNotification(newNotification)
-            }
+//             }
         })
         // end onMessage
     }

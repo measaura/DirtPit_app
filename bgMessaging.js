@@ -16,15 +16,15 @@ export default async (message: RemoteMessage) => {
     console.log("bgMessaging RemoteMessage", message);
 
     // Build a channel
-      const sosChannel = new firebase.notifications.Android.Channel('sos-channel', 'SOS Channel', firebase.notifications.Android.Importance.High)
-          .setDescription('SOS Alert Channel')
-          .setSound('sos.wav');
+//       const sosChannel = new firebase.notifications.Android.Channel('sos-channel', 'SOS Channel', firebase.notifications.Android.Importance.High)
+//           .setDescription('SOS Alert Channel')
+//           .setSound('sos.wav');
       const defaultChannel = new firebase.notifications.Android.Channel('default-channel', 'Default Channel', firebase.notifications.Android.Importance.Default)
           .setDescription('Default Notification Channel')
           .setSound('default');
 
       // Create the channel
-      firebase.notifications().android.createChannels([sosChannel,defaultChannel]);
+      firebase.notifications().android.createChannels(defaultChannel);
 
     const newNotification = new firebase.notifications.Notification()
         .setNotificationId(message.messageId)
@@ -87,9 +87,9 @@ export default async (message: RemoteMessage) => {
 	}
   
     console.log("bgMessaging newNotification: ", newNotification)
-			if ((message.data.title === 'SOS!')||(message.data.title === 'Notification')||(message.data.title === 'Device Manager')||(message.data.title === 'RequestMonitor')) {
+// 			if ((message.data.title === 'SOS!')||(message.data.title === 'Notification')||(message.data.title === 'Device Manager')||(message.data.title === 'RequestMonitor')) {
             	firebase.notifications().displayNotification(newNotification)
-            }
+//             }
 
 
     return Promise.resolve();
