@@ -53,13 +53,15 @@ export default class Profile extends React.Component {
     }
 
     connectAPI() {
-        API.userDetail().then(response => {
-            data = response.items;
-            console.log(data);
+  
+    	const dataForm = new FormData();
+    	dataForm.append("access_token", this.state.tokenKey)
+        API.userDetail(dataForm).then(response => {
+            data = response;
             this.setState({
-                fetchedName: data.name,
+                fetchedName: data.firstname+' '+data.lastname,
                 fetchedEmail: data.email,
-                fetchedPhone: data.phone
+                fetchedPhone: data.telephone
             });
 
             if (data.imgUrl) {
@@ -98,9 +100,10 @@ export default class Profile extends React.Component {
         return true;
     }
 
-    renderCenter() {
-        return <Text style={styles.headerNavTitle}>PROFILE</Text>;
-    }
+	renderCenter() {
+			return <Image source={require('../images/dirtpit-logo-181x43.png')} />
+	}
+
     renderRight() {
         const { navigate } = this.props.navigation;
         return (
@@ -147,36 +150,33 @@ export default class Profile extends React.Component {
     render() {
         return (
             <View style={styles.container}>
-                <Header
-                    innerContainerStyles={styles.headerInnerContainer}
-                    centerContainerStyle={styles.headerInnerContainer}
-                    outerContainerStyles={styles.headerOuterContainer}
-                    centerComponent={this.renderCenter()}
-                    rightComponent={this.renderRight()}
-                        containerStyle={{
-													backgroundColor: '#fff',
-													marginTop:  Platform.OS == "ios" ? (iPhoneX ? 20 : 0) : -10,
-													top: Platform.OS == "ios" ? (iPhoneX ? -15 : 0) : -5,
-													height: 70
-												}}
-                />
+						<Header
+								innerContainerStyles={styles.headerInnerContainer}
+								outerContainerStyles={styles.headerOuterContainer}
+								centerComponent={this.renderCenter()}
+								rightComponent={this.renderRight()}
+								containerStyle={{
+										backgroundColor: '#000',
+										marginTop:
+												Platform.OS == 'ios' ? 0 : -20,
+										top:
+												Platform.OS == 'ios' ? (notch ? -10 : 0) : 0,
+										height: Platform.OS == 'ios' ? (notch ? 90 : 0) : 70,
+								}}
+						/>
                 <ScrollView
                     style={styles.scrollStyle}
                     contentContainerStyle={styles.scrollContent}
                 >
                     <View style={styles.headerWrap}>
-                        {this.renderHeaderImg()}
                         <Text style={styles.headerName}>
                             {this.state.fetchedName}
-                            Demo Name
                         </Text>
                         <Text style={styles.headerEmail}>
                             {this.state.fetchedEmail}
-                            demo@email.com
                         </Text>
                         <Text style={styles.headerEmail}>
                             {this.state.fetchedPhone}
-                            01223456789
                         </Text>
                     </View>
 										<Image
@@ -212,7 +212,7 @@ const styles = StyleSheet.create({
         top: 60
     },
     doneButton: {
-        color: "#000",
+        color: "yellow",
         fontSize: 18,
     },
     headerOuterContainer: {
@@ -243,7 +243,7 @@ const styles = StyleSheet.create({
         alignItems: "center"
     },
     headerWrap: {
-        height: 220,
+        height: 100,
         backgroundColor: "#0c0c0c",
         alignSelf: "stretch",
         justifyContent: "center",
@@ -259,10 +259,12 @@ const styles = StyleSheet.create({
     },
     headerName: {
         color: "#ffffff",
+        fontFamily: 'Gotham Bold',
         fontSize: 18,
     },
     headerEmail: {
         color: "#ffffff",
+        fontFamily: 'Gotham Bold',
         fontSize: 14,
     },
     logOutBut: {
@@ -274,6 +276,7 @@ const styles = StyleSheet.create({
     },
     logOutButText: {
         color: "#000",
+        fontFamily: 'Gotham Bold',
         fontSize: 18,
         textAlign: "center"
     }
