@@ -199,6 +199,38 @@ export default class ProductScreen extends Component {
 				 cart.push(itemcart)
 				 AsyncStorage.setItem('cart',JSON.stringify(cart));
 			 }
+			 
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+				let mySession = AsyncStorage.getItem('tokenKey');
+				var formdata = new FormData();
+				formdata.append(data.product_id);
+				formdata.append(data.quanitiy);
+				
+				
+				var myHeaders = new Headers();
+				myHeaders.append("Cookie", "language=en-gb;");
+				myHeaders.append("Cookie", "default="+mySession+";");
+				console.log(AsyncStorage.getItem('tokenKey'))
+				console.log(myHeaders)
+
+				var requestOptions = {
+					method: 'POST',
+					headers: myHeaders,
+					body: formdata,
+					redirect: 'follow'
+				};
+
+				fetch("https://demo.shortcircuitworks.com/dirtpit23/index.php?route=api/usercart/add", requestOptions)
+					.then(response => response.text())
+					.then(result =>{
+						console.log(result)
+// 						if (result.firstname) {
+// 							console.log(result.firstname)
+// 						}
+					})
+					.catch(error => console.log('error', error));
+					
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++					
 				this.updateCount()
 				this.toaster(
 						'Added to cart',
@@ -285,7 +317,7 @@ export default class ProductScreen extends Component {
 // 				<Text allowFontScaling={false} style={styles.sectionPrice} style={{paddingBottom:30, paddingLeft: 15,}}>Options: {'\n'}{item.options[0].name}{': '}{item.options[0].product_option_value[0].name}</Text>
 // 			);
 // 		}
-console.info(this.state.optionName.length)
+// console.info(this.state.optionName.length)
 			if (this.state.optionName.length > 0) {			
 				return (
 					<View style={{ flexDirection: 'row', flexWrap: 'wrap', marginLeft: 10,alignItems:'center'}} >
