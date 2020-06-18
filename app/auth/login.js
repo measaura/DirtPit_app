@@ -276,6 +276,7 @@ export default class Login extends React.Component {
                 })
                 AsyncStorage.setItem('customerId', response.customer_id)
                 AsyncStorage.setItem('tokenKey', response.access_token)
+                AsyncStorage.setItem('mySession', response.access_token)
                 this.fetchProfile()
 								navigate('Home', {prevScreenTitle: 'Home'})
             })

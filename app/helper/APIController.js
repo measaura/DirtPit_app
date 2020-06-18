@@ -66,6 +66,7 @@ export default API = {
                     body: params,
                 })
                     .then(response => {
+                    	console.log('fetchHandlerMultiPart',response)
                         return Promise.all([response.status, response.json()])
                     })
                     .then(([responseCode, responseObj]) => {
