@@ -131,7 +131,7 @@ export default class HomeScreen extends React.Component {
 
 	
 	render() {
-	console.log(this.state.images['image'])
+// 	console.log('image',this.state.images['image'])
 		const {navigate} = this.props.navigation
 		return (
 			<>
