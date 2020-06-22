@@ -34,6 +34,7 @@ import {createBottomTabNavigator} from 'react-navigation-tabs'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 import firebase from 'react-native-firebase'
+import CookieManager from '@react-native-community/cookies'
 
 
 import Login from './app/auth/login'
@@ -48,6 +49,9 @@ import CategoryScreen from './app/main/shop/category'
 import ProductScreen from './app/main/shop/product'
 import DetailScreen from './app/main/shop/details'
 import CartScreen from './app/main/shop/cart'
+import CartNewScreen from './app/main/shop/cartnew'
+import CheckoutScreen from './app/main/shop/checkout'
+import PaymentScreen from './app/main/shop/payment'
 import DealersScreen from './app/main/dealers'
 import MotoGarageScreen from './app/main/motogarage'
 import BikeGarageScreen from './app/main/bikegarage'
@@ -65,8 +69,16 @@ class AuthLoadingScreen extends React.Component {
         this._bootstrapAsync()
     }
 
+
     // Fetch the token from storage then navigate to our appropriate place
     _bootstrapAsync = async () => {
+				// Get cookies for a url
+				CookieManager.get('https://demo.shortcircuitworks.com')
+					.then((cookies) => {
+						console.log('CookieManager.get =>', cookies);
+						console.log(cookies?cookies.default.value:false);
+					});
+
         const userToken = await AsyncStorage.getItem('tokenKey')
         setTimeout(() => {
             // go to Home page
@@ -131,6 +143,7 @@ const Tabs = createBottomTabNavigator(
     {
         Home: HomeScreen,
         Notifications: Notifications,
+        CartNew: CartNewScreen,
         Profile: Profile,
     },
     {
@@ -143,6 +156,8 @@ const Tabs = createBottomTabNavigator(
 									iconName = `ios-home`;
                 } else if (routeName === 'Notifications') {
                     iconName = `ios-notifications`;
+                } else if (routeName === 'CartNew') {
+                    iconName = `ios-cart`;
                 } else if (routeName === 'Profile') {
                     iconName = `ios-person`;
                 } 
@@ -183,6 +198,9 @@ const AppModalStack = createStackNavigator(
         Cafe: CafeScreen,
         Community: CommunityScreen,
         Cart: CartScreen,
+        CartNew: CartNewScreen,
+        Checkout: CheckoutScreen,
+        Payment: PaymentScreen,
 //         Slider: Slider,
 //         UserList: UserList,
 //         TrackingHistory: TrackingHistory,
