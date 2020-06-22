@@ -34,7 +34,7 @@ export default class ProductScreen extends Component {
 
 	componentDidMount(){
 	console.log(this.state.segId)
-		fetch("http://demo.shortcircuitworks.com/dirtpit23/index.php?route=api/product&category="+ this.state.catId)
+		fetch("https://demo.shortcircuitworks.com/dirtpit23/index.php?route=api/product&category="+ this.state.catId)
 			.then(response => response.json())
 			.then((responseJson)=> {
 				this.setState({
