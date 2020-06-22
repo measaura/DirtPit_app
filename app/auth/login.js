@@ -276,7 +276,8 @@ export default class Login extends React.Component {
                 })
                 AsyncStorage.setItem('customerId', response.customer_id)
                 AsyncStorage.setItem('tokenKey', response.access_token)
-                AsyncStorage.setItem('mySession', response.access_token)
+                AsyncStorage.setItem('myLogin', JSON.stringify(response))
+                AsyncStorage.setItem('myEmail', emailfieldpassed)
                 this.fetchProfile()
 								navigate('Home', {prevScreenTitle: 'Home'})
             })
@@ -367,7 +368,7 @@ export default class Login extends React.Component {
                 <View
                     style={{
                         flex: 1,
-                        backgroundColor: '#fff',
+                        backgroundColor: 'black',
                         justifyContent: 'center',
                     }}>
                     <ActivityIndicator size="large" color="yellow" />
