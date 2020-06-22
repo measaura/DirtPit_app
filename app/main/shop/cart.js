@@ -18,6 +18,7 @@ import { Header } from "react-native-elements";
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import AsyncStorage from '@react-native-community/async-storage'
 import NumberFormat from 'react-number-format'
+import { NavigationEvents } from 'react-navigation'
 import DeviceInfo from 'react-native-device-info'
 var iPhoneX = DeviceInfo.hasNotch()
 
@@ -39,8 +40,28 @@ export default class CartScreen extends Component {
      };
   }
 
-  componentDidMount()
-  {
+  componentDidMount() {
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+// 				let mySession = AsyncStorage.getItem('tokenKey');
+				var myHeaders = new Headers();
+// 				myHeaders.append("Cookie", "language=en-gb;");
+// 				myHeaders.append("Cookie", "default="+mySession+";");
+// 				myHeaders.append("Cookie", "language=en-gb; currency=MYR; PHPSESSID=473df23cb16c59c23d61cf2254bc32e0; default=ab3122bd90780f42debb797e1de4449a");
+// 				console.log(AsyncStorage.getItem('tokenKey'))
+// 				console.log(myHeaders)
+
+				var requestOptions = {
+					method: 'POST',
+					headers: myHeaders,
+					redirect: 'follow'
+				};
+
+				fetch("https://demo.shortcircuitworks.com/dirtpit23/index.php?route=api/usercart/products", requestOptions)
+					.then(response =>response.text())
+					.then(result =>console.log(result))
+					.catch(error => console.log('error', error));
+					
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++	
     AsyncStorage.getItem('cart').then((cart)=>{
       if (cart !== null) {
         // We have data!!
@@ -56,6 +77,43 @@ export default class CartScreen extends Component {
     })
   }
 
+	getCartItems() {
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+// 				let mySession = AsyncStorage.getItem('tokenKey');
+				var myHeaders = new Headers();
+// 				myHeaders.append("Cookie", "language=en-gb;");
+// 				myHeaders.append("Cookie", "default="+mySession+";");
+// 				myHeaders.append("Cookie", "language=en-gb; currency=MYR; PHPSESSID=473df23cb16c59c23d61cf2254bc32e0; default=ab3122bd90780f42debb797e1de4449a");
+// 				console.log(AsyncStorage.getItem('tokenKey'))
+// 				console.log(myHeaders)
+
+				var requestOptions = {
+					method: 'POST',
+					headers: myHeaders,
+					redirect: 'follow'
+				};
+
+				fetch("https://demo.shortcircuitworks.com/dirtpit23/index.php?route=api/usercart/products", requestOptions)
+					.then(response =>response.text())
+					.then(result =>console.log(result))
+					.catch(error => console.log('error', error));
+					
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++	
+    AsyncStorage.getItem('cart').then((cart)=>{
+      if (cart !== null) {
+        // We have data!!
+        const shopcart = JSON.parse(cart)
+        this.setState({dataCart:shopcart})
+
+
+//         AsyncStorage.getItem('cart').then((res) => console.log(res))
+      }
+    })
+    .catch((err)=>{
+      alert(err)
+    })
+  }
+  
   goBack() {
     const {  navigation, route  } = this.props;
     navigation.goBack()
@@ -96,7 +154,9 @@ export default class CartScreen extends Component {
 					/>
 
          <View style={{flex:1}}>
-
+							<NavigationEvents
+                onDidFocus={() => console.log('Refreshed')}
+              />
            <ScrollView>
 
              {
