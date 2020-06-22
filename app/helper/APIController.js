@@ -66,7 +66,7 @@ export default API = {
                     body: params,
                 })
                     .then(response => {
-                    	console.log('fetchHandlerMultiPart',response)
+//                     	console.log('fetchHandlerMultiPart',response)
                         return Promise.all([response.status, response.json()])
                     })
                     .then(([responseCode, responseObj]) => {
@@ -115,12 +115,10 @@ export default API = {
     },
 
     userDetail(data) {
-    console.log('userDetail',data)
         return new Promise(resolve => {
             this.fetchHandlerMultiPart('POST', base_url + 'api/userdetail',data).then(
                 ([code, response]) => {
                     if (code === 200) {
-                    console.log('userDetail response',response)
                         resolve(response)
                     }
                 },
@@ -148,9 +146,7 @@ export default API = {
 			}
         return new Promise(resolve => {
             this.fetchHandlerMultiPart('POST', base_url + 'api/userupdate',data).then(([code, response]) => {
-                console.log('success userUpdate')
                 if (code === 200) {
-                console.log('userUpdate response',response)
                     resolve(response)
                 }
             })
