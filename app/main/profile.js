@@ -12,6 +12,7 @@ import {
 import { Header } from "react-native-elements";
 import { StackActions, NavigationActions } from "react-navigation";
 import VersionNumber from "react-native-version-number";
+import CookieManager from '@react-native-community/cookies';
 
 import API from "../helper/APIController";
 
@@ -39,6 +40,12 @@ export default class Profile extends React.Component {
     };
 
     componentDidMount() {
+				// Get cookies for a url
+				CookieManager.get('https://demo.shortcircuitworks.com')
+					.then((cookies) => {
+						console.log('CookieManager.get =>', cookies);
+					});
+
         this.props.navigation.setParams({
             onTabFocus: this.handleTabFocus
         });
@@ -64,16 +71,16 @@ export default class Profile extends React.Component {
                 fetchedPhone: data.telephone
             });
 
-            if (data.imgUrl) {
-                this.setState({
-                    avatarCheck: "http://iot.adamana.my/uploads/",
-                    avatarContent: data.imgUrl
-                });
-            } else {
-                this.setState({
-                    avatarCheck: ""
-                });
-            }
+//             if (data.imgUrl) {
+//                 this.setState({
+//                     avatarCheck: "http://iot.adamana.my/uploads/",
+//                     avatarContent: data.imgUrl
+//                 });
+//             } else {
+//                 this.setState({
+//                     avatarCheck: ""
+//                 });
+//             }
         });
     }
 
@@ -115,6 +122,11 @@ export default class Profile extends React.Component {
 
     logout = () => {
         API.logout().then(response => {
+						// clear cookies
+						CookieManager.clearAll()
+							.then((success) => {
+								console.log('CookieManager.clearAll =>', success);
+							});
             const resetAction = StackActions.reset({
                 index: 0,
                 actions: [
