@@ -21,6 +21,7 @@ import HTML from 'react-native-render-html'
 import { IGNORED_TAGS } from 'react-native-render-html/src/HTMLUtils'
 import Toast, {DURATION} from 'react-native-easy-toast'
 import OptionButton from '../../components/optionbutton.js'
+import { NavigationEvents } from 'react-navigation'
 import DeviceInfo from 'react-native-device-info'
 var iPhoneX = DeviceInfo.hasNotch()
 
@@ -48,41 +49,9 @@ export default class ProductScreen extends Component {
 			optionSelected: [],
 			popupimg:'',
 			items:0,
+			quantity: 1,
 			prodId: this.props.navigation.state.params.prodId,
-      radioItems:
-        [
-          {
-            label: 'S',
-            size: 30,
-            color: 'grey',
-            textColor: 'black',
-            selected: false
-          },
-
-          {
-            label: 'M',
-            color: 'yellow',
-            textColor: 'black',
-            size: 30,
-            selected: false,
-          },
-
-          {
-            label: 'L',
-            size: 30,
-            color: 'yellow',
-            textColor: 'black',
-            selected: false
-          },
-
-          {
-            label: 'XL',
-            size: 30,
-            color: 'yellow',
-            textColor: 'black',
-            selected: false
-          }
-        ], 
+      radioItems:[], 
       selectedItem: ''
 		}
 		this.toaster = this.toaster.bind(this)
@@ -99,7 +68,7 @@ export default class ProductScreen extends Component {
 	componentDidMount(){
 	console.log(this.state.prodId)
 // 		fetch("http://demo.shortcircuitworks.com/dirtpit23/index.php?route=api/product&id="+this.state.prodId)
-		fetch("http://demo.shortcircuitworks.com/dirtpit23/index.php?route=api/productdetails&product_id="+this.state.prodId)
+		fetch("https://demo.shortcircuitworks.com/dirtpit23/index.php?route=api/productdetails&product_id="+this.state.prodId)
 			.then(response => response.json())
 			.then((responseJson)=> {
 				this.setState({
@@ -116,7 +85,7 @@ export default class ProductScreen extends Component {
 						prodimg: [ ...this.state.prodimg, ...responseJson.product[0].images]
 					});
 				}
-				if(responseJson.product[0].options){
+				if(responseJson.product[0].options.length > 0){
 					this.setState({
 						optionName: responseJson.product[0].options[0].name,
 						optionItems: responseJson.product[0].options[0].product_option_value,
@@ -126,7 +95,7 @@ export default class ProductScreen extends Component {
 			})
 		.catch(error=>console.log(error)) //to catch the errors if any
 
-	this.updateCount()
+// 	this.updateCount()
 
     this.state.radioItems.map((item) => {
       if (item.selected == true) {
@@ -167,6 +136,7 @@ export default class ProductScreen extends Component {
 	}
 	
 	addToCart(data){
+	console.log('addToCart data', data.product_id)
 		var currency = data.price;
 		var number = Number(currency.replace(/[^\d\.]/g,""));
 		var itemprice = (number).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&');
@@ -179,6 +149,7 @@ export default class ProductScreen extends Component {
 		AsyncStorage.getItem('cart').then((datacart)=>{
 			 if (datacart !== null) {
 				 // We have data!!
+				 console.log(JSON.stringify(datacart))
 				 const cart = JSON.parse(datacart)
 					const existingItem = cart.find((item) => {
 						return itemcart.shop.product_id === item.shop.product_id;
@@ -200,18 +171,35 @@ export default class ProductScreen extends Component {
 				 AsyncStorage.setItem('cart',JSON.stringify(cart));
 			 }
 			 
+			 console.log('itemcart prodId',itemcart.shop.product_id)
+			 console.log('itemcart quantity', itemcart.quantity)
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-				let mySession = AsyncStorage.getItem('tokenKey');
-				var formdata = new FormData();
-				formdata.append(data.product_id);
-				formdata.append(data.quanitiy);
-				
-				
+// 				let mySession = AsyncStorage.getItem('tokenKey');
 				var myHeaders = new Headers();
-				myHeaders.append("Cookie", "language=en-gb;");
-				myHeaders.append("Cookie", "default="+mySession+";");
-				console.log(AsyncStorage.getItem('tokenKey'))
-				console.log(myHeaders)
+// 				myHeaders.append("Cookie", "language=en-gb;");
+// 				myHeaders.append("Cookie", "default="+mySession+";");
+// 				console.log(AsyncStorage.getItem('tokenKey'))
+// 				myHeaders.append("Cookie", "language=en-gb; currency=MYR; PHPSESSID=473df23cb16c59c23d61cf2254bc32e0; default=ab3122bd90780f42debb797e1de4449a");
+
+
+
+				var formdata = new FormData();
+				formdata.append("product_id", JSON.stringify(itemcart.shop.product_id));
+				if (this.state.quantity > 1){
+					formdata.append("quantity", this.state.quantity);
+				}else{
+					formdata.append("quantity", JSON.stringify(itemcart.quantity));
+				}
+				console.log('optionitems state', this.state.optionItems)
+				if (this.state.optionItems.length > 0) {
+				console.log(JSON.stringify(itemcart.shop.options[0].product_option_value[0].product_option_value_id))
+					var itemOption = itemcart.shop.options[0].product_option_id
+					var selectedOption = itemcart.shop.options[0].product_option_value[0].product_option_value_id
+					formdata.append("option["+itemOption+"]", selectedOption)
+				}
+				
+				console.log('formdata addToCart', formdata)
+				
 
 				var requestOptions = {
 					method: 'POST',
@@ -222,12 +210,7 @@ export default class ProductScreen extends Component {
 
 				fetch("https://demo.shortcircuitworks.com/dirtpit23/index.php?route=api/usercart/add", requestOptions)
 					.then(response => response.text())
-					.then(result =>{
-						console.log(result)
-// 						if (result.firstname) {
-// 							console.log(result.firstname)
-// 						}
-					})
+					.then(result => console.log(result))
 					.catch(error => console.log('error', error));
 					
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++					
@@ -238,7 +221,7 @@ export default class ProductScreen extends Component {
 				)
 		 })
 		 .catch((err)=>{
-			 alert(err)
+			 console.warn(err)
 		 })
 	}
 
@@ -309,7 +292,7 @@ export default class ProductScreen extends Component {
 	}
 	
 	renderOptions(item){
-		console.log(JSON.stringify(item.options))
+		console.log(JSON.stringify('options',item.options))
 // 		if(item.options[0]){
 // 		
 // 			console.warn(item.options[0].name)
@@ -361,6 +344,26 @@ export default class ProductScreen extends Component {
 			return <Image source={require('../../images/dirtpit-logo-181x43.png')} />
 	}
 
+	renderNone() {
+			const {navigate} = this.props.navigation
+			const BadgedIcon = withBadge(this.state.items)(Icon)
+			if (this.state.isMonitor) {
+					return ''
+			} else {
+					return (
+							<TouchableOpacity
+									onPress={() =>
+											navigate('CartNew')
+									}>
+									<View style={{ paddingRight: 15}} >
+
+										<BadgedIcon type='ionicon' name="ios-cart" size={28} color={"yellow"} />
+									</View>
+							</TouchableOpacity>
+					)
+			}
+	}
+	
 	renderRight() {
 			const {navigate} = this.props.navigation
 			const BadgedIcon = withBadge(this.state.items)(Icon)
@@ -370,11 +373,11 @@ export default class ProductScreen extends Component {
 					return (
 							<TouchableOpacity
 									onPress={() =>
-											navigate('Cart')
+											navigate('CartNew')
 									}>
 									<View style={{ paddingRight: 15}} >
 
-										<BadgedIcon type='ionicon' name="ios-cart" size={28} color={"yellow"} />
+										<Ionicons type='ionicon' name="ios-cart" size={28} color={"yellow"} />
 									</View>
 							</TouchableOpacity>
 					)
@@ -390,18 +393,7 @@ export default class ProductScreen extends Component {
 				</View>
 			)
 		}else if (this.state.dataSource){
-// 		var list = this.state.dataSource.filter(item => item.top === "1")
-// 		console.log('-------------------- ')
-// 		console.log(list)
-// 		console.log('=====================')
-// console.warn(this.state.images)
-// 			this.setState({
-// 					images: [{
-// 						popup: this.state.dataSource.popup,
-// 						thumb: this.state.dataSource.thumb,
-// 					}]
-// 			})
-console.warn('selected: '+ JSON.stringify(this.state.optionSelected))
+// console.warn('selected: '+ JSON.stringify(this.state.optionSelected))
 			return(
 
 				<View style={styles.container}>
@@ -423,6 +415,9 @@ console.warn('selected: '+ JSON.stringify(this.state.optionSelected))
 					{this.state.dataSource.map((item) => {
 						return (
 						<View style={styles.mainContainer}>
+							<NavigationEvents
+                onDidFocus={() => console.log('refreshed')}
+              />
 							<Toast ref="toast" position="top" />
 							<ScrollView
 								style={styles.scrollStyle}
@@ -480,12 +475,24 @@ console.warn('selected: '+ JSON.stringify(this.state.optionSelected))
 								</View>
 						</ScrollView>
 						<View style={styles.footerBar}>
-						<TouchableOpacity 
-							onPress={()=>this.addToCart(item)} >
-							<View style={{flex:1, width: width,  flexDirection:'row',justifyContent: 'space-around', alignItems: 'center',}} >
-								<Text allowFontScaling={false} style={{fontFamily: 'Gotham Bold', color: 'white'}}>ADD TO CART</Text>
+							<View style={{flexDirection:'row', width: width*0.5, alignItems:'center', paddingLeft: 15, backgroundColor: 'white'}}>
+								<Text style={{fontFamily: 'Gotham Bold', color: 'black',paddingRight: 5}}>Quantity</Text>
+								 <TouchableOpacity onPress={()=>this.onChangeQuan('neg')}>
+									 <Ionicons name="ios-remove-circle-outline" size={30} color={"black"} />
+								 </TouchableOpacity>
+								 <Text style={{paddingHorizontal:8, fontWeight:'bold', fontSize:20, backgroundColor: 'white', border:1}}>{this.state.quantity}</Text>
+								 <TouchableOpacity onPress={()=>this.onChangeQuan('pos')}>
+									 <Ionicons name="ios-add-circle-outline" size={30} color={"black"} backgroundColor={'black'}/>
+								 </TouchableOpacity>
+							 </View>
+							<View style={{flexDirection:'row', width: width*0.5, alignItems:'center', justifyContent: 'center', backgroundColor: 'green'}}>
+								<TouchableOpacity 
+									onPress={()=>this.addToCart(item)} >
+
+										<Text allowFontScaling={false} style={{fontFamily: 'Gotham Bold', color: 'white'}}>ADD TO CART</Text>
+
+								</TouchableOpacity>
 							</View>
-						</TouchableOpacity>
 						</View>
 						
 					</View>
@@ -527,7 +534,30 @@ console.warn('selected: '+ JSON.stringify(this.state.optionSelected))
 		}
 		
   }
+
+  onChangeQuan(type) {
+  console.log('type',type)
+    const dataCar = this.state.quantity;
+    let cantd = dataCar;
+
+    if (type=='pos') {
+     cantd = cantd + 1
+     this.setState({quantity:cantd})
+    }
+    else if (type=='neg'&&cantd>=2){
+     cantd = cantd - 1
+     this.setState({quantity:cantd})
+    }
+    else if (type=='neg'&&cantd==1){
+     this.setState({quantity:cantd})
+    }
+    console.log('quantity',cantd)
+// 	 AsyncStorage.setItem('cart',JSON.stringify(dataCar));
+  }
+  
 };
+
+
 
 const styles = StyleSheet.create({
 	MainContainer: {
@@ -739,8 +769,6 @@ const styles = StyleSheet.create({
 			bottom: 0,
 			height: Platform.OS == 'ios' ? 70 : 50,
 			flexDirection: 'row',
-			justifyContent: 'space-between',
-			backgroundColor: 'green',
 		},
 		mainContainer: {
 			height:Platform.OS == 'ios' ? height-80 : height-40,
