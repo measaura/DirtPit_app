@@ -3,6 +3,8 @@ import {
   SafeAreaView,
   StyleSheet,
   ScrollView,
+  Animated,
+  Easing,
   FlatList,
   View,
   Text,
@@ -32,15 +34,29 @@ const randomHexColor = () => {
 export default class BikeGarageScreen extends Component {
 	constructor(props) {
 		super(props);
+     this.spinValue = new Animated.Value(0);
 		this.state = {
 			loading: true,
 			dataSource: [],
 		};
 	}
 
+	spin () {
+		this.spinValue.setValue(0)
+		Animated.timing(
+			this.spinValue,
+			{
+				toValue: 1,
+				duration: 1500,
+				easing: Easing.linear
+			}
+		).start(() => this.spin())
+	}
+
 	componentDidMount(){
+		this.spin()
 // 	console.log(this.state.segId)
-		fetch("http://demo.shortcircuitworks.com/dirtpit23/index.php?route=api/garage&bike")
+		fetch("https://demo.shortcircuitworks.com/dirtpit23/index.php?route=api/garage&bike")
 			.then(response => response.json())
 			.then((responseJson)=> {
 				this.setState({
@@ -78,10 +94,21 @@ export default class BikeGarageScreen extends Component {
   render() {
 		const {navigate} = this.props.navigation
 		if (this.state.loading){
+			const spin = this.spinValue.interpolate({
+				inputRange: [0, 1],
+				outputRange: ['0deg', '360deg']
+			})
+	
 			return(
-				<View style={styles.loader}>
-					<ActivityIndicator size="large" color="#0c9" />
-				</View>
+					<View style={{flex:1,alignItems: 'center', justifyContent: 'center',backgroundColor:'black'}}>
+							<Animated.Image
+						style={{
+							width: 100,
+							height: 100,
+							transform: [{rotate: spin}] }}
+							source={require('../images/DirtPit_icon_1024.png')}
+					/>
+					</View>
 			)
 		}else if (this.state.dataSource){
 // 		var list = this.state.dataSource.filter(item => item.top === "1")

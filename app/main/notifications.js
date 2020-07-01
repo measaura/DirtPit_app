@@ -1,6 +1,8 @@
 import React, {Component} from 'react'
 import {
     StyleSheet,
+  Animated,
+  Easing,
     View,
     Text,
     FlatList,
@@ -24,8 +26,8 @@ console.disableYellowBox = true
 export default class Notifications extends React.Component {
     constructor(props) {
         super(props)
-        this2 = this
         this.state = {}
+				 this.spinValue = new Animated.Value(0);
     }
 
     // static navigationOptions = {

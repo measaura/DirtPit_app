@@ -4,6 +4,8 @@ import {
   StyleSheet,
   ScrollView,
   FlatList,
+  Animated,
+  Easing,
   View,
   Text,
   StatusBar,
@@ -34,6 +36,7 @@ export default class CheckoutScreen extends Component {
 
   constructor(props) {
      super(props);
+     this.spinValue = new Animated.Value(0);
      this.state = {
        dataCart:[],
        cartTotal:[],
@@ -49,7 +52,20 @@ export default class CheckoutScreen extends Component {
      };
   }
 
+	spin () {
+		this.spinValue.setValue(0)
+		Animated.timing(
+			this.spinValue,
+			{
+				toValue: 1,
+				duration: 1500,
+				easing: Easing.linear
+			}
+		).start(() => this.spin())
+	}
+
   componentDidMount() {
+  	this.spin()
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 				var myHeaders = new Headers();
 				var requestOptions = {
@@ -536,26 +552,24 @@ if (!this.state.isLoading){
 
       </View>
     )
-}else{
-	return(
-      <View style={{flex:1,alignItems: 'center', justifyContent: 'center'}}>
-					<Header
-							innerContainerStyles={styles.headerInnerContainer}
-							outerContainerStyles={styles.headerOuterContainer}
-							leftComponent={this.renderLeft()}
-							centerComponent={this.renderCenter()}
-							containerStyle={{
-									backgroundColor: '#000',
-									marginTop:
-											Platform.OS == 'ios' ? 0 : -20,
-									top:
-											Platform.OS == 'ios' ? (iPhoneX ? -10 : 0) : -5,
-									height: Platform.OS == 'ios' ? (iPhoneX ? 90 : 0) : 70,
-							}}
+		}else{
+			const spin = this.spinValue.interpolate({
+				inputRange: [0, 1],
+				outputRange: ['0deg', '360deg']
+			})
+	
+			return(
+					<View style={{flex:1,alignItems: 'center', justifyContent: 'center',backgroundColor:'black'}}>
+							<Animated.Image
+						style={{
+							width: 100,
+							height: 100,
+							transform: [{rotate: spin}] }}
+							source={require('../../images/DirtPit_icon_1024.png')}
 					/>
-			</View>
-	)
-}
+					</View>
+			)
+		}
   }
 
   onChangeQuan(i,type)
