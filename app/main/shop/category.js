@@ -40,7 +40,7 @@ export default class CategoryScreen extends Component {
 
 	componentDidMount(){
 // 	console.log(this.state.segId)
-		fetch("http://demo.shortcircuitworks.com/dirtpit23/index.php?route=api/category&parent="+this.state.segId)
+		fetch("https://demo.shortcircuitworks.com/dirtpit23/index.php?route=api/category&parent="+this.state.segId)
 			.then(response => response.json())
 			.then((responseJson)=> {
 				this.setState({

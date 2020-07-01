@@ -40,7 +40,7 @@ export default class CommunityScreen extends Component {
 
 	componentDidMount(){
 // 	console.log(this.state.segId)
-		fetch("http://demo.shortcircuitworks.com/dirtpit23/index.php?route=api/community")
+		fetch("https://demo.shortcircuitworks.com/dirtpit23/index.php?route=api/community")
 			.then(response => response.json())
 			.then((responseJson)=> {
 				this.setState({

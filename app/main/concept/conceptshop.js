@@ -92,7 +92,7 @@ export default class ConceptScreen extends Component {
 	}
 
 	componentDidMount(){
-		fetch("http://demo.shortcircuitworks.com/dirtpit23/index.php?route=api/category&concept")
+		fetch("https://demo.shortcircuitworks.com/dirtpit23/index.php?route=api/category&concept")
 			.then(response => response.json())
 			.then((responseJson)=> {
 				this.setState({
