@@ -29,6 +29,7 @@ import {
 
 import AsyncStorage from '@react-native-community/async-storage'
 import {createAppContainer, createSwitchNavigator} from 'react-navigation'
+import { useNavigation } from '@react-navigation/native'
 import {createStackNavigator} from 'react-navigation-stack'
 import {createBottomTabNavigator} from 'react-navigation-tabs'
 import Ionicons from 'react-native-vector-icons/Ionicons'
@@ -53,6 +54,8 @@ import CartNewScreen from './app/main/shop/cartnew'
 import CheckoutScreen from './app/main/shop/checkout'
 import PaymentScreen from './app/main/shop/payment'
 import DealersScreen from './app/main/dealers'
+import DealersListScreen from './app/main/dealers/dealerslist'
+import DealersShopScreen from './app/main/dealers/dealershop'
 import MotoGarageScreen from './app/main/motogarage'
 import BikeGarageScreen from './app/main/bikegarage'
 import CafeScreen from './app/main/cafe'
@@ -75,8 +78,11 @@ class AuthLoadingScreen extends React.Component {
 				// Get cookies for a url
 				CookieManager.get('https://demo.shortcircuitworks.com')
 					.then((cookies) => {
-						console.log('CookieManager.get =>', cookies);
-						console.log(cookies?cookies.default.value:false);
+					
+						if(cookies.length > 0){
+							console.log('CookieManager.get =>', cookies);
+							console.log(cookies?cookies.default.value:false);
+						}
 					});
 
         const userToken = await AsyncStorage.getItem('tokenKey')
@@ -193,6 +199,8 @@ const AppModalStack = createStackNavigator(
         Concept: ConceptList,
         ConceptScreen: ConceptScreen,
         Dealers: DealersScreen,
+        DealersList: DealersListScreen,
+        DealerShop: DealersShopScreen,
         MotoGarage: MotoGarageScreen,
         BikeGarage: BikeGarageScreen,
         Cafe: CafeScreen,
@@ -329,6 +337,7 @@ export default class App extends Component {
         // To remove and use Notification on both server and app.
 
         this.messageListener = firebase.messaging().onMessage(message => {
+        	const navigation = useNavigation();
             console.log('App.js METHOD: onMessage')
             // Process your message as required
             console.log('message: ', message)
@@ -396,16 +405,17 @@ export default class App extends Component {
                 'App.js displayNotification foreground:',
                 newNotification,
             )
+						
 
-//             if (
-//                 message.data.title === 'SOS!' ||
-//                 message.data.title === 'ALERT!' ||
-//                 message.data.title === 'Notification' ||
-//                 message.data.title === 'Device Manager' ||
-//                 message.data.title === 'RequestMonitor'
-//             ) {
+						
+            if (message.data.title === 'Notification') {
+            						console.log('Notification',message.data.title)
                 firebase.notifications().displayNotification(newNotification)
-//             }
+            }else{
+            	console.log(message.data.title)
+            	this.showAlert(message.data.title, message.data.body)
+            	navigation.navigate('Home')
+            }
         })
         // end onMessage
     }
