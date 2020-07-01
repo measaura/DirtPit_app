@@ -36,7 +36,8 @@ export default class Register extends React.Component {
             countryfield:'',
             statefield: '',
             zonedone: false,
-            countrybefore: ''
+            countrybefore: '',
+            submitBtn: true
         };
     }
 
@@ -80,19 +81,19 @@ console.log('zonedone',this.state.zonedone)
             this.refs.copasswordfieldRef.focus();
         } else if (passedPassword != passedCoPassword) {
             Alert.alert("Password entered does not match!");
-        } else if (passedPassword < 4 || passedPassword >20) {
+        } else if (passedPassword.length < 4 || passedPassword.length >20) {
             Alert.alert("Password must be between 4 and 20 characters!");
             this.refs.passwordfieldRef.focus();
         } else if (passedAddress1 == "") {
             Alert.alert("Please enter your address.");
             this.refs.address1fieldRef.focus();
-        } else if (passedAddress1 < 3 || passedAddress1 >128) {
+        } else if (passedAddress1.length < 3 || passedAddress1.length >128) {
             Alert.alert("Address 1 must be between 3 and 128 characters!");
             this.refs.address1fieldRef.focus();
         } else if (passedCity == "") {
             Alert.alert("Please enter your city.");
             this.refs.cityfieldRef.focus();
-        } else if (cityfield < 2 || cityfield >128) {
+        } else if (passedCity.length < 2 || passedCity.length >128) {
             Alert.alert("City must be between 2 and 128 characters!");
             this.refs.cityfieldRef.focus();
         } else if (passedCountry == "") {
@@ -128,8 +129,8 @@ console.log('zonedone',this.state.zonedone)
 				formdata.append("address_2", passedAddress2);
 				formdata.append("city", passedCity);
 				formdata.append("postcode", passedPostcode);
-				formdata.append("country", passedCountry);
-				formdata.append("zone", passedState);
+				formdata.append("country_id", passedCountry);
+				formdata.append("zone_id", passedState);
 				formdata.append("password", passedPassword);
 				formdata.append("confirm", passedCoPassword);
 				formdata.append("agree", true);
@@ -143,13 +144,14 @@ console.log('zonedone',this.state.zonedone)
 					body: formdata,
 					redirect: 'follow'
 				};
-
+console.log('submit', formdata)
 				fetch("https://demo.shortcircuitworks.com/dirtpit23/index.php?route=api/userregister", requestOptions)
 					.then(response => response.text())
 					.then(result =>{
 						console.log(result)
-						if (result.firstname) {
-							console.log(result.firstname)
+						if (result.success) {
+							console.log(result.success)
+							
 						}
 					})
 					.catch(error => console.log('error', error));
@@ -214,7 +216,8 @@ console.log('zone',zonetemp.length)
 														color: 'dark-grey'
 												}}
 												onChangeItem={item => this.setState({
-														statefield: item.value
+														statefield: item.value,
+														submitBtn: false
 												})}
 										/>
 							)
@@ -487,6 +490,7 @@ console.log('zone',zonetemp.length)
 										{this.renderZone()}
 
                     <TouchableOpacity
+                    		disabled={this.state.submitBtn}
                         style={styles.signInBut}
                         onPress={this.filterField.bind(this)}
                     >
