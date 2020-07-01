@@ -41,6 +41,7 @@ export default class SegmentScreen extends Component {
 		fetch("https://demo.shortcircuitworks.com/dirtpit23/index.php?route=api/category&segment")
 			.then(response => response.json())
 			.then((responseJson)=> {
+// 				console.log(responseJson)
 				this.setState({
 					loading: false,
 					dataSource: responseJson.categories
