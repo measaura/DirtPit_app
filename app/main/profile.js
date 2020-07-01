@@ -107,9 +107,9 @@ export default class Profile extends React.Component {
         return true;
     }
 
-	renderCenter() {
-			return <Image source={require('../images/dirtpit-logo-181x43.png')} />
-	}
+		renderCenter() {
+				return <Image source={require('../images/dirtpit-logo-181x43.png')} />
+		}
 
     renderRight() {
         const { navigate } = this.props.navigation;

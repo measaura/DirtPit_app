@@ -35,43 +35,6 @@ export default class Login extends React.Component {
         }
     }
 
-    _requestCallPermission = () => {
-        request('android.permission.CALL_PHONE').then(response => {
-            this.setState({callPermission: response})
-            // console.log(response);
-        })
-    }
-
-    grantedMeCall() {
-        AsyncStorage.setItem('isCallAccept', 'yes')
-        this.setState({isCallAccept: 'yes'})
-        console.log('Call Permission granted')
-        if (Platform.OS === 'android') {
-            this.setState(
-                {
-                    callPermission: 'allow',
-                },
-                this._requestCallPermission,
-            )
-        } else if (Platform.OS === 'ios') {
-            this.setState({
-                callPermission: 'allow',
-            })
-        }
-    }
-
-    notGrantedCall() {
-        AsyncStorage.setItem('isCallAccept', 'no')
-        this.setState({isCallAccept: 'no'})
-        console.log('Call Permission denied')
-        this.setState(
-            {
-                callPermission: 'not allow',
-            },
-            this._requestCallPermission,
-        )
-    }
-
     _requestPermission = () => {
         //         Permissions.request("android.permission.ACCESS_FINE_LOCATION").then(response => {
         request(
@@ -118,7 +81,7 @@ export default class Login extends React.Component {
         })
         Alert.alert(
             'Access to phone location required.',
-            'This app requires your phone location to give you the most accurate information about you and the tracker device location. Your phone location will not be stored in the server.',
+            'This app requires your phone location to assist you in setting your delivery address. Your phone location will not be stored in the server.',
             [
                 {
                     text: 'No',
@@ -134,24 +97,6 @@ export default class Login extends React.Component {
         )
     }
 
-    requestCall() {
-        Alert.alert(
-            'Access to call function are required.',
-            'This app requires the permission to make call in an emergency case upon user click to communicate to the tracker device. No calls will be made automatically from the app.',
-            [
-                {
-                    text: 'No',
-                    onPress: () => this.notGrantedCall(),
-                    style: 'cancel',
-                },
-                {
-                    text: 'Okay',
-                    onPress: () => this.grantedMeCall(),
-                    style: 'cancel',
-                },
-            ],
-        )
-    }
     
 //     _askPermission() {
 //     console.log('ask permission')
