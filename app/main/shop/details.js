@@ -145,84 +145,163 @@ export default class ProductScreen extends Component {
 			quantity:  1,
 			price: itemprice
 		}
+		
+		console.log(this.state.optionItems.length)
+		if (this.state.optionItems.length > 0) {
+		console.log('option selected',this.state.optionItems[0].selected)
+			if (this.state.optionItems[0].selected){
+				AsyncStorage.getItem('cart').then((datacart)=>{
+				 if (datacart !== null) {
+					 // We have data!!
+					 console.log(datacart)
+					 const cart = JSON.parse(datacart)
+						const existingItem = cart.find((item) => {
+							return itemcart.shop.product_id === item.shop.product_id;
+						});
 
-		AsyncStorage.getItem('cart').then((datacart)=>{
-			 if (datacart !== null) {
-				 // We have data!!
-				 console.log(JSON.stringify(datacart))
-				 const cart = JSON.parse(datacart)
-					const existingItem = cart.find((item) => {
-						return itemcart.shop.product_id === item.shop.product_id;
-					});
-
-					if(existingItem) {
-						 existingItem.quantity++;
-					} else {
-						// Push the item into the cart
-						cart.push(itemcart);
-					}
+						if(existingItem) {
+							 existingItem.quantity++;
+						} else {
+							// Push the item into the cart
+							cart.push(itemcart);
+						}
 					
-// 				 cart.push(itemcart)
-				 AsyncStorage.setItem('cart',JSON.stringify(cart));
-// 				 			 console.log(JSON.stringify(cart))
-			 }else{
-				 const cart  = []
-				 cart.push(itemcart)
-				 AsyncStorage.setItem('cart',JSON.stringify(cart));
-			 }
+	// 				 cart.push(itemcart)
+					 AsyncStorage.setItem('cart',JSON.stringify(cart));
+	// 				 			 console.log(JSON.stringify(cart))
+				 }else{
+					 const cart  = []
+					 cart.push(itemcart)
+					 AsyncStorage.setItem('cart',JSON.stringify(cart));
+				 }
 			 
-			 console.log('itemcart prodId',itemcart.shop.product_id)
-			 console.log('itemcart quantity', itemcart.quantity)
-//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-// 				let mySession = AsyncStorage.getItem('tokenKey');
-				var myHeaders = new Headers();
-// 				myHeaders.append("Cookie", "language=en-gb;");
-// 				myHeaders.append("Cookie", "default="+mySession+";");
-// 				console.log(AsyncStorage.getItem('tokenKey'))
-// 				myHeaders.append("Cookie", "language=en-gb; currency=MYR; PHPSESSID=473df23cb16c59c23d61cf2254bc32e0; default=ab3122bd90780f42debb797e1de4449a");
+				 console.log('itemcart prodId',itemcart.shop.product_id)
+				 console.log('itemcart quantity', itemcart.quantity)
+	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+	// 				let mySession = AsyncStorage.getItem('tokenKey');
+					var myHeaders = new Headers();
+	// 				myHeaders.append("Cookie", "language=en-gb;");
+	// 				myHeaders.append("Cookie", "default="+mySession+";");
+	// 				console.log(AsyncStorage.getItem('tokenKey'))
+	// 				myHeaders.append("Cookie", "language=en-gb; currency=MYR; PHPSESSID=473df23cb16c59c23d61cf2254bc32e0; default=ab3122bd90780f42debb797e1de4449a");
 
 
 
-				var formdata = new FormData();
-				formdata.append("product_id", JSON.stringify(itemcart.shop.product_id));
-				if (this.state.quantity > 1){
-					formdata.append("quantity", this.state.quantity);
-				}else{
-					formdata.append("quantity", JSON.stringify(itemcart.quantity));
-				}
-				console.log('optionitems state', this.state.optionItems)
-				if (this.state.optionItems.length > 0) {
-				console.log(JSON.stringify(itemcart.shop.options[0].product_option_value[0].product_option_value_id))
-					var itemOption = itemcart.shop.options[0].product_option_id
-					var selectedOption = itemcart.shop.options[0].product_option_value[0].product_option_value_id
-					formdata.append("option["+itemOption+"]", selectedOption)
-				}
+					var formdata = new FormData();
+					formdata.append("product_id", JSON.stringify(itemcart.shop.product_id));
+					if (this.state.quantity > 1){
+						formdata.append("quantity", this.state.quantity);
+					}else{
+						formdata.append("quantity", JSON.stringify(itemcart.quantity));
+					}
+					console.log('optionitems state', this.state.optionItems)
+					if (this.state.optionItems.length > 0) {
+					console.log(JSON.stringify(itemcart.shop.options[0].product_option_value[0].product_option_value_id))
+						var itemOption = itemcart.shop.options[0].product_option_id
+						var selectedOption = itemcart.shop.options[0].product_option_value[0].product_option_value_id
+						formdata.append("option["+itemOption+"]", selectedOption)
+					}
 				
-				console.log('formdata addToCart', formdata)
+					console.log('formdata addToCart', formdata)
 				
 
-				var requestOptions = {
-					method: 'POST',
-					headers: myHeaders,
-					body: formdata,
-					redirect: 'follow'
-				};
+					var requestOptions = {
+						method: 'POST',
+						headers: myHeaders,
+						body: formdata,
+						redirect: 'follow'
+					};
 
-				fetch("https://demo.shortcircuitworks.com/dirtpit23/index.php?route=api/usercart/add", requestOptions)
-					.then(response => response.text())
-					.then(result => console.log(result))
-					.catch(error => console.log('error', error));
+					fetch("https://demo.shortcircuitworks.com/dirtpit23/index.php?route=api/usercart/add", requestOptions)
+						.then(response => response.text())
+						.then(result => console.log(result))
+						.catch(error => console.log('error', error));
 					
-//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++					
-				this.updateCount()
-				this.toaster(
-						'Added to cart',
-						2000,
-				)
-		 })
-		 .catch((err)=>{
-			 console.warn(err)
-		 })
+	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++					
+					this.updateCount()
+					this.toaster(
+							'Added to cart',
+							2000,
+					)
+			 })
+			 .catch((err)=>{
+				 console.warn(err)
+			 })
+			}else{
+				alert("You must select a product option before adding to cart!");
+			}
+		}else{
+				AsyncStorage.getItem('cart').then((datacart)=>{
+				 if (datacart !== null) {
+					 // We have data!!
+					 console.log(datacart)
+					 const cart = JSON.parse(datacart)
+						const existingItem = cart.find((item) => {
+							return itemcart.shop.product_id === item.shop.product_id;
+						});
+
+						if(existingItem) {
+							 existingItem.quantity++;
+						} else {
+							// Push the item into the cart
+							cart.push(itemcart);
+						}
+					
+	// 				 cart.push(itemcart)
+					 AsyncStorage.setItem('cart',JSON.stringify(cart));
+	// 				 			 console.log(JSON.stringify(cart))
+				 }else{
+					 const cart  = []
+					 cart.push(itemcart)
+					 AsyncStorage.setItem('cart',JSON.stringify(cart));
+				 }
+			 
+				 console.log('itemcart prodId',itemcart.shop.product_id)
+				 console.log('itemcart quantity', itemcart.quantity)
+	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+	// 				let mySession = AsyncStorage.getItem('tokenKey');
+					var myHeaders = new Headers();
+	// 				myHeaders.append("Cookie", "language=en-gb;");
+	// 				myHeaders.append("Cookie", "default="+mySession+";");
+	// 				console.log(AsyncStorage.getItem('tokenKey'))
+	// 				myHeaders.append("Cookie", "language=en-gb; currency=MYR; PHPSESSID=473df23cb16c59c23d61cf2254bc32e0; default=ab3122bd90780f42debb797e1de4449a");
+
+
+
+					var formdata = new FormData();
+					formdata.append("product_id", JSON.stringify(itemcart.shop.product_id));
+					if (this.state.quantity > 1){
+						formdata.append("quantity", this.state.quantity);
+					}else{
+						formdata.append("quantity", JSON.stringify(itemcart.quantity));
+					}
+				
+					console.log('formdata addToCart', formdata)
+				
+
+					var requestOptions = {
+						method: 'POST',
+						headers: myHeaders,
+						body: formdata,
+						redirect: 'follow'
+					};
+
+					fetch("https://demo.shortcircuitworks.com/dirtpit23/index.php?route=api/usercart/add", requestOptions)
+						.then(response => response.text())
+						.then(result => console.log(result))
+						.catch(error => console.log('error', error));
+					
+	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++					
+					this.updateCount()
+					this.toaster(
+							'Added to cart',
+							2000,
+					)
+			 })
+			 .catch((err)=>{
+				 console.warn(err)
+			 })
+		}
 	}
 
 	itemSeparatorComponent = () => {
@@ -292,15 +371,7 @@ export default class ProductScreen extends Component {
 	}
 	
 	renderOptions(item){
-		console.log(JSON.stringify('options',item.options))
-// 		if(item.options[0]){
-// 		
-// 			console.warn(item.options[0].name)
-// 			return(
-// 				<Text allowFontScaling={false} style={styles.sectionPrice} style={{paddingBottom:30, paddingLeft: 15,}}>Options: {'\n'}{item.options[0].name}{': '}{item.options[0].product_option_value[0].name}</Text>
-// 			);
-// 		}
-// console.info(this.state.optionName.length)
+		console.log('options',item)
 			if (this.state.optionName.length > 0) {			
 				return (
 					<View style={{ flexDirection: 'row', flexWrap: 'wrap', marginLeft: 10,alignItems:'center'}} >
@@ -317,6 +388,7 @@ export default class ProductScreen extends Component {
 	}
 
   changeActiveRadioButton(index) {
+  console.log('before select',this.state.optionItems)
     this.state.optionItems.map((item) => {
       item.selected = false;
     });
@@ -329,6 +401,7 @@ export default class ProductScreen extends Component {
       	optionSelected: this.state.optionItems[index] 
       });
     });
+    console.log('after select',this.state.optionItems[0].selected)
   }
   
 	renderLeft() {
@@ -752,7 +825,7 @@ const styles = StyleSheet.create({
         fontSize: 13,
     },
     scrollStyle: {
-        alignSelf: "stretch"
+        alignSelf: "stretch",
     },
     scrollContent: {
         flexGrow: 1,
