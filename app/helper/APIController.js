@@ -127,8 +127,10 @@ export default API = {
     },
 
     userUpdate(data) {
-//     console.log('userUpdate',data)
+    console.log('userUpdate',data.fcm_token)
 			const dataForm = new FormData();
+			dataForm.append(data);
+			
 			if(data.firstname){
 				dataForm.append("firstname", data.firstname);
 			}
@@ -145,8 +147,9 @@ export default API = {
 				dataForm.append("fcm_token" ,data.fcm_token);
 			}
         return new Promise(resolve => {
-            this.fetchHandlerMultiPart('POST', base_url + 'api/userupdate',data).then(([code, response]) => {
+            this.fetchHandlerMultiPart('POST', base_url + 'api/userupdate',dataForm).then(([code, response]) => {
                 if (code === 200) {
+                console.log('userUpdate response',response)
                     resolve(response)
                 }
             })
