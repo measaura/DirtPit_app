@@ -52,7 +52,8 @@ export default class ProductScreen extends Component {
 			quantity: 1,
 			prodId: this.props.navigation.state.params.prodId,
       radioItems:[], 
-      selectedItem: ''
+      selectedItem: '',
+      didSelected: false
 		}
 		this.toaster = this.toaster.bind(this)
 	}
@@ -146,14 +147,14 @@ export default class ProductScreen extends Component {
 			price: itemprice
 		}
 		
-		console.log(this.state.optionItems.length)
+		console.log(this.state.didSelected)
 		if (this.state.optionItems.length > 0) {
-		console.log('option selected',this.state.optionItems[0].selected)
-			if (this.state.optionItems[0].selected){
+		console.log('option selected',JSON.stringify(this.state.optionSelected.selected))
+			if (this.state.optionSelected.selected){
 				AsyncStorage.getItem('cart').then((datacart)=>{
 				 if (datacart !== null) {
 					 // We have data!!
-					 console.log(datacart)
+// 					 console.log(datacart)
 					 const cart = JSON.parse(datacart)
 						const existingItem = cart.find((item) => {
 							return itemcart.shop.product_id === item.shop.product_id;
@@ -194,14 +195,14 @@ export default class ProductScreen extends Component {
 					}else{
 						formdata.append("quantity", JSON.stringify(itemcart.quantity));
 					}
-					console.log('optionitems state', this.state.optionItems)
-					if (this.state.optionItems.length > 0) {
-					console.log(JSON.stringify(itemcart.shop.options[0].product_option_value[0].product_option_value_id))
+					
+					if (this.state.optionSelected.selected) {
+// 					console.log(JSON.stringify(itemcart.shop.options[0].product_option_value[0].product_option_value_id))
+						console.log(this.state.optionSelected.product_option_value_id)
 						var itemOption = itemcart.shop.options[0].product_option_id
-						var selectedOption = itemcart.shop.options[0].product_option_value[0].product_option_value_id
+						var selectedOption = this.state.optionSelected.product_option_value_id
 						formdata.append("option["+itemOption+"]", selectedOption)
 					}
-				
 					console.log('formdata addToCart', formdata)
 				
 
@@ -371,7 +372,7 @@ export default class ProductScreen extends Component {
 	}
 	
 	renderOptions(item){
-		console.log('options',item)
+// 		console.log('options',item)
 			if (this.state.optionName.length > 0) {			
 				return (
 					<View style={{ flexDirection: 'row', flexWrap: 'wrap', marginLeft: 10,alignItems:'center'}} >
@@ -397,11 +398,11 @@ export default class ProductScreen extends Component {
 
     this.setState({ optionItems: this.state.optionItems }, () => {
       this.setState({ 
-      	selectedItem: this.state.optionItems[index].name,
-      	optionSelected: this.state.optionItems[index] 
+      	optionSelected: this.state.optionItems[index],
+      	didSelected: true
       });
     });
-    console.log('after select',this.state.optionItems[0].selected)
+
   }
   
 	renderLeft() {
@@ -466,7 +467,7 @@ export default class ProductScreen extends Component {
 				</View>
 			)
 		}else if (this.state.dataSource){
-// console.warn('selected: '+ JSON.stringify(this.state.optionSelected))
+console.warn('selected: '+ (this.state.optionSelected))
 			return(
 
 				<View style={styles.container}>
@@ -549,7 +550,7 @@ export default class ProductScreen extends Component {
 						</ScrollView>
 						<View style={styles.footerBar}>
 							<View style={{flexDirection:'row', width: width*0.5, alignItems:'center', paddingLeft: 15, backgroundColor: 'white'}}>
-								<Text style={{fontFamily: 'Gotham Bold', color: 'black',paddingRight: 5}}>Quantity</Text>
+								<Text style={{fontFamily: 'Gotham-Bold', color: 'black',paddingRight: 5}}>Quantity</Text>
 								 <TouchableOpacity onPress={()=>this.onChangeQuan('neg')}>
 									 <Ionicons name="ios-remove-circle-outline" size={30} color={"black"} />
 								 </TouchableOpacity>
@@ -562,7 +563,7 @@ export default class ProductScreen extends Component {
 								<TouchableOpacity 
 									onPress={()=>this.addToCart(item)} >
 
-										<Text allowFontScaling={false} style={{fontFamily: 'Gotham Bold', color: 'white'}}>ADD TO CART</Text>
+										<Text allowFontScaling={false} style={{fontFamily: 'Gotham-Bold', color: 'white'}}>ADD TO CART</Text>
 
 								</TouchableOpacity>
 							</View>
@@ -679,7 +680,7 @@ const styles = StyleSheet.create({
   },
   sectionTitle: {
     fontSize: 24,
-    fontFamily: 'Gotham Bold',
+    fontFamily: 'Gotham-Bold',
     fontWeight: 'bold',
     color: Colors.black,
     marginLeft: 8,
@@ -694,7 +695,7 @@ const styles = StyleSheet.create({
   sectionPrice: {
     marginLeft: 8,
     marginBottom: 5,
-    fontFamily: 'Gotham Bold',
+    fontFamily: 'Gotham-Bold',
     fontSize: 18,
     fontWeight: '800',
     color: 'black',
@@ -815,7 +816,7 @@ const styles = StyleSheet.create({
         paddingRight: 10,
     },
     rowPrice: {
-        fontFamily: 'Gotham Bold',
+        fontFamily: 'Gotham-Bold',
         fontSize: 15,
         paddingLeft: 8,
         color: 'green',
