@@ -365,7 +365,7 @@ console.log(this.state.my)
 							{this.state.cartTotal.map((item)=>{
 								return(
 									<View style={{flex:1, width: width, height:40,  flexDirection:'row',justifyContent: 'space-around', alignItems: 'center', backgroundColor: '#a0a0a0', borderColor: 'black'}} >
-										<Text allowFontScaling={false} style={{fontFamily: 'Gotham Bold', color: 'black'}}>{item.title}: {item.text}</Text>
+										<Text allowFontScaling={false} style={{fontFamily: 'Gotham-Bold', color: 'black'}}>{item.title}: {item.text}</Text>
 									</View>
 								)
 							})}
@@ -374,7 +374,7 @@ console.log(this.state.my)
 									onPress={()=>navigate('Checkout')} >
 																<View style={{flex:1, width: width,  flexDirection:'row',justifyContent: 'space-around', alignItems: 'center', backgroundColor: 'yellow', borderWidth: 2, borderColor: 'black'}} >
 
-										<Text allowFontScaling={false} style={{fontFamily: 'Gotham Bold', color: 'black'}}>CHECKOUT</Text>
+										<Text allowFontScaling={false} style={{fontFamily: 'Gotham-Bold', color: 'black'}}>CHECKOUT</Text>
 																</View>
 								</TouchableOpacity>
 							</View>
@@ -405,7 +405,7 @@ console.log(this.state.my)
 						/>
 
 						<View style={{flex:1, alignItems: 'center', justifyContent: 'center'}}>
-							<Text style={{alignSelf: 'center', paddingLeft: 10, paddingRight: 10, paddingBottom: 30, fontSize: 16, fontFamily: 'Gotham Bold'}}>Your cart is empty. Add some products before you can see it here.</Text>
+							<Text style={{alignSelf: 'center', paddingLeft: 10, paddingRight: 10, paddingBottom: 30, fontSize: 16, fontFamily: 'Gotham-Bold'}}>Your cart is empty. Add some products before you can see it here.</Text>
 							<Image source={require('../../images/empty-cart.png')} style={{width: 200, height:200}}/>
 						</View>
     		</View>

@@ -438,11 +438,11 @@ export default class CheckoutScreen extends Component {
   	return(
 			<View style={{height:100,  backgroundColor:'#accecd'}}>
 				<ImageBackground source={require('../../images/airmail_border.png')} style={{ resizeMode: 'cover',justifyContent:'center'}}>
-					<Text style={{fontFamily:'Gotham Bold',color:"black",fontSize:10, paddingLeft:10}}>Shipping Address:</Text>
-					<Text style={{fontFamily:'Gotham Bold',color:"black",fontSize:12, paddingLeft:10, paddingTop:2}}>{shipping.firstname} {shipping.lastname}</Text>
-					<Text style={{fontFamily:'Gotham Bold',color:"black",fontSize:12, paddingLeft:10}}>{shipping.address_1}, {shipping.address_2}</Text>
-					<Text style={{fontFamily:'Gotham Bold',color:"black",fontSize:12, paddingLeft:10}}>{shipping.postcode} {shipping.city}</Text>
-					<Text style={{fontFamily:'Gotham Bold',color:"black",fontSize:12, paddingLeft:10}}>{shipping.country}</Text>
+					<Text style={{fontFamily:'Gotham-Bold',color:"black",fontSize:10, paddingLeft:10}}>Shipping Address:</Text>
+					<Text style={{fontFamily:'Gotham-Bold',color:"black",fontSize:12, paddingLeft:10, paddingTop:2}}>{shipping.firstname} {shipping.lastname}</Text>
+					<Text style={{fontFamily:'Gotham-Bold',color:"black",fontSize:12, paddingLeft:10}}>{shipping.address_1}, {shipping.address_2}</Text>
+					<Text style={{fontFamily:'Gotham-Bold',color:"black",fontSize:12, paddingLeft:10}}>{shipping.postcode} {shipping.city}</Text>
+					<Text style={{fontFamily:'Gotham-Bold',color:"black",fontSize:12, paddingLeft:10}}>{shipping.country}</Text>
 				</ImageBackground>
 			</View>
   	)
@@ -510,7 +510,7 @@ if (!this.state.isLoading){
                      <Image resizeMode={"contain"} style={{width: 70, height:70, marginTop:3}} source={{uri: item.thumb}} />
                      <View style={{flex:1, backgroundColor:'trangraysparent', padding:10, justifyContent:"space-between"}}>
                        <View>
-                         <Text style={{fontWeight:"bold", fontSize:16, fontFamily: "Gotham Bold"}}>{item.name}</Text>
+                         <Text style={{fontWeight:"bold", fontSize:16, fontFamily: "Gotham-Bold"}}>{item.name}</Text>
                          {this.renderOptions(item)}
                        </View>
                        <View style={{flexDirection:'row',justifyContent:'space-between'}}>
@@ -533,7 +533,7 @@ if (!this.state.isLoading){
 							{this.state.cartTotal.map((item)=>{
 								return(
 									<View style={{flex:1, width: width, height:40,  flexDirection:'row',justifyContent: 'space-around', alignItems: 'center', backgroundColor: '#a0a0a0', borderColor: 'black'}} >
-										<Text allowFontScaling={false} style={{fontFamily: 'Gotham Bold', color: 'black'}}>{item.title}: {item.text}</Text>
+										<Text allowFontScaling={false} style={{fontFamily: 'Gotham-Bold', color: 'black'}}>{item.title}: {item.text}</Text>
 									</View>
 								)
 							})}
@@ -542,7 +542,7 @@ if (!this.state.isLoading){
 									onPress={()=>this.makePayment()} >
 																<View style={{flex:1, width: width,  flexDirection:'row',justifyContent: 'space-around', alignItems: 'center', backgroundColor: 'yellow', borderWidth: 2, borderColor: 'black'}} >
 
-										<Text allowFontScaling={false} style={{fontFamily: 'Gotham Bold', color: 'black'}}>PROCEED</Text>
+										<Text allowFontScaling={false} style={{fontFamily: 'Gotham-Bold', color: 'black'}}>PROCEED</Text>
 																</View>
 								</TouchableOpacity>
 							</View>
@@ -737,7 +737,7 @@ const styles = StyleSheet.create({
     },
     rowMessage: {
         color: '#ffffff',
-        fontFamily: 'Gotham Bold',
+        fontFamily: 'Gotham-Bold',
         fontSize: 18,
         paddingLeft: 25,
         paddingTop: 40,

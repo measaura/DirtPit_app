@@ -298,7 +298,7 @@ const styles = StyleSheet.create({
     },
     rowMessage: {
         color: '#fff',
-        fontFamily: 'Gotham Bold',
+        fontFamily: 'Gotham-Bold',
         fontSize: 18,
         paddingRight: 10,
         paddingLeft: 25,

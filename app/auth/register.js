@@ -210,7 +210,7 @@ console.log('zone',zonetemp.length)
 												style={{backgroundColor:'#cdcdcd',borderTopLeftRadius: 25, borderTopRightRadius: 25, borderBottomLeftRadius: 25, borderBottomRightRadius: 25}}
 												dropDownStyle={{backgroundColor: '#cdcdcd'}}
 												labelStyle={{
-														fontFamily: 'Gotham Bold',
+														fontFamily: 'Gotham-Bold',
 														fontSize: 18,
 														textAlign: 'left',
 														color: 'dark-grey'
@@ -267,10 +267,10 @@ console.log('zone',zonetemp.length)
                     contentContainerStyle={styles.scrollContent}
                 >
                     <View style={styles.headerLogo}>
-											<Text style={{alignSelf: 'center', fontFamily:'Gotham Bold', fontSize: 20}}>Register Account</Text>
+											<Text style={{alignSelf: 'center', fontFamily:'Gotham-Bold', fontSize: 20}}>Register Account</Text>
                     </View>
 										<View>
-											<Text style={{fontFamily: 'Gotham Bold', fontSize: 16, justifyContent: 'flex-start'}}>Personal Details</Text>
+											<Text style={{fontFamily: 'Gotham-Bold', fontSize: 16, justifyContent: 'flex-start'}}>Personal Details</Text>
 										</View>		
                     <View style={styles.wrapField}>
                         <Image
@@ -379,7 +379,7 @@ console.log('zone',zonetemp.length)
                         />
                     </View>
 										<View>
-											<Text style={{fontFamily: 'Gotham Bold', fontSize: 16, paddingTop:15,}}>Address</Text>
+											<Text style={{fontFamily: 'Gotham-Bold', fontSize: 16, paddingTop:15,}}>Address</Text>
 										</View>		
                     <View style={styles.wrapField}>
                         <Image
@@ -476,7 +476,7 @@ console.log('zone',zonetemp.length)
 												style={{backgroundColor:'#cdcdcd',borderTopLeftRadius: 25, borderTopRightRadius: 25, borderBottomLeftRadius: 25, borderBottomRightRadius: 25}}
 												dropDownStyle={{backgroundColor: '#cdcdcd'}}
 												labelStyle={{
-														fontFamily: 'Gotham Bold',
+														fontFamily: 'Gotham-Bold',
 														fontSize: 18,
 														textAlign: 'left',
 														color: 'dark-grey'
@@ -568,7 +568,7 @@ const styles = StyleSheet.create({
     },
     inputStyles: {
         flex: 2,
-        fontFamily: "Gotham Bold",
+        fontFamily: "Gotham-Bold",
         fontSize: 17,
         color: "black",
         paddingLeft: 15,
@@ -587,7 +587,7 @@ const styles = StyleSheet.create({
     },
     signInText: {
         fontSize: 16,
-        fontFamily: "Gotham Bold",
+        fontFamily: "Gotham-Bold",
         color: "black"
     },
     doesntText: {

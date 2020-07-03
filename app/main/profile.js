@@ -271,12 +271,12 @@ const styles = StyleSheet.create({
     },
     headerName: {
         color: "#ffffff",
-        fontFamily: 'Gotham Bold',
+        fontFamily: 'Gotham-Bold',
         fontSize: 18,
     },
     headerEmail: {
         color: "#ffffff",
-        fontFamily: 'Gotham Bold',
+        fontFamily: 'Gotham-Bold',
         fontSize: 14,
     },
     logOutBut: {
@@ -288,7 +288,7 @@ const styles = StyleSheet.create({
     },
     logOutButText: {
         color: "#000",
-        fontFamily: 'Gotham Bold',
+        fontFamily: 'Gotham-Bold',
         fontSize: 18,
         textAlign: "center"
     }

@@ -178,7 +178,7 @@ export default class CartScreen extends Component {
                      <Image resizeMode={"contain"} style={{width:width/3,height:width/3}} source={{uri: item.shop.thumb}} />
                      <View style={{flex:1, backgroundColor:'trangraysparent', padding:10, justifyContent:"space-between"}}>
                        <View>
-                         <Text style={{fontWeight:"bold", fontSize:16, fontFamily: "Gotham Bold"}}>{item.shop.heading_title}</Text>
+                         <Text style={{fontWeight:"bold", fontSize:16, fontFamily: "Gotham-Bold"}}>{item.shop.heading_title}</Text>
                          <Text>Options: </Text>
                        </View>
                        <View style={{flexDirection:'row',justifyContent:'space-between'}}>
@@ -205,12 +205,12 @@ export default class CartScreen extends Component {
            </ScrollView>
 						<View style={styles.footerBar}>
 						<View style={{flex:1, width: width*0.7,  flexDirection:'row',justifyContent: 'space-around', alignItems: 'center', backgroundColor: 'white', borderColor: 'black'}} >
-							<Text allowFontScaling={false} style={{fontFamily: 'Gotham Bold', color: 'black'}}>TOTAL: RM{rmTotal}</Text>
+							<Text allowFontScaling={false} style={{fontFamily: 'Gotham-Bold', color: 'black'}}>TOTAL: RM{rmTotal}</Text>
 						</View>
 						<TouchableOpacity 
 							onPress={()=>console.log('checkout')} >
 							<View style={{flex:1, width: width*0.3,  flexDirection:'row',justifyContent: 'space-around', alignItems: 'center', backgroundColor: 'yellow', borderWidth: 2, borderColor: 'black'}} >
-								<Text allowFontScaling={false} style={{fontFamily: 'Gotham Bold', color: 'black'}}>CHECKOUT</Text>
+								<Text allowFontScaling={false} style={{fontFamily: 'Gotham-Bold', color: 'black'}}>CHECKOUT</Text>
 							</View>
 						</TouchableOpacity>
 						</View>
@@ -387,7 +387,7 @@ const styles = StyleSheet.create({
     },
     rowMessage: {
         color: '#ffffff',
-        fontFamily: 'Gotham Bold',
+        fontFamily: 'Gotham-Bold',
         fontSize: 18,
         paddingLeft: 25,
         paddingTop: 40,

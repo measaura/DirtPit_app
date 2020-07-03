@@ -215,7 +215,7 @@ export default class DealersShopScreen extends Component {
 												title: item.item.retail_name + ', ' + item.item.address,
 										})
 								}>
-									<Text style={{fontFamily: 'Gotham Bold', fontSize: 18, color: 'black'}}>NAVIGATE TO CONCEPT STORE</Text>
+									<Text style={{fontFamily: 'Gotham-Bold', fontSize: 18, color: 'black'}}>NAVIGATE TO CONCEPT STORE</Text>
 							</TouchableOpacity>
 						</View>
 					</View>

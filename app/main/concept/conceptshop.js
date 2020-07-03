@@ -211,7 +211,7 @@ export default class ConceptScreen extends Component {
 												longitude: item.longitude,
 										})
 								}>
-									<Text style={{fontFamily: 'Gotham Bold', fontSize: 18, color: 'black'}}>NAVIGATE TO CONCEPT STORE</Text>
+									<Text style={{fontFamily: 'Gotham-Bold', fontSize: 18, color: 'black'}}>NAVIGATE TO CONCEPT STORE</Text>
 							</TouchableOpacity>
 						</View>
 					</View>

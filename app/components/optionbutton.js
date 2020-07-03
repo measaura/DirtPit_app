@@ -11,7 +11,7 @@ export default class OptionButton extends Component {
     }
 
     render() {
-console.log('button: '+JSON.stringify(this.props.button))
+// console.log('button: '+JSON.stringify(this.props.button))
         return (
             <TouchableOpacity onPress={this.props.onClick} activeOpacity={0.8} style={styles.radioButton}>
                 <View style={[styles.radioButtonHolder, { height: this.props.button.size?this.props.style.size:optionHeight, borderColor: this.props.style.color }]}>
@@ -50,7 +50,7 @@ const styles = StyleSheet.create({
         marginLeft: 5,
         marginRight: 5,
         fontSize: 18,
-        fontFamily: 'Gotham Bold',
+        fontFamily: 'Gotham-Bold',
         opacity: 1
     },
 

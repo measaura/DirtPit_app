@@ -445,7 +445,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     signInText: {
-    		fontFamily: 'Gotham Bold',
+    		fontFamily: 'Gotham-Bold',
         fontSize: 16,
         color: 'black',
     },
@@ -456,7 +456,7 @@ const styles = StyleSheet.create({
     },
     signUpButton: {
         marginTop: 8,
-        fontFamily: 'Gotham Bold',
+        fontFamily: 'Gotham-Bold',
         fontSize: 16,
         color: 'black',
     },

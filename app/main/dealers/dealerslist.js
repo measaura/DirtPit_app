@@ -684,7 +684,7 @@ const styles = StyleSheet.create({
     },
     rowMessage: {
         color: '#3f3f3f',
-        fontFamily: 'Gotham Bold',
+        fontFamily: 'Gotham-Bold',
         fontSize: 22,
     },
     rowTime: {
@@ -693,7 +693,7 @@ const styles = StyleSheet.create({
     },
   SectionHeaderStyle: {
     backgroundColor: 'yellow',
-    fontFamily: 'Gotham Bold',
+    fontFamily: 'Gotham-Bold',
     fontSize: 20,
     padding: 5,
     color: 'black',
