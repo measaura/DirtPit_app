@@ -45,12 +45,11 @@ let IntervalTime = 4000;
 
 const screenHeight = Dimensions.get('screen').height;
 const windowHeight = Dimensions.get('window').height;
-const navbarHeight = screenHeight - windowHeight + StatusBar.currentHeight;
+// const navbarHeight = screenHeight - windowHeight + Constants.statusBarHeight;
 
 const {width, height} = Dimensions.get('window')
 
-console.log('\nwidth: '+width+'\nheight: '+height)
-console.log('statusbar height'+StatusBar.currentHeight+', navbarHeight: '+navbarHeight)
+
 export default class HomeScreen extends React.Component {
 	constructor(props) {
 		super(props)
@@ -95,6 +94,9 @@ export default class HomeScreen extends React.Component {
 	};
 	
 	componentDidMount() {
+	console.log('\nwidth: '+width+'\nheight: '+height)
+// 	console.log('statusbar height '+StatusBar.currentHeight+', navbarHeight: '+navbarHeight)
+
 		fetch("https://demo.shortcircuitworks.com/dirtpit23/index.php?route=api/banner&id=9")
 			.then(response => response.json())
 			.then((responseJson)=> {
@@ -134,7 +136,7 @@ export default class HomeScreen extends React.Component {
 // 	console.log('image',this.state.images['image'])
 		const {navigate} = this.props.navigation
 		return (
-			<>
+			<SafeAreaView>
 				<StatusBar barStyle="light-content" />
 				<View style={{backgroundColor: 'black',}}>
 				<SafeAreaView>
@@ -148,10 +150,10 @@ export default class HomeScreen extends React.Component {
 								containerStyle={{
 										backgroundColor: '#000',
 										marginTop:
-												Platform.OS == 'ios' ? 0 : -20,
+												Platform.OS == 'ios' ? (notch ? -52:-18) : -20,
 										top:
-												Platform.OS == 'ios' ? (notch ? -10 : 0) : 0,
-										height: Platform.OS == 'ios' ? (notch ? 90 : 0) : 70,
+												Platform.OS == 'ios' ? (notch ? 0 : 0) : 0,
+										height: Platform.OS == 'ios' ? (notch ? 90 : 70) : 70,
 								}}
 						/>
 						<View style={styles.body}>
@@ -166,9 +168,9 @@ export default class HomeScreen extends React.Component {
 				/>
 				
 			</View>
-							<View style={{ height: navbarHeight < 100 ?  (windowHeight-width-navbarHeight-48):(windowHeight-width-navbarHeight+6), justifyContent: 'space-around', backgroundColor: '#ffffff',}}>
+							<View style={{flex:1, justifyContent: 'flex-start', alignItems: 'center', backgroundColor: '#ffffff',}}>
 
-								<View style={{flexDirection: 'row', justifyContent: 'space-around', flexWrap: 'wrap',}}>
+								<View style={{flexDirection: 'row', justifyContent: 'space-around', flexWrap: 'wrap',backgroundColor: '#eaeaea', }}>
 									<TouchableOpacity
 											style={styles.logOutBut}
 											onPress={()=>navigate('Segment')}
@@ -273,7 +275,7 @@ export default class HomeScreen extends React.Component {
 					</View>
 				</SafeAreaView>
 				</View>
-			</>
+			</SafeAreaView>
 		);
 	}
 };
@@ -295,7 +297,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 0,
   },
   sectionTitle: {
-  	fontFamily: 'Gotham Bold',
+  	fontFamily: 'Gotham-Bold',
     fontSize: 24,
     fontWeight: '600',
     color: Colors.black,
@@ -318,21 +320,21 @@ const styles = StyleSheet.create({
     textAlign: 'right',
   },
   menuButton: {
-  	width: 80,
+  	width: 90,
   	height: 80,
   },
   menuBox: {
-  	width: 80,
+  	width: 90,
   	marginLeft: 5,
   	marginRight: 5,
   	flexDirection: 'column',
   	alignItems: 'center',
   },
   menuText: {
-  	fontFamily: 'Gotham Bold',
-  	fontSize: 14,
+  	fontFamily: 'Gotham-Bold',
+  	fontSize: 12,
   	fontWeight: 'bold',
-  	marginTop: -10,
+  	marginTop: 0,
   	textAlign: 'center',
   },
   sliderItems: {
