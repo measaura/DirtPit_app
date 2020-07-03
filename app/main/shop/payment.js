@@ -21,6 +21,7 @@ import AsyncStorage from '@react-native-community/async-storage'
 
 export default class PaymentScreen extends Component {
   constructor(props) {
+  	webview = null;
     super(props);
     this.state = {
     	showAlert: false,
@@ -58,6 +59,52 @@ export default class PaymentScreen extends Component {
 			myUrl: item,
 		})
   }
+  
+  handleWebViewNavigationStateChange = (newNavState) => {
+    // newNavState looks something like this:
+    // {
+    //   url?: string;
+    //   title?: string;
+    //   loading?: boolean;
+    //   canGoBack?: boolean;
+    //   canGoForward?: boolean;
+    // }
+    
+    console.log(newNavState)
+    const { url } = newNavState;
+    if (!url) return;
+
+    // handle certain doctypes
+    if (url.includes('.pdf')) {
+      this.webview.stopLoading();
+      // open a modal with the PDF viewer
+    }
+
+    // one way to handle a successful form submit is via query strings
+    if (url.includes('?message=success')) {
+      this.webview.stopLoading();
+      // maybe close this view?
+    }
+
+    // one way to handle a successful form submit is via query strings
+    if (url.includes('?route=checkout/success')) {
+      this.webview.stopLoading();
+      this.setState({showAlert: true})
+      // maybe close this view?
+    }
+    
+    // one way to handle errors is via query string
+    if (url.includes('?errors=true')) {
+      this.webview.stopLoading();
+    }
+
+    // redirect somewhere else
+    if (url.includes('google.com')) {
+      const newURL = 'https://reactnative.dev/';
+      const redirectTo = 'window.location = "' + newURL + '"';
+      this.webview.injectJavaScript(redirectTo);
+    }
+  };
   
   renderWebview(){
 		AsyncStorage.getItem("payment_url", (err, value) => {
@@ -124,7 +171,9 @@ export default class PaymentScreen extends Component {
 							}}
 					/>
 				<WebView 
+					ref={(ref) => (this.webview = ref)}
 					source={{uri: this.state.myUrl}}
+					onNavigationStateChange={this.handleWebViewNavigationStateChange}
 					style={{flex: 1, marginTop: 0, height: 100}}
 				/>  
         <AwesomeAlert
