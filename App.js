@@ -44,6 +44,10 @@ import Verify from './app/auth/verify'
 
 import HomeScreen from './app/main/home'
 import TourScreen from './app/main/tour'
+import BikeTourScreen from './app/main/tour/biketour'
+import MotoTourScreen from './app/main/tour/mototour'
+import BikeTourTmpScreen from './app/main/tour/biketourtmp'
+import FourByFourTourTmpScreen from './app/main/tour/4x4tourtmp'
 import ShopScreen from './app/main/shop/retail'
 import SegmentScreen from './app/main/shop/segment'
 import CategoryScreen from './app/main/shop/category'
@@ -196,6 +200,9 @@ const AppModalStack = createStackNavigator(
         App: Tabs,
         Shop: ShopStack,
         Tour: TourScreen,
+        BikeTour: BikeTourTmpScreen,
+        MotoTour: MotoTourScreen,
+        FourByFourTour: FourByFourTourTmpScreen,
         Concept: ConceptList,
         ConceptScreen: ConceptScreen,
         Dealers: DealersScreen,

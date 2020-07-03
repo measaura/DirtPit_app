@@ -49,6 +49,7 @@ export default class TourScreen extends React.Component  {
 	}
 
   render() {  
+		const {navigate} = this.props.navigation
     return (
       <>
         <StatusBar barStyle="light-content" />
@@ -82,7 +83,7 @@ export default class TourScreen extends React.Component  {
                 <View style={styles.menuContainer}>
                   <TouchableOpacity
                       style={styles.logOutBut}
-                      onPress={()=>console.log('Bike Tour')}
+                      onPress={()=>navigate('BikeTour')}
                   >							
                     <View style={styles.menuBox} >
                       <Image source={require('../images/menu-icon-09.png')}
@@ -94,7 +95,7 @@ export default class TourScreen extends React.Component  {
                   </TouchableOpacity>
                   <TouchableOpacity
                       style={styles.logOutBut}
-                      onPress={()=>console.warn('Moto Tour')}
+                      onPress={()=>navigate('MotoTour')}
                   >							
                     <View style={styles.menuBox} >
                       <Image source={require('../images/menu-icon-10.png')}
@@ -106,7 +107,7 @@ export default class TourScreen extends React.Component  {
                   </TouchableOpacity>
                   <TouchableOpacity
                       style={styles.logOutBut}
-                      onPress={()=>console.log('4x4 Tour')}
+                      onPress={()=>navigate('FourByFourTour')}
                   >							
                     <View style={styles.menuBox} >
                       <Image source={require('../images/menu-icon-11.png')}
