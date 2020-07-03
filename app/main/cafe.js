@@ -17,6 +17,8 @@ import {
 } from 'react-native';
 import {Colors} from '../NewAppScreen';
 import {Header} from 'react-native-elements'
+import { NavigationEvents } from 'react-navigation'
+import Toast, {DURATION} from 'react-native-easy-toast'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 
 import {showLocation} from 'react-native-map-link'
@@ -30,6 +32,57 @@ const randomHexColor = () => {
     return (~~(Math.random() * 16)).toString(16);
   });
 };
+
+const DATA = [
+        {
+            "store_id":"1",
+            "image":"http://demo.shortcircuitworks.com/dirtpit23/image/catalog/app/kuantan.png",
+            "parent_id":"0",
+            "top":"1",
+            "column":"1",
+            "sort_order":"0",
+            "status":"1",
+            "name":"Kuantan Concept Store",
+            "description":"Kuantan Concept Store",
+            "meta_title":"Kuantan",
+            "meta_description":"No 9, \nJalan Bukit Sekilau, \n25300 Kuantan, \nPahang",
+            "meta_keyword":"",
+            "latitude":"3.814205",
+            "longitude":"103.325233",
+        },
+        {
+            "store_id":"2",
+            "image":"http://demo.shortcircuitworks.com/dirtpit23/image/catalog/app/johor.jpg",
+            "parent_id":"0",
+            "top":"1",
+            "column":"1",
+            "sort_order":"0",
+            "status":"1",
+            "name":"Johor Bahru Concept Store",
+            "description":"Johor Bahru Concept Store",
+            "meta_title":"Johor Bahru",
+            "meta_description":"Lot L1.23 & L1.24, \nPlaza Angsana, \nJalan Skudai, \nPusat Bandar Tampoi, \n81200 Johor Bharu, \nJohor",
+            "meta_keyword":"",
+            "latitude":"1.495196",
+            "longitude":"103.705745",
+        },
+        {
+            "store_id":"3",
+            "image":"http://demo.shortcircuitworks.com/dirtpit23/image/catalog/app/penang.jpg",
+            "parent_id":"0",
+            "top":"1",
+            "column":"1",
+            "sort_order":"0",
+            "status":"1",
+            "name":"Penang Concept Store",
+            "description":"Penang Concept Store",
+            "meta_title":"Penang",
+            "meta_description":"170-01-05/06/07/08, \nPlaza Gurney, \nPersiaran Gurney, \nPulau Tikus, \n10250 George Town, \nPenang",
+            "meta_keyword":"",
+            "latitude":"5.437492",
+            "longitude":"100.309398",
+        }
+];
 
 export default class CafeScreen extends Component {
 	constructor(props) {
@@ -56,12 +109,14 @@ export default class CafeScreen extends Component {
 	componentDidMount(){
 		this.spin()
 // 	console.log(this.state.segId)
-		fetch("https://demo.shortcircuitworks.com/dirtpit23/index.php?route=api/cafe")
+		fetch("https://demo.shortcircuitworks.com/dirtpit23/index.php?route=api/banner&id=10")
 			.then(response => response.json())
 			.then((responseJson)=> {
+				console.log(responseJson.banner[0])
 				this.setState({
 					loading: false,
-					dataSource: responseJson.dealers
+					dataSource: responseJson.banner,
+					popupimg: responseJson.banner[0].image
 				})
 			})
 		.catch(error=>console.log(error)) //to catch the errors if any
@@ -78,6 +133,13 @@ export default class CafeScreen extends Component {
 		);
 	}
 
+	renderPopup(item) {
+		console.warn(item)
+		this.setState({
+			popupimg: item.image,
+		})
+	}
+	
 	renderLeft() {
 			const {navigate} = this.props.navigation
 			return (
@@ -115,6 +177,7 @@ export default class CafeScreen extends Component {
 // 		console.log('-------------------- ')
 // 		console.log(list)
 // 		console.log('=====================')
+console.log(this.state.dataSource[0].image)
 			return(
 				<View style={styles.container}>
 					<Header
@@ -131,42 +194,67 @@ export default class CafeScreen extends Component {
 									height: Platform.OS == 'ios' ? (iPhoneX ? 90 : 0) : 70,
 							}}
 					/>
-					<FlatList
-						data={this.state.dataSource}
-// 						renderItem={item => this.renderItem(item)}
-						renderItem={item => (
-// 							if ({item.item.top} == 1){
-									<TouchableOpacity
-											onPress={() =>
-												showLocation({
-														dialogTitle: 'Open map application',
-														dialogMessage:
-																'Get directions to "' +
-																item.item.dealer_name +
-																'" using selected app',
-														latitude: item.item.latitude,
-														longitude: item.item.longitude,
-												})
-											}
-											style={styles.rowWrap}>
-											<View style={styles.rowTextContent}>
-													<Text allowFontScaling={false} style={styles.rowMessage}>
-														{item.item.dealer_name}
-													</Text>
-													<Text allowFontScaling={false} style={styles.rowTime}>
-														{item.item.address}
-													</Text>
-													<Text allowFontScaling={false} style={styles.rowTime}>
-														{item.item.in_charge}{': '}{item.item.contact_no}
-													</Text>
-											</View>
+					{this.state.dataSource.map((item) => {
+					console.log(item.image)
+						return (
+						<View style={styles.mainContainer}>
+							<ScrollView
+								style={styles.scrollStyle}
+							>
+							<Image
+									source={{uri: this.state.popupimg}}
+									style={styles.imageLarge}
+							/>
+							<View style={{height:(height*0.15)+10}} >
+								<FlatList
+										style={{flex:1, flexDirection: 'row', width: width, paddingTop: 0, paddingBottom: 0, backgroundColor: "#ffffff"}}
+										horizontal={true}
+										data={this.state.dataSource}
+										renderItem={({item,index}) => 
+                    	<TouchableOpacity 
+                    		onPress={()=>this.renderPopup(item,index)}>
+																			<Image
+																					source={{uri: item.image}}
+																					style={styles.imageThumb}
+																			/>
+                      </TouchableOpacity>
+										}
 
-									</TouchableOpacity>
-// 								}									
-									
-							)}
-						keyExtractor={item=>item.store_id.toString()}
-					/>
+										ItemSeparatorComponent={() => {
+												return (
+														<View
+																style={{
+																height: (height*0.15)+10,
+																width: 5,
+																backgroundColor: "#fff",
+
+																}}
+														/>
+												);
+										}}
+
+										keyExtractor={(item, index) => index.toString()}
+								/>
+							</View>
+								<View style={{justifyContent: 'center'}} >
+
+									<Image 
+											source={{uri: "https://demo.shortcircuitworks.com/dirtpit23/image/catalog/app/cafe/menu7.jpg"}}
+											style={styles.imageMenu}
+									/>
+									<Image 
+											source={{uri: "https://demo.shortcircuitworks.com/dirtpit23/image/catalog/app/cafe/menu8.jpg"}}
+											style={styles.imageMenu}
+									/>
+									<Image 
+											source={{uri: "https://demo.shortcircuitworks.com/dirtpit23/image/catalog/app/cafe/menu9.jpg"}}
+											style={styles.imageMenu}
+									/>
+								</View>
+						</ScrollView>						
+					</View>
+					)
+				})}
 				</View>
 			)
 		}else{
@@ -347,4 +435,37 @@ const styles = StyleSheet.create({
         color: '#a0abba',
         fontSize: 15,
     },
+  imageLarge: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: height*0.5,
+    width: '95%',
+    padding: 2,
+    margin: 8
+  },
+  imageThumb: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: height*0.15,
+    width: height*0.15,
+    padding: 2,
+    marginTop: 5,
+    borderWidth: 5,
+    borderColor: '#fff',
+  },
+  imageMenu: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: 600,
+    width: width*0.95,
+    padding: 2,
+    margin: 8
+  },
+  sectionTitle: {
+    fontSize: 24,
+    fontFamily: 'Gotham-Bold',
+    fontWeight: 'bold',
+    color: Colors.black,
+    marginLeft: 8,
+  },
 });
