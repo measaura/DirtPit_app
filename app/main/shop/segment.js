@@ -305,7 +305,7 @@ const styles = StyleSheet.create({
         paddingLeft: 25,
         paddingTop: 40,
         paddingBottom: 40,
-        width: width*0.8,
+        width: width*0.7,
     },
     rowTime: {
         color: '#fff',
