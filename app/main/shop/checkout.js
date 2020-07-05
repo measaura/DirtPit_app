@@ -49,6 +49,7 @@ export default class CheckoutScreen extends Component {
        payment_methods: [],
        orders: [],
        billplz: [],
+       stockErr: [],
      };
   }
 
@@ -66,6 +67,10 @@ export default class CheckoutScreen extends Component {
 
   componentDidMount() {
   	this.spin()
+		this.checkCartItems()
+  }
+
+	listCartItems() {
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 				var myHeaders = new Headers();
 				var requestOptions = {
@@ -82,7 +87,7 @@ export default class CheckoutScreen extends Component {
 							newCart: result[0].products,
 							cartTotal: result[0].totals,
 						})
-					console.log('didmount',result[0].products)
+					console.log('didmount',JSON.stringify(result[0].products))
 			    this.getPaymentAddress()
 					})
 					.catch(error => console.log('error', error));
@@ -101,9 +106,9 @@ export default class CheckoutScreen extends Component {
 //       alert(err)
 //     })
 
-  }
-
-	getCartItems() {
+	}
+	
+	checkCartItems() {
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 // 				let mySession = AsyncStorage.getItem('tokenKey');
 				var myHeaders = new Headers();
@@ -120,8 +125,15 @@ export default class CheckoutScreen extends Component {
 				};
 
 				fetch("https://demo.shortcircuitworks.com/dirtpit23/index.php?route=api/usercart/products", requestOptions)
-					.then(response =>response.text())
-					.then(result =>console.log(result))
+					.then(response =>response.json())
+					.then(result =>{
+						console.log('getCartItems',result)
+						console.log('stock error',result.error? true:false)
+						if(result.error) {
+							    const {  navigation, route  } = this.props;
+									navigation.navigate('Cart')
+						}
+					})
 					.catch(error => console.log('error', error));
 					
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++	

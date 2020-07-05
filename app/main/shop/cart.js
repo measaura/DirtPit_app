@@ -37,44 +37,9 @@ export default class CartScreen extends Component {
      this.state = {
        dataCart:[],
        cartTotal:0,
+       showCart:[],
+       stockCheck:[],
      };
-  }
-
-  componentDidMount() {
-//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-// 				let mySession = AsyncStorage.getItem('tokenKey');
-				var myHeaders = new Headers();
-// 				myHeaders.append("Cookie", "language=en-gb;");
-// 				myHeaders.append("Cookie", "default="+mySession+";");
-// 				myHeaders.append("Cookie", "language=en-gb; currency=MYR; PHPSESSID=473df23cb16c59c23d61cf2254bc32e0; default=ab3122bd90780f42debb797e1de4449a");
-// 				console.log(AsyncStorage.getItem('tokenKey'))
-// 				console.log(myHeaders)
-
-				var requestOptions = {
-					method: 'POST',
-					headers: myHeaders,
-					redirect: 'follow'
-				};
-
-				fetch("https://demo.shortcircuitworks.com/dirtpit23/index.php?route=api/usercart/products", requestOptions)
-					.then(response =>response.text())
-					.then(result =>console.log(result))
-					.catch(error => console.log('error', error));
-					
-//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++	
-    AsyncStorage.getItem('cart').then((cart)=>{
-      if (cart !== null) {
-        // We have data!!
-        const shopcart = JSON.parse(cart)
-        this.setState({dataCart:shopcart})
-
-
-//         AsyncStorage.getItem('cart').then((res) => console.log(res))
-      }
-    })
-    .catch((err)=>{
-      alert(err)
-    })
   }
 
 	getCartItems() {
@@ -94,25 +59,43 @@ export default class CartScreen extends Component {
 				};
 
 				fetch("https://demo.shortcircuitworks.com/dirtpit23/index.php?route=api/usercart/products", requestOptions)
-					.then(response =>response.text())
-					.then(result =>console.log(result))
+					.then(response =>response.json())
+					.then(result =>{
+						console.log('getCartItems',JSON.stringify(result))
+						console.log('stock error',result.error? true:false)
+// 						if(result.error) {
+// 							    const {  navigation, route  } = this.props;
+// 									navigation.navigate('Cart')
+// 						}
+						this.setState({
+							dataCart: result.products,
+							cartTotal: result.totals
+						})
+					})
 					.catch(error => console.log('error', error));
 					
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++	
-    AsyncStorage.getItem('cart').then((cart)=>{
-      if (cart !== null) {
-        // We have data!!
-        const shopcart = JSON.parse(cart)
-        this.setState({dataCart:shopcart})
-
-
-//         AsyncStorage.getItem('cart').then((res) => console.log(res))
-      }
-    })
-    .catch((err)=>{
-      alert(err)
-    })
+//     AsyncStorage.getItem('cart').then((cart)=>{
+//       if (cart !== null) {
+//         // We have data!!
+//         const shopcart = JSON.parse(cart)
+//         this.setState({dataCart:shopcart})
+// 
+// 
+// //         AsyncStorage.getItem('cart').then((res) => console.log(res))
+//       }
+//     })
+//     .catch((err)=>{
+//       alert(err)
+//     })
   }
+  
+  componentDidMount() {
+  	this.getCartItems() 
+
+  }
+
+
   
   goBack() {
     const {  navigation, route  } = this.props;
@@ -134,7 +117,7 @@ export default class CartScreen extends Component {
 	}
 	
   render() {
-  var rmTotal=this.state.cartTotal.toFixed(2)
+//   var rmTotal=this.state.cartTotal.toFixed(2)
  const grandTotal = []
     return (
       <View style={{flex:1,alignItems: 'center', justifyContent: 'center'}}>
@@ -157,11 +140,19 @@ export default class CartScreen extends Component {
 							<NavigationEvents
                 onDidFocus={() => console.log('Refreshed')}
               />
+            <View style={{backgroundColor: 'red'}}>
+            	<Text style={{fontSize: 14, fontFamily: "Gotham-Bold", color:'white', marginLeft: 5, marginRight: 5,}} >Products marked with *** are not available in the desired quantity or not in stock!</Text>
+            </View>
            <ScrollView>
 
              {
 
                this.state.dataCart.map((item,i)=>{
+														 if (item.stock == false){
+																var stockErr = '***';
+														 }else{
+																var stockErr = '';
+														 }
                	var price = Number(item.price*item.quantity);
                	var itemprice = price.toFixed(2);
 								const total = {
@@ -172,17 +163,21 @@ export default class CartScreen extends Component {
 								console.log(grandTotal)
 							const productsTotal = grandTotal.reduce((itemTotal, meal) => itemTotal + Number(meal.prodTot), 0)
 		console.log('total '+productsTotal); // 45 calories
-		rmTotal = productsTotal.toFixed(2)
+// 		rmTotal = productsTotal.toFixed(2)
+		
                  return(
                    <View style={{width:width-20,margin:10,backgroundColor:'transparent', flexDirection:'row', borderBottomWidth:2, borderColor:"#cccccc", paddingBottom:10}}>
-                     <Image resizeMode={"contain"} style={{width:width/3,height:width/3}} source={{uri: item.shop.thumb}} />
+                     <Image resizeMode={"contain"} style={{width:width/3,height:width/3}} source={{uri: item.thumb}} />
                      <View style={{flex:1, backgroundColor:'trangraysparent', padding:10, justifyContent:"space-between"}}>
                        <View>
-                         <Text style={{fontWeight:"bold", fontSize:16, fontFamily: "Gotham-Bold"}}>{item.shop.heading_title}</Text>
+                       		<View style={{flexDirection:'row'}}>
+													 <Text style={{fontWeight:"bold", fontSize:16, fontFamily: "Gotham-Bold"}}>{item.name}</Text>
+													 <Text style={{ fontSize:20, fontFamily: "Gotham-Bold", color:"red"}}> {stockErr}</Text>
+                         </View>
                          <Text>Options: </Text>
                        </View>
                        <View style={{flexDirection:'row',justifyContent:'space-between'}}>
-                         <Text style={{fontWeight:'bold',color:"#33c37d",fontSize:14}}>RM{itemprice}</Text>
+                         <Text style={{fontWeight:'bold',color:"#33c37d",fontSize:14}}>{item.price}</Text>
                          <View style={{flexDirection:'row', alignItems:'center'}}>
                            <TouchableOpacity onPress={()=>this.onChangeQuan(i,false)}>
                              <Ionicons name="ios-remove-circle" size={30} color={"#33c37d"} />
@@ -205,7 +200,7 @@ export default class CartScreen extends Component {
            </ScrollView>
 						<View style={styles.footerBar}>
 						<View style={{flex:1, width: width*0.7,  flexDirection:'row',justifyContent: 'space-around', alignItems: 'center', backgroundColor: 'white', borderColor: 'black'}} >
-							<Text allowFontScaling={false} style={{fontFamily: 'Gotham-Bold', color: 'black'}}>TOTAL: RM{rmTotal}</Text>
+							<Text allowFontScaling={false} style={{fontFamily: 'Gotham-Bold', color: 'black'}}>TOTAL: RM{}</Text>
 						</View>
 						<TouchableOpacity 
 							onPress={()=>console.log('checkout')} >
