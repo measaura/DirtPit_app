@@ -359,8 +359,9 @@ const styles = StyleSheet.create({
     },
     rowMessage: {
         color: '#3f3f3f',
-        fontSize: 18,
-        paddingRight: 10,
+        fontFamily: 'Gotham-Light',
+        fontSize: 14,
+        paddingRight: 5,
     },
     rowPrice: {
         color: '#3f3f3f',

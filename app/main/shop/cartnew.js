@@ -364,18 +364,18 @@ console.log(this.state.my)
 						<View style={styles.footerBar}>
 							{this.state.cartTotal.map((item)=>{
 								return(
-									<View style={{flex:1, width: width, height:40,  flexDirection:'row',justifyContent: 'space-around', alignItems: 'center', backgroundColor: '#a0a0a0', borderColor: 'black'}} >
-										<Text allowFontScaling={false} style={{fontFamily: 'Gotham-Bold', color: 'black'}}>{item.title}: {item.text}</Text>
+									<View style={{flex:1, width: width+3, height:40,  flexDirection:'row', alignItems: 'center', justifyContent: 'flex-end', marginBottom:-1, marginLeft:-1, borderWidth:1, borderColor: 'black'}} >
+										<Text allowFontScaling={false} style={{fontFamily: 'Gotham-Medium', color: 'black', justifyContent: 'flex-start', paddingRight: 10}}>{item.title}: </Text>
+										<Text allowFontScaling={false} style={{fontFamily: 'Gotham-Bold', color: 'black', justifyContent: 'flex-end', paddingRight: 10}}>{item.text}</Text>
 									</View>
 								)
 							})}
 							<View style={{ width: width, height:50, flexDirection:'row',justifyContent: 'space-around', alignItems: 'center',}} >
 								<TouchableOpacity 
 									onPress={()=>navigate('Checkout')} >
-																<View style={{flex:1, width: width,  flexDirection:'row',justifyContent: 'space-around', alignItems: 'center', backgroundColor: 'yellow', borderWidth: 2, borderColor: 'black'}} >
-
-										<Text allowFontScaling={false} style={{fontFamily: 'Gotham-Bold', color: 'black'}}>CHECKOUT</Text>
-																</View>
+										<View style={{flex:1, width: width+5, marginLeft:1,  flexDirection:'row',justifyContent: 'space-around', alignItems: 'center', backgroundColor: 'yellow', borderWidth: 2, borderColor: 'black'}} >
+											<Text allowFontScaling={false} style={{fontFamily: 'Gotham-Bold',fontSize: 18, color: 'black'}}>CHECKOUT</Text>
+										</View>
 								</TouchableOpacity>
 							</View>
 						</View>
@@ -587,7 +587,7 @@ const styles = StyleSheet.create({
 		footerBar: {
 			left: 0,
 			bottom: 0,
-			height: Platform.OS == 'ios' ? 70 : 120,
+			height: Platform.OS == 'ios' ? iPhoneX ? 100:70 : 120,
 			flexDirection: 'column',
 		},
 });

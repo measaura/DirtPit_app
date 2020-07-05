@@ -310,6 +310,7 @@ const styles = StyleSheet.create({
     },
     rowMessage: {
         color: '#3f3f3f',
+        fontFamily:'Gotham-Bold',
         fontSize: 25,
     },
     rowTime: {
