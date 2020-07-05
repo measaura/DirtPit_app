@@ -48,6 +48,9 @@ const windowHeight = Dimensions.get('window').height;
 // const navbarHeight = screenHeight - windowHeight + Constants.statusBarHeight;
 
 const {width, height} = Dimensions.get('window')
+const softNavBar = Platform.OS == 'ios' ? notch ? 116 :68 : 50;
+const bottomTab = 48;
+const sliderHeight = height-width < 300? 340: width;
 
 
 export default class HomeScreen extends React.Component {
@@ -136,7 +139,7 @@ export default class HomeScreen extends React.Component {
 // 	console.log('image',this.state.images['image'])
 		const {navigate} = this.props.navigation
 		return (
-			<SafeAreaView>
+			<SafeAreaView style={{flex:1}}>
 				<StatusBar barStyle="light-content" />
 				<View style={{backgroundColor: 'black',}}>
 				<SafeAreaView>
@@ -157,20 +160,20 @@ export default class HomeScreen extends React.Component {
 								}}
 						/>
 						<View style={styles.body}>
-			<View style={{height:width}} >
-				<FlatList
-					data={this.state.images}
-					keyExtractor={this._keyExtractor.bind(this)}
-					renderItem={this._renderItem.bind(this)}
-					horizontal={true}
-					flatListRef={React.createRef()}
-					ref={this.flatList}
-				/>
+							<View style={{height:sliderHeight}} >
+								<FlatList
+									data={this.state.images}
+									keyExtractor={this._keyExtractor.bind(this)}
+									renderItem={this._renderItem.bind(this)}
+									horizontal={true}
+									flatListRef={React.createRef()}
+									ref={this.flatList}
+								/>
 				
-			</View>
-							<View style={{flex:1, justifyContent: 'flex-start', alignItems: 'center', backgroundColor: '#ffffff',}}>
+							</View>
+							<View style={{flex:1, justifyContent: 'space-around', alignItems: 'center', backgroundColor: '#ffffff',height:250}}>
 
-								<View style={{flexDirection: 'row', justifyContent: 'space-around', flexWrap: 'wrap',backgroundColor: '#eaeaea', }}>
+								<View style={{flexDirection: 'row',justifyContent: 'space-around', alignSelf: 'stretch', flexWrap: 'wrap',backgroundColor: '#eaeaea', }}>
 									<TouchableOpacity
 											style={styles.logOutBut}
 											onPress={()=>navigate('Segment')}
@@ -221,7 +224,7 @@ export default class HomeScreen extends React.Component {
 									</TouchableOpacity>
 									<TouchableOpacity
 											style={styles.logOutBut}
-											onPress={()=>navigate('MotoGarage')}
+											onPress={()=>navigate('Garage')}
 									>							
 										<View style={styles.menuBox} >
 											<Image source={require('../images/menu-icon-05.png')}
@@ -289,7 +292,7 @@ const styles = StyleSheet.create({
     right: 0,
   },
   body: {
-    height: height,
+  	height:height-bottomTab-softNavBar,
     backgroundColor: Colors.white,
   },
   sectionContainer: {
@@ -320,13 +323,14 @@ const styles = StyleSheet.create({
     textAlign: 'right',
   },
   menuButton: {
-  	width: 90,
+  	width: 80,
   	height: 80,
   },
   menuBox: {
-  	width: 90,
+  	width: 80,
   	marginLeft: 5,
   	marginRight: 5,
+  	marginBottom: 5,
   	flexDirection: 'column',
   	alignItems: 'center',
   },
