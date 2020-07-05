@@ -29,7 +29,9 @@ const {width, height} = Dimensions.get('window')
 
 const screenHeight = Dimensions.get('screen').height;
 const windowHeight = Dimensions.get('window').height;
-const navbarHeight = screenHeight - windowHeight + StatusBar.currentHeight;
+const statusBarHeight = StatusBar.currentHeight;
+const navbarHeight = Platform.OS == 'android'? screenHeight > windowHeight? 0:48 :0;
+
 
 const randomHexColor = () => {
   return '#000000'.replace(/0/g, function() {
@@ -467,7 +469,9 @@ export default class ProductScreen extends Component {
 				</View>
 			)
 		}else if (this.state.dataSource){
-console.warn('selected: '+ (this.state.optionSelected))
+console.log('screen',screenHeight)
+console.log('window',windowHeight)
+console.log('statusbar',navbarHeight)
 			return(
 
 				<View style={styles.container}>
@@ -548,7 +552,12 @@ console.warn('selected: '+ (this.state.optionSelected))
 									</View>
 								</View>
 						</ScrollView>
-						<View style={styles.footerBar}>
+						<View style={{
+			left: 0,
+			bottom: navbarHeight,
+			height: Platform.OS == 'ios' ? 70 : 50,
+			flexDirection: 'row', alignSelf:'flex-end',
+		}}>
 							<View style={{flexDirection:'row', width: width*0.5, alignItems:'center', paddingLeft: 15, backgroundColor: 'white'}}>
 								<Text style={{fontFamily: 'Gotham-Bold', color: 'black',paddingRight: 5}}>Quantity</Text>
 								 <TouchableOpacity onPress={()=>this.onChangeQuan('neg')}>
@@ -710,28 +719,6 @@ const styles = StyleSheet.create({
     padding: 4,
     paddingRight: 12,
     textAlign: 'right',
-  },
-  menuContainer: {
-  	flexDirection: 'column',
-  	justifyContent: 'center',
-  	alignItems: 'center',
-  	paddingTop: 40,
-  	paddingBottom: 20
-  },
-  menuButton: {
-  	width: 100,
-  	height: 100,
-  },
-  menuBox: {
-  	width: 100,
-  	paddingBottom: 20,
-  	flexDirection: 'column',
-  	alignItems: 'center',
-  },
-  menuText: {
-  	fontSize: 16,
-  	fontWeight: 'bold',
-  	marginTop: -10,
   },
   flexContainer: {
 		flex: 1,
