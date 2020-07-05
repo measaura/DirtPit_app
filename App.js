@@ -62,6 +62,7 @@ import DealersListScreen from './app/main/dealers/dealerslist'
 import DealersShopScreen from './app/main/dealers/dealershop'
 import MotoGarageScreen from './app/main/motogarage'
 import BikeGarageScreen from './app/main/bikegarage'
+import GarageScreen from './app/main/garage'
 import CafeScreen from './app/main/cafe'
 import CommunityScreen from './app/main/community'
 import ConceptList from './app/main/concept'
@@ -179,7 +180,7 @@ const Tabs = createBottomTabNavigator(
             activeTintColor: Colors.primary,
             inactiveTintColor: 'gray',
             showLabel: false,
-            style: {backgroundColor: 'black'},
+            style: {backgroundColor: 'darkgray'},
         },
     },
 // )
@@ -210,6 +211,7 @@ const AppModalStack = createStackNavigator(
         DealerShop: DealersShopScreen,
         MotoGarage: MotoGarageScreen,
         BikeGarage: BikeGarageScreen,
+        Garage: GarageScreen,
         Cafe: CafeScreen,
         Community: CommunityScreen,
         Cart: CartScreen,
