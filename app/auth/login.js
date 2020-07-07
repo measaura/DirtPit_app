@@ -261,12 +261,13 @@ export default class Login extends React.Component {
                                     .messaging()
                                     .getToken()
                                     .then(token => {
+                                        this.setState({fcm_token: token})
                                         console.log(
                                             'login.js FCM TOKEN: ',
                                             token,
                                         )
-                                        this.setState({fcm_token: token})
-                                        this.updateProfile(response)
+                                        console.log('login.js FCM TOKEN: ',this.state.fcm_token)
+                                        this.updateProfile(response, token)
                                     })
                             })
                             .catch(error => {
@@ -294,11 +295,11 @@ export default class Login extends React.Component {
         })
     }
 
-    updateProfile(responseData) {
+    updateProfile(responseData, fcmToken) {
         const {navigate} = this.props.navigation
         let dataToShow = responseData
-//         console.log(this.state.fcm_token)
-        dataToShow.fcm_token = this.state.fcm_token
+        console.log('updateProfile',fcmToken)
+        dataToShow.fcm_token = fcmToken
         API.userUpdate(dataToShow).then(_ => {
             this.setState({isLogin: false})
             navigate('Home', {prevScreenTitle: 'Home'})
