@@ -13,6 +13,14 @@ import {
 import { Header } from "react-native-elements";
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import DropDownPicker from 'react-native-dropdown-picker';
+import DateTimePicker from "react-native-modal-datetime-picker";
+import Moment from "moment";
+import MomentTimezone from "moment-timezone";
+import * as RNLocalize from 'react-native-localize'
+import DeviceInfo from 'react-native-device-info'
+var notch = DeviceInfo.hasNotch()
+
+var timeZone = RNLocalize.getTimeZone()
 
 export default class GarageScreen extends React.Component {
     constructor(props) {
@@ -37,9 +45,39 @@ export default class GarageScreen extends React.Component {
             statefield: '',
             zonedone: false,
             countrybefore: '',
-            submitBtn: true
+            submitBtn: true,
+            isDateTimePickerVisible: false,
+            selectedDateStar: 'Select Date',
         };
     }
+
+    _showDateTimePicker = () =>
+        this.setState({ isDateTimePickerVisible: true });
+
+    _hideDateTimePicker = () =>
+        this.setState({ isDateTimePickerVisible: false });
+
+    _handleDatePicked = date => {
+    console.log('ok click')
+//         var todayDate = MomentTimezone.tz(date, Moment.tz.guess()).format();
+        var todayDate = MomentTimezone.tz(date, timeZone).format();
+        var today = Moment(todayDate)
+            .add(1, "minutes")
+            .format("DD-MM-YYYY");
+//         this.setState({
+//             startDate: today,
+//             endDate: today
+//         });
+        console.log(this.state.startDate);
+        console.log(this.state.endDate);
+        this.setState(
+            {
+                selectedDateStar: today,
+                isDateTimePickerVisible: false
+            },
+        );
+//         this._hideDateTimePicker();
+    };
 
 		validateEmail = email => {
 			var re = /^(([^<>()\[\]\\.,;:\s@”]+(\.[^<>()\[\]\\.,;:\s@”]+)*)|(“.+”))@((\[[0–9]{1,3}\.[0–9]{1,3}\.[0–9]{1,3}\.[0–9]{1,3}])|(([a-zA-Z\-0–9]+\.)+[a-zA-Z]{2,}))$/;
@@ -226,6 +264,43 @@ console.log('zone',zonetemp.length)
 		}
 		
     componentDidMount(){
+
+    console.log("componentDidMount")
+  
+        var dateGen = Moment.utc().format();
+        var todayDate = MomentTimezone.tz(
+            dateGen,
+            timeZone
+        ).format();
+
+        var today = Moment(todayDate)
+            .add(1, "minutes")
+            .format("D-MM-YYYY");
+            
+        var todaySelect = Moment(todayDate)
+            .add(1, "minutes")
+            .format("YYYY/MM/D");
+            
+        this.setState({
+            todayDate: todaySelect,
+            startDate: today,
+            endDate: today
+        });
+
+console.log("TZ: ", timeZone)
+console.log("today date: ",today)  
+// 
+//         this.setState({
+//             selectedDateStar: today
+//         });
+// 
+//         this.setState(
+//             {
+//                 startDate: today,
+//                 endDate: today
+//             },
+//         );
+
     	this.getCountries()
     }
     
@@ -248,6 +323,13 @@ console.log('zone',zonetemp.length)
         const { navigate } = this.props.navigation;
         return (
             <View style={styles.container}>
+                <DateTimePicker
+                    mode={"date"}
+										date={new Date(this.state.todayDate)}
+                    isVisible={this.state.isDateTimePickerVisible}
+                    onConfirm={this._handleDatePicked}
+                    onCancel={this._hideDateTimePicker}
+                />
 						<Header
 								innerContainerStyles={styles.headerInnerContainer}
 								outerContainerStyles={styles.headerOuterContainer}
@@ -267,206 +349,16 @@ console.log('zone',zonetemp.length)
                     contentContainerStyle={styles.scrollContent}
                 >
                     <View style={styles.headerLogo}>
-											<Text style={{alignSelf: 'center', fontFamily:'Gotham-Bold', fontSize: 20}}>Register Account</Text>
-                    </View>
-										<View>
-											<Text style={{fontFamily: 'Gotham-Bold', fontSize: 16, justifyContent: 'flex-start'}}>Personal Details</Text>
-										</View>		
-                    <View style={styles.wrapField}>
-                        <Image
-                            source={require("../images/icoUser.png")}
-                            style={styles.fieldIco}
-                        />
-                        <TextInput
-                            ref="firstnamefieldRef"
-                            onChangeText={firstnamefield =>
-                                this.setState({ firstnamefield })
-                            }
-                            value={this.state.firstnamefieldRef}
-                            style={styles.inputStyles}
-                            placeholder="First Name *"
-                            underlineColorAndroid="transparent"
-                            placeholderTextColor="dark-grey"
-                        />
-                    </View>
-                    <View style={styles.wrapField}>
-                        <Image
-                            source={require("../images/icoUser.png")}
-                            style={styles.fieldIco}
-                        />
-                        <TextInput
-                            ref="lastnamefieldRef"
-                            onChangeText={lastnamefield =>
-                                this.setState({ lastnamefield })
-                            }
-                            value={this.state.lastnamefieldRef}
-                            style={styles.inputStyles}
-                            placeholder="Last Name *"
-                            underlineColorAndroid="transparent"
-                            placeholderTextColor="dark-grey"
-                        />
-                    </View>
-                    <View style={styles.wrapField}>
-                        <Image
-                            source={require("../images/icoEmail.png")}
-                            style={styles.fieldIco}
-                        />
-                        <TextInput
-                            ref="emailfieldRef"
-                            onChangeText={emailfield =>
-                                this.setState({ emailfield })
-                            }
-                            value={this.state.emailfield}
-                            style={styles.inputStyles}
-                            placeholder="Email *"
-                            underlineColorAndroid="transparent"
-                            placeholderTextColor="dark-grey"
-                            keyboardType="email-address"
-                        />
-                    </View>
-                    <View style={styles.wrapField}>
-                        <Image
-                            source={require("../images/icoPhone.png")}
-                            style={styles.fieldIco}
-                        />
-                        <TextInput
-                            ref="phonefieldRef"
-                            onChangeText={phonefield =>
-                                this.setState({ phonefield })
-                            }
-                            value={this.state.phonefield}
-                            style={styles.inputStyles}
-                            placeholder="Mobile Number *"
-                            underlineColorAndroid="transparent"
-                            placeholderTextColor="dark-grey"
-                            keyboardType="phone-pad"
-                        />
-                    </View>
-                    <View style={styles.wrapField}>
-                        <Image
-                            source={require("../images/icoPassword.png")}
-                            style={styles.fieldIco}
-                        />
-                        <TextInput
-                            ref="passwordfieldRef"
-                            secureTextEntry={true}
-                            onChangeText={passwordfield =>
-                                this.setState({ passwordfield })
-                            }
-                            value={this.state.passwordfield}
-                            style={styles.inputStyles}
-                            placeholder="Password *"
-                            underlineColorAndroid="transparent"
-                            placeholderTextColor="dark-grey"
-                        />
-                    </View>
-                    <View style={styles.wrapField}>
-                        <Image
-                            source={require("../images/icoPassword.png")}
-                            style={styles.fieldIco}
-                        />
-                        <TextInput
-                            ref="copasswordfieldRef"
-                            secureTextEntry={true}
-                            onChangeText={copasswordfield =>
-                                this.setState({ copasswordfield })
-                            }
-                            value={this.state.copasswordfield}
-                            style={styles.inputStyles}
-                            placeholder="Confirm Password *"
-                            underlineColorAndroid="transparent"
-                            placeholderTextColor="dark-grey"
-                        />
-                    </View>
-										<View>
-											<Text style={{fontFamily: 'Gotham-Bold', fontSize: 16, paddingTop:15,}}>Address</Text>
-										</View>		
-                    <View style={styles.wrapField}>
-                        <Image
-                            source={require("../images/icoUser.png")}
-                            style={styles.fieldIco}
-                        />
-                        <TextInput
-                            ref="companyfieldRef"
-                            onChangeText={companyfield =>
-                                this.setState({ companyfield })
-                            }
-                            value={this.state.firstnamefieldRef}
-                            style={styles.inputStyles}
-                            placeholder="Company"
-                            underlineColorAndroid="transparent"
-                            placeholderTextColor="dark-grey"
-                        />
-                    </View>
-                    <View style={styles.wrapField}>
-                        <Image
-                            source={require("../images/icoUser.png")}
-                            style={styles.fieldIco}
-                        />
-                        <TextInput
-                            ref="address1fieldRef"
-                            onChangeText={address1field =>
-                                this.setState({ address1field })
-                            }
-                            value={this.state.address1field}
-                            style={styles.inputStyles}
-                            placeholder="Address 1 *"
-                            underlineColorAndroid="transparent"
-                            placeholderTextColor="dark-grey"
-                        />
-                    </View>
-                    <View style={styles.wrapField}>
-                        <Image
-                            source={require("../images/icoEmail.png")}
-                            style={styles.fieldIco}
-                        />
-                        <TextInput
-                            ref="address2fieldRef"
-                            onChangeText={address2field =>
-                                this.setState({ address2field })
-                            }
-                            value={this.state.address2field}
-                            style={styles.inputStyles}
-                            placeholder="Address 2"
-                            underlineColorAndroid="transparent"
-                            placeholderTextColor="dark-grey"
-                        />
-                    </View>
-                    <View style={styles.wrapField}>
-                        <Image
-                            source={require("../images/icoPhone.png")}
-                            style={styles.fieldIco}
-                        />
-                        <TextInput
-                            ref="cityfieldRef"
-                            onChangeText={cityfield =>
-                                this.setState({ cityfield })
-                            }
-                            value={this.state.cityfield}
-                            style={styles.inputStyles}
-                            placeholder="City *"
-                            underlineColorAndroid="transparent"
-                            placeholderTextColor="dark-grey"
-                        />
-                    </View>
-                    <View style={styles.wrapField}>
-                        <Image
-                            source={require("../images/icoPassword.png")}
-                            style={styles.fieldIco}
-                        />
-                        <TextInput
-                            ref="postcodefieldRef"
-                            onChangeText={postcodefield =>
-                                this.setState({ postcodefield })
-                            }
-                            value={this.state.postcodefield}
-                            style={styles.inputStyles}
-                            placeholder="Postcode"
-                            underlineColorAndroid="transparent"
-                            placeholderTextColor="dark-grey"
-                            keyboardType="number-pad"
-                        />
-                    </View>
+											<Text style={{alignSelf: 'center', fontFamily:'Gotham-Bold', fontSize: 20}}>Service Booking</Text>
+                    </View>	
+											<TouchableOpacity
+													onPress={this._showDateTimePicker}
+													style={styles.signInBut}
+											>
+													<Text style={styles.changeDateContent}>
+															{this.state.selectedDateStar}
+													</Text>
+											</TouchableOpacity>
 										<DropDownPicker
 												ref="countryfieldRef"
 												items={this.state.countryoption}
@@ -592,15 +484,30 @@ const styles = StyleSheet.create({
     },
     doesntText: {
         marginTop: 30,
-        fontFamily: "CircularStd-Book",
+        fontFamily: "Gotham-Light",
         fontSize: 16,
         color: "#a0abba"
     },
     signUpButton: {
         marginTop: 4,
         marginBottom: 40,
-        fontFamily: "CircularStd-Black",
+        fontFamily: "Gotham-Bold",
         fontSize: 16,
         color: "#a0abba"
-    }
+    },
+    floatingView: {
+        marginLeft: 30,
+        marginRight: 30,
+        height: 50,
+        borderRadius: 25,
+        backgroundColor: "yellow",
+        justifyContent: "center",
+        alignItems: "center"
+    },
+    changeDateContent: {
+        marginTop: 2,
+        fontSize: 19,
+        fontFamily: "Gotham-Bold",
+        marginBottom: 5
+    },
 });
