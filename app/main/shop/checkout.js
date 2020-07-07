@@ -132,6 +132,8 @@ export default class CheckoutScreen extends Component {
 						if(result.error) {
 							    const {  navigation, route  } = this.props;
 									navigation.navigate('Cart')
+						}else{
+							this.listCartItems()
 						}
 					})
 					.catch(error => console.log('error', error));
@@ -544,15 +546,18 @@ if (!this.state.isLoading){
 						<View style={styles.footerBar}>
 							{this.state.cartTotal.map((item)=>{
 								return(
-									<View style={{flex:1, width: width, height:40,  flexDirection:'row',justifyContent: 'space-around', alignItems: 'center', backgroundColor: '#a0a0a0', borderColor: 'black'}} >
-										<Text allowFontScaling={false} style={{fontFamily: 'Gotham-Bold', color: 'black'}}>{item.title}: {item.text}</Text>
+									<View style={{flex:1, width: width+3, height:40,  flexDirection:'row', alignItems: 'center', justifyContent: 'flex-end', marginBottom:-1, marginLeft:-1, borderWidth:1, borderColor: 'black'}} >
+										<Text allowFontScaling={false} style={{fontFamily: 'Gotham-Medium', color: 'black', alignItems: 'center',justifyContent: 'flex-end', paddingRight: 10}}>{item.title}: </Text>
+										<View style={{width:width*0.25,flexDirection:'row', alignItems: 'center', justifyContent: 'flex-end',}}>										
+											<Text allowFontScaling={false} style={{fontFamily: 'Gotham-Bold', color: 'black', alignItems: 'center',justifyContent: 'flex-end', paddingRight: 10, }}>{item.text}</Text>
+										</View>
 									</View>
 								)
 							})}
 							<View style={{ width: width, height:50, flexDirection:'row',justifyContent: 'space-around', alignItems: 'center',}} >
 								<TouchableOpacity 
 									onPress={()=>this.makePayment()} >
-																<View style={{flex:1, width: width,  flexDirection:'row',justifyContent: 'space-around', alignItems: 'center', backgroundColor: 'yellow', borderWidth: 2, borderColor: 'black'}} >
+																<View style={{flex:1, width: width,  flexDirection:'row',justifyContent: 'space-around', alignItems: 'center', backgroundColor: 'yellow',width:width+4, borderWidth: 2, borderColor: 'black'}} >
 
 										<Text allowFontScaling={false} style={{fontFamily: 'Gotham-Bold', color: 'black'}}>PROCEED</Text>
 																</View>
@@ -765,7 +770,7 @@ const styles = StyleSheet.create({
 		footerBar: {
 			left: 0,
 			bottom: 0,
-			height: Platform.OS == 'ios' ? 70 : 150,
+			height: Platform.OS == 'ios' ? 120 : 150,
 			flexDirection: 'column',
 		},
 });
