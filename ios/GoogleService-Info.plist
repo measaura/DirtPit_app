@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>737191230040-3mf5j51mc99s7919suohcr98oaguc072.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.737191230040-3mf5j51mc99s7919suohcr98oaguc072</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>737191230040-0j2uvsb06mlanmtgegsp3tu5okjndvrd.apps.googleusercontent.com</string>
+	<key>API_KEY</key>
+	<string>AIzaSyDw5c8XHsBld1U3ummeyKr8xv2LYIeiKtk</string>
+	<key>GCM_SENDER_ID</key>
+	<string>737191230040</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.dirtpit</string>
+	<key>PROJECT_ID</key>
+	<string>dirt-pit</string>
+	<key>STORAGE_BUCKET</key>
+	<string>dirt-pit.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:737191230040:ios:2ae2ed7bb9d5ffa0a6a82d</string>
+	<key>DATABASE_URL</key>
+	<string>https://dirt-pit.firebaseio.com</string>
+</dict>
+</plist>
