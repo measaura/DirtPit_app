@@ -18,6 +18,8 @@ import Ionicons from 'react-native-vector-icons/Ionicons'
 import { WebView } from 'react-native-webview';
 import AwesomeAlert from 'react-native-awesome-alerts'
 import AsyncStorage from '@react-native-community/async-storage'
+import DeviceInfo from 'react-native-device-info'
+var iPhoneX = DeviceInfo.hasNotch()
 
 export default class PaymentScreen extends Component {
   constructor(props) {
