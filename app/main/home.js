@@ -52,6 +52,9 @@ const softNavBar = Platform.OS == 'ios' ? notch ? 116 :68 : 50;
 const bottomTab = 48;
 const sliderHeight = height-width < 300? 340: width;
 
+const statusBarHeight = StatusBar.currentHeight;
+const navbarHeight = Platform.OS == 'android'? screenHeight > windowHeight? 0:48 :0;
+
 
 export default class HomeScreen extends React.Component {
 	constructor(props) {
@@ -171,7 +174,7 @@ export default class HomeScreen extends React.Component {
 								/>
 				
 							</View>
-							<View style={{flex:1, justifyContent: 'space-around', alignItems: 'center', backgroundColor: '#ffffff',height:250}}>
+							<View style={{flex:1, justifyContent: 'space-around', alignItems: 'center', backgroundColor: '#ffffff',marginBottom:navbarHeight}}>
 
 								<View style={{flexDirection: 'row',justifyContent: 'space-around', alignSelf: 'stretch', flexWrap: 'wrap',backgroundColor: '#eaeaea', }}>
 									<TouchableOpacity
