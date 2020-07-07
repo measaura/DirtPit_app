@@ -346,7 +346,7 @@ export default class App extends Component {
         // To remove and use Notification on both server and app.
 
         this.messageListener = firebase.messaging().onMessage(message => {
-        	const navigation = useNavigation();
+//         	const navigation = useNavigation;
             console.log('App.js METHOD: onMessage')
             // Process your message as required
             console.log('message: ', message)
@@ -371,6 +371,22 @@ export default class App extends Component {
                 newNotification
                     .setSound('default')
                     .android.setChannelId('default-channel')
+                    
+								if (message.data.bigpic) {
+										newNotification.android.setBigPicture(
+												message.data.bigpic,
+												message.data.lgicon,
+												message.data.title,
+												message.data.bigsummary,
+										)
+								}
+								if (message.data.lgicon) {
+										newNotification.android.setLargeIcon(message.data.lgicon)
+								}
+								if (message.data.color) {
+										newNotification.android.setColor(message.data.color)
+								}
+
             } else {
                 newNotification.setSound('default')
             }
@@ -395,20 +411,6 @@ export default class App extends Component {
 //                 }
 //             }
 
-            if (message.data.bigpic) {
-                newNotification.android.setBigPicture(
-                    message.data.bigpic,
-                    message.data.lgicon,
-                    message.data.title,
-                    message.data.bigsummary,
-                )
-            }
-            if (message.data.lgicon) {
-                newNotification.android.setLargeIcon(message.data.lgicon)
-            }
-            if (message.data.color) {
-                newNotification.android.setColor(message.data.color)
-            }
 
             console.log(
                 'App.js displayNotification foreground:',
@@ -423,7 +425,7 @@ export default class App extends Component {
             }else{
             	console.log(message.data.title)
             	this.showAlert(message.data.title, message.data.body)
-            	navigation.navigate('Home')
+//             	navigation.navigate('Home')
             }
         })
         // end onMessage
