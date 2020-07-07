@@ -17,7 +17,7 @@ import CookieManager from '@react-native-community/cookies';
 import API from "../helper/APIController";
 
 import DeviceInfo from "react-native-device-info";
-var iPhoneX = DeviceInfo.hasNotch();
+var notch = DeviceInfo.hasNotch();
 
 console.disableYellowBox = true;
 export default class Profile extends React.Component {
@@ -40,6 +40,12 @@ export default class Profile extends React.Component {
     };
 
     componentDidMount() {
+			fetch('https://demo.shortcircuitworks.com/dirtpit23/chk.php')
+			.then(response => response.json())
+			.then(json => {
+				console.log('session', json) 
+			})
+			
 				// Get cookies for a url
 				CookieManager.get('https://demo.shortcircuitworks.com')
 					.then((cookies) => {
