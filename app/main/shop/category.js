@@ -62,6 +62,47 @@ export default class CategoryScreen extends Component {
 		);
 	}
 
+	renderFlatlist() {
+		const {navigate} = this.props.navigation
+		if (this.state.dataSource){
+			var list = this.state.dataSource.filter(item => item.top === "1")
+			return(
+				<FlatList
+					data={this.state.dataSource}
+// 						renderItem={item => this.renderItem(item)}
+					renderItem={item => (
+// 							if ({item.item.top} == 1){
+								<TouchableOpacity
+										onPress={() =>
+												navigate('Product', {
+														prevScreenTitle: 'Product',
+														catId: item.item.category_id,
+												})
+										}
+										style={styles.rowWrap}>
+										<Image
+												source={{uri: item.item.image}}
+												style={styles.rowIcon}
+										/>
+										<View style={styles.rowTextContent}>
+												<Text allowFontScaling={false} style={styles.rowMessage}>
+													{item.item.name}{' '}
+												</Text>
+												<Text allowFontScaling={false} style={styles.rowTime}>
+													{item.item.description}{' '}
+												</Text>
+										</View>
+
+								</TouchableOpacity>
+// 								}									
+								
+						)}
+					keyExtractor={item=>item.category_id.toString()}
+				/>
+			)
+		}
+	}
+
 	renderLeft() {
 			const {navigate} = this.props.navigation
 			return (
@@ -104,38 +145,7 @@ export default class CategoryScreen extends Component {
 									height: Platform.OS == 'ios' ? (iPhoneX ? 90 : 0) : 70,
 							}}
 					/>
-					<FlatList
-						data={this.state.dataSource}
-// 						renderItem={item => this.renderItem(item)}
-						renderItem={item => (
-// 							if ({item.item.top} == 1){
-									<TouchableOpacity
-											onPress={() =>
-													navigate('Product', {
-															prevScreenTitle: 'Product',
-															catId: item.item.category_id,
-													})
-											}
-											style={styles.rowWrap}>
-											<Image
-													source={{uri: item.item.image}}
-													style={styles.rowIcon}
-											/>
-											<View style={styles.rowTextContent}>
-													<Text allowFontScaling={false} style={styles.rowMessage}>
-														{item.item.name}{' '}
-													</Text>
-													<Text allowFontScaling={false} style={styles.rowTime}>
-														{item.item.description}{' '}
-													</Text>
-											</View>
-
-									</TouchableOpacity>
-// 								}									
-									
-							)}
-						keyExtractor={item=>item.category_id.toString()}
-					/>
+					{this.renderFlatlist()}
 				</View>
 			)
 		}else{

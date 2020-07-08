@@ -60,6 +60,48 @@ export default class SegmentScreen extends Component {
 			/>
 		);
 	}
+	renderFlatlist() {
+		const {navigate} = this.props.navigation
+		if (this.state.dataSource){
+			var list = this.state.dataSource.filter(item => item.top === "1")
+			return(
+				<FlatList
+					data={list}
+					contentContainerStyle={{ flexGrow: 1 }}
+					keyExtractor={item=>item.category_id.toString()}
+					ItemSeparatorComponent = { this.FlatListItemSeparator }
+					renderItem={item => (
+	// 							if ({item.item.top} == 1){
+
+								<TouchableOpacity
+										onPress={() =>
+												navigate('Category', {
+														prevScreenTitle: 'Category',
+														segId: item.item.category_id,
+												})
+										}
+										>
+										<ImageBackground
+												source={{uri: item.item.image}}
+												style={styles.rowBg}
+										>
+										<View style={styles.rowTextContent}>
+												<Text allowFontScaling={false}  
+													style={styles.rowMessage}>
+													{item.item.name}
+												</Text>
+
+										</View>
+										</ImageBackground>
+								</TouchableOpacity>
+
+	// 								}									
+
+						)}
+				/>
+			)
+		}
+	}
 
 	renderLeft() {
 			const {navigate} = this.props.navigation
@@ -75,7 +117,6 @@ export default class SegmentScreen extends Component {
 	}
 
   render() {
-		const {navigate} = this.props.navigation
 		if (this.state.loading){
 			return(
 				<View style={styles.loader}>
@@ -97,10 +138,6 @@ export default class SegmentScreen extends Component {
 				</View>
 			)
 		}else{
-		var list = this.state.dataSource.filter(item => item.top === "1")
-// 		console.log('-------------------- ')
-// 		console.log(list)
-// 		console.log('=====================')
 			return(
 				<View style={styles.container}>
 					<Header
@@ -117,44 +154,10 @@ export default class SegmentScreen extends Component {
 									height: Platform.OS == 'ios' ? (iPhoneX ? 90 : 0) : 70,
 							}}
 					/>
-					<FlatList
-						data={list}
-						contentContainerStyle={{ flexGrow: 1 }}
-						keyExtractor={item=>item.category_id.toString()}
-						ItemSeparatorComponent = { this.FlatListItemSeparator }
-						renderItem={item => (
-// 							if ({item.item.top} == 1){
-
-									<TouchableOpacity
-											onPress={() =>
-													navigate('Category', {
-															prevScreenTitle: 'Category',
-															segId: item.item.category_id,
-													})
-											}
-											>
-											<ImageBackground
-													source={{uri: item.item.image}}
-													style={styles.rowBg}
-											>
-											<View style={styles.rowTextContent}>
-													<Text allowFontScaling={false}  
-														style={styles.rowMessage}>
-														{item.item.name}
-													</Text>
-
-											</View>
-											</ImageBackground>
-									</TouchableOpacity>
-
-// 								}									
-
-							)}
-					/>
+					{this.renderFlatlist()}
 				</View>
 			)
 		}
-
   }
 };
 

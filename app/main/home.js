@@ -11,6 +11,8 @@ import {
   SafeAreaView,
   StyleSheet,
   ScrollView,
+  Animated,
+  Easing,
   View,
   Text,
   StatusBar,
@@ -59,12 +61,25 @@ const navbarHeight = Platform.OS == 'android'? screenHeight > windowHeight? 0:48
 export default class HomeScreen extends React.Component {
 	constructor(props) {
 		super(props)
+     this.spinValue = new Animated.Value(0);
     this.state = {
     	loading: true,
       images: []
     };
 	}
 	
+	spin () {
+		this.spinValue.setValue(0)
+		Animated.timing(
+			this.spinValue,
+			{
+				toValue: 1,
+				duration: 1500,
+				easing: Easing.linear
+			}
+		).start(() => this.spin())
+	}
+
 	renderLeft() {
 			const {navigate} = this.props.navigation
 			return (
@@ -100,6 +115,7 @@ export default class HomeScreen extends React.Component {
 	};
 	
 	componentDidMount() {
+  	this.spin()
 	console.log('\nwidth: '+width+'\nheight: '+height)
 // 	console.log('statusbar height '+StatusBar.currentHeight+', navbarHeight: '+navbarHeight)
 
@@ -133,6 +149,37 @@ export default class HomeScreen extends React.Component {
 		return index.toString();
 	}
 	
+	renderSlider() {
+		if(this.state.images){
+			return(<FlatList
+							data={this.state.images}
+							keyExtractor={this._keyExtractor.bind(this)}
+							renderItem={this._renderItem.bind(this)}
+							horizontal={true}
+							flatListRef={React.createRef()}
+							ref={this.flatList}
+						/>
+			)
+		}else{
+			const spin = this.spinValue.interpolate({
+				inputRange: [0, 1],
+				outputRange: ['0deg', '360deg']
+			})
+	
+			return(
+					<View style={{flex:1,alignItems: 'center', justifyContent: 'center',backgroundColor:'black'}}>
+							<Animated.Image
+						style={{
+							width: 100,
+							height: 100,
+							transform: [{rotate: spin}] }}
+							source={require('../images/DirtPit_icon_1024.png')}
+					/>
+					</View>
+			)
+		}
+	}
+	
 	renderCenter() {
 			return <Image source={require('../images/dirtpit-logo-181x43.png')} />
 	}
@@ -164,14 +211,7 @@ export default class HomeScreen extends React.Component {
 						/>
 						<View style={styles.body}>
 							<View style={{height:sliderHeight}} >
-								<FlatList
-									data={this.state.images}
-									keyExtractor={this._keyExtractor.bind(this)}
-									renderItem={this._renderItem.bind(this)}
-									horizontal={true}
-									flatListRef={React.createRef()}
-									ref={this.flatList}
-								/>
+							{this.renderSlider()}
 				
 							</View>
 							<View style={{flex:1, justifyContent: 'space-around', alignItems: 'center', backgroundColor: '#ffffff',marginBottom:navbarHeight}}>
