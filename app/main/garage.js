@@ -1,552 +1,307 @@
-import React, { Component } from "react";
+import React, {Component} from 'react';
 import {
-    StyleSheet,
-    View,
-    Text,
-    TouchableOpacity,
-    Image,
-    ImageBackground,
-    TextInput,
-    ScrollView,
-    Alert,
-    ActivityIndicator
-} from "react-native";
+  SafeAreaView,
+  StyleSheet,
+  ScrollView,
+  FlatList,
+  View,
+  Text,
+  StatusBar,
+  Image,
+  ImageBackground,
+  Dimensions,
+  TouchableOpacity,
+  ActivityIndicator,
+} from 'react-native';
+import {Colors} from '../NewAppScreen';
 import { Header } from "react-native-elements";
 import Ionicons from 'react-native-vector-icons/Ionicons'
-import DropDownPicker from 'react-native-dropdown-picker';
-import DateTimePicker from "react-native-modal-datetime-picker";
-import Moment from "moment";
-import MomentTimezone from "moment-timezone";
-import * as RNLocalize from 'react-native-localize'
+
 import DeviceInfo from 'react-native-device-info'
-var notch = DeviceInfo.hasNotch()
+var iPhoneX = DeviceInfo.hasNotch()
 
-var timeZone = RNLocalize.getTimeZone()
+const {width, height} = Dimensions.get('window')
 
-export default class GarageScreen extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            firstnamefield: "",
-            lastnamefield: "",
-            emailfield: "",
-            phonefield: "",
-            passwordfield: "",
-            copasswordfield: "",
-            companyfield: "",
-            address1field:"",
-            address2field: "",
-            cityfield: "",
-            postcodefield: "",
-            countryoption:[],
-            countrytemp: [],
-            stateoption: [],
-            statetemp: [],
-            countryfield:'',
-            statefield: '',
-            zonedone: false,
-            countrybefore: '',
-            submitBtn: true,
-            isDatePickerVisible: false,
-            isTimePickerVisible: false,
-            selectedDateStar: 'Select Date',
-            selectedTimeStar: 'Select Time',
-        };
-    }
+const randomHexColor = () => {
+  return '#000000'.replace(/0/g, function() {
+    return (~~(Math.random() * 16)).toString(16);
+  });
+};
 
-    _showDatePicker = () =>
-        this.setState({ isDatePickerVisible: true });
+const datArr = 2;
 
-    _hideDatePicker = () =>
-        this.setState({ isDatePickerVisible: false });
-
-    _showTimePicker = () =>
-        this.setState({ isTimePickerVisible: true });
-
-    _hideTimePicker = () =>
-        this.setState({ isTimePickerVisible: false });
-        
-    _handleDatePicked = date => {
-    console.log('ok click')
-//         var todayDate = MomentTimezone.tz(date, Moment.tz.guess()).format();
-        var todayDate = MomentTimezone.tz(date, timeZone).format();
-        var today = Moment(todayDate)
-            .add(1, "minutes")
-            .format("DD-MM-YYYY");
-//         this.setState({
-//             startDate: today,
-//             endDate: today
-//         });
-        console.log(this.state.startDate);
-        console.log(this.state.endDate);
-        this.setState(
-            {
-                selectedDateStar: today,
-                isDatePickerVisible: false
-            },
-        );
-//         this._hideDateTimePicker();
-    };
-    
-    _handleTimePicked = date => {
-    console.log('ok click')
-//         var todayDate = MomentTimezone.tz(date, Moment.tz.guess()).format();
-        var todayDate = MomentTimezone.tz(date, timeZone).format();
-        var today = Moment(todayDate)
-            .format("hh:mm a");
-//         this.setState({
-//             startDate: today,
-//             endDate: today
-//         });
-        console.log(this.state.startDate);
-        console.log(this.state.endDate);
-        this.setState(
-            {
-                selectedTimeStar: today,
-                isTimePickerVisible: false
-            },
-        );
-//         this._hideDateTimePicker();
-    };
-
-		validateEmail = email => {
-			var re = /^(([^<>()\[\]\\.,;:\s@”]+(\.[^<>()\[\]\\.,;:\s@”]+)*)|(“.+”))@((\[[0–9]{1,3}\.[0–9]{1,3}\.[0–9]{1,3}\.[0–9]{1,3}])|(([a-zA-Z\-0–9]+\.)+[a-zA-Z]{2,}))$/;
-			return re.test(email);
+export default class GarageScreen extends Component {
+	constructor(props) {
+		super(props);
+		this.state = {
+			loading: true,
+			dataSource: []
 		};
+	}
 
-    filterField() {
-        let passedFirstname = this.state.firstnamefield;
-        let passedLastname = this.state.lastnamefield;
-        let passedEmail = this.state.emailfield;
-        let passedPhone = this.state.phonefield;
-        let passedPassword = this.state.passwordfield;
-        let passedCoPassword = this.state.copasswordfield;
-        let passedAddress1 = this.state.address1field;
-        let passedCity = this.state.cityfield;
-        let passedCountry = this.state.countryfield;
-        let passedState = this.state.statefield;
-
-console.log('zonedone',this.state.zonedone)
-        if (passedFirstname == "") {
-            Alert.alert("Please enter your first name.");
-            this.refs.firstnamefieldRef.focus();
-        } else if (passedLastname == "") {
-            Alert.alert("Please enter your last name.");
-            this.refs.lastnamefieldRef.focus();
-        } else if (passedEmail == "") {
-            Alert.alert("Please enter your email.");
-            this.refs.emailfieldRef.focus();
-        } else if (!this.validateEmail(passedEmail)) {
-						Alert.alert("Please enter a valid email address")
-				}else if (passedPhone == "") {
-            Alert.alert("Please enter your phone number.");
-            this.refs.phonefieldRef.focus();
-        } else if (passedPassword == "") {
-            Alert.alert("Please enter your password.");
-            this.refs.passwordfieldRef.focus();
-        } else if (passedCoPassword == "") {
-            Alert.alert("Please confirm your password.");
-            this.refs.copasswordfieldRef.focus();
-        } else if (passedPassword != passedCoPassword) {
-            Alert.alert("Password entered does not match!");
-        } else if (passedPassword.length < 4 || passedPassword.length >20) {
-            Alert.alert("Password must be between 4 and 20 characters!");
-            this.refs.passwordfieldRef.focus();
-        } else if (passedAddress1 == "") {
-            Alert.alert("Please enter your address.");
-            this.refs.address1fieldRef.focus();
-        } else if (passedAddress1.length < 3 || passedAddress1.length >128) {
-            Alert.alert("Address 1 must be between 3 and 128 characters!");
-            this.refs.address1fieldRef.focus();
-        } else if (passedCity == "") {
-            Alert.alert("Please enter your city.");
-            this.refs.cityfieldRef.focus();
-        } else if (passedCity.length < 2 || passedCity.length >128) {
-            Alert.alert("City must be between 2 and 128 characters!");
-            this.refs.cityfieldRef.focus();
-        } else if (passedCountry == "") {
-            Alert.alert("Please select your country.");
-        } else if ((this.state.stateoption.length > 0) && passedState == "") {
-            Alert.alert("Please select your state.");
-        } else {
-        		this.validateEmail(passedEmail);
-            this.validate();
-        }
-    }
-
-    validate() {
-        let passedFirstname = this.state.firstnamefield;
-        let passedLastname = this.state.lastnamefield;
-        let passedEmail = this.state.emailfield;
-        let passedPhone = this.state.phonefield;
-        let passedPassword = this.state.passwordfield;
-        let passedCoPassword = this.state.copasswordfield;
-        let passedAddress1 = this.state.address1field;
-        let passedAddress2 = this.state.address2field;
-        let passedCity = this.state.cityfield;
-        let passedPostcode = this.state.postcodefield;
-        let passedCountry = this.state.countryfield;
-        let passedState = this.state.statefield;
-
-				var formdata = new FormData();
-				formdata.append("firstname", passedFirstname);
-				formdata.append("lastname", passedLastname);
-				formdata.append("email", passedEmail);
-				formdata.append("telephone", passedPhone);
-				formdata.append("address_1", passedAddress1);
-				formdata.append("address_2", passedAddress2);
-				formdata.append("city", passedCity);
-				formdata.append("postcode", passedPostcode);
-				formdata.append("country_id", passedCountry);
-				formdata.append("zone_id", passedState);
-				formdata.append("password", passedPassword);
-				formdata.append("confirm", passedCoPassword);
-				formdata.append("agree", true);
-
-				var myHeaders = new Headers();
-				myHeaders.append("Cookie", "language=en-gb;");
-
-				var requestOptions = {
-					method: 'POST',
-					headers: myHeaders,
-					body: formdata,
-					redirect: 'follow'
-				};
-console.log('submit', formdata)
-				fetch("https://demo.shortcircuitworks.com/dirtpit23/index.php?route=api/userregister", requestOptions)
-					.then(response => response.text())
-					.then(result =>{
-						console.log(result)
-						if (result.success) {
-							console.log(result.success)
-							
-						}
-					})
-					.catch(error => console.log('error', error));
-
-    }
-    
-    getCountries = () => {
-//         return fetch("https://demo.shortcircuitworks.com/dirtpit23/index.php?route=api/country/countries", {
-			fetch('https://demo.shortcircuitworks.com/dirtpit23/index.php?route=api/country/countries')
+	componentDidMount(){
+		fetch("https://demo.shortcircuitworks.com/dirtpit23/index.php?route=api/category&dealers")
 			.then(response => response.json())
-			.then(json => {
-				const countrytemp = json.map(
-					(item) => ({
-							label: item.name,
-							value: item.country_id
-					})
-				)
-// 				console.log(countrytemp)
+			.then((responseJson)=> {
 				this.setState({
-					countryoption: countrytemp 
+					loading: false,
+					dataSource: responseJson.categories
 				})
 			})
-    }
-    
-		renderZone() {
-		console.log('countryfield',this.state.countryfield)
+		.catch(error=>console.log(error)) //to catch the errors if any
+	}
 
-		let country_id = this.state.countryfield
-		if ((country_id != this.state.countrybefore) && !this.state.zonedone){
-				fetch('https://demo.shortcircuitworks.com/dirtpit23/index.php?route=api/country/country&country_id='+this.state.countryfield)
-				.then(response => response.json())
-				.then(json => {
-					console.log(json.zone)
-					const zonetemp = json.zone.map(
-						(item) => ({
-								label: item.name,
-								value: item.zone_id
-						})
-					)
-console.log('zone',zonetemp.length)
+	FlatListItemSeparator = () => {
+		return (
+			<View style={{
+				 height: 5,
+				 width:"100%",
+				 backgroundColor: '#fff',
+				}}
+			/>
+		);
+	}
 
-					this.setState({
-						stateoption: zonetemp,
-						zonedone: true 
-					})
-				})
-			}
-			
-			if (this.state.stateoption.length > 0 && this.state.zonedone){
-							return(<DropDownPicker
-												ref="statefieldRef"
-												items={this.state.stateoption}
-												defaultValue={this.state.statefield}
-												placeholder="Select Region / State"
-												containerStyle={{height:50, width: 300, marginTop: 10, }}
-												style={{backgroundColor:'#cdcdcd',borderTopLeftRadius: 25, borderTopRightRadius: 25, borderBottomLeftRadius: 25, borderBottomRightRadius: 25}}
-												dropDownStyle={{backgroundColor: '#cdcdcd'}}
-												labelStyle={{
-														fontFamily: 'Gotham-Bold',
-														fontSize: 18,
-														textAlign: 'left',
-														color: 'dark-grey'
-												}}
-												onChangeItem={item => this.setState({
-														statefield: item.value,
-														submitBtn: false
-												})}
-										/>
-							)
-							this.setState({countrybefore: country_id})
-			}
-		}
-		
-    componentDidMount(){
-
-    console.log("componentDidMount")
-  
-        var dateGen = Moment.utc().format();
-        var todayDate = MomentTimezone.tz(
-            dateGen,
-            timeZone
-        ).format();
-
-        var today = Moment(todayDate)
-            .add(1, "minutes")
-            .format("D-MM-YYYY");
-            
-        var todaySelect = Moment(todayDate)
-            .add(1, "minutes")
-            .format("YYYY/MM/D");
-            
-        this.setState({
-            todayDate: todaySelect,
-            startDate: today,
-            endDate: today
-        });
-
-console.log("TZ: ", timeZone)
-console.log("today date: ",today)  
-// 
-//         this.setState({
-//             selectedDateStar: today
-//         });
-// 
-//         this.setState(
-//             {
-//                 startDate: today,
-//                 endDate: today
-//             },
-//         );
-
-    	this.getCountries()
-    }
-    
-
-    
 	renderLeft() {
 			const {navigate} = this.props.navigation
 			return (
-					<TouchableOpacity onPress={() => navigate('Login')}>
-							<Ionicons name={'ios-arrow-back'} size={35} color={'yellow'} style={{paddingTop: 0}} />
+					<TouchableOpacity onPress={() => navigate('Home')}>
+							<Ionicons name={'ios-home'} size={30} color={'yellow'} style={{paddingTop: 0}} />
 					</TouchableOpacity>
 			);
 	}
-	
+
 	renderCenter() {
-			return <Image source={require('../images/dirtpit-logo-181x43.png')} />
+			return <Image source={require('../images/DirtPit_logo-180x35.png')} />
 	}
 
-    render() {
-        const { navigate } = this.props.navigation;
-        return (
-            <View style={styles.container}>
-                <DateTimePicker
-                    mode={"date"}
-										date={new Date(this.state.todayDate)}
-                    isVisible={this.state.isDatePickerVisible}
-                    onConfirm={this._handleDatePicked}
-                    onCancel={this._hideDateTimePicker}
-                />
-                <DateTimePicker
-                    mode={"time"}
-										date={new Date(this.state.todayDate)}
-                    isVisible={this.state.isTimePickerVisible}
-                    onConfirm={this._handleTimePicked}
-                    onCancel={this._hideTimePicker}
-                />
-						<Header
-								innerContainerStyles={styles.headerInnerContainer}
-								outerContainerStyles={styles.headerOuterContainer}
-								leftComponent={this.renderLeft()}
-								centerComponent={this.renderCenter()}
-								containerStyle={{
-										backgroundColor: '#000',
-										marginTop:
-												Platform.OS == 'ios' ? 0 : -20,
-										top:
-												Platform.OS == 'ios' ? (notch ? -10 : 0) : 0,
-										height: Platform.OS == 'ios' ? (notch ? 90 : 0) : 70,
-								}}
-						/>
-                <ScrollView
-                    style={styles.scrollStyle}
-                    contentContainerStyle={styles.scrollContent}
-                >
-										<ImageBackground
-												source={{uri: "https://demo.shortcircuitworks.com/dirtpit23/image/catalog/app/mx-dealers.jpg"}}
-												style={styles.container}
-										>
-                    <View style={styles.headerLogo}>
-											<Text style={{alignSelf: 'center', fontFamily:'Gotham-Bold', fontSize: 20}}>Service Booking</Text>
-                    </View>	
-										<DropDownPicker
-												ref="countryfieldRef"
-												items={this.state.countryoption}
-												defaultValue={this.state.countryfield}
-												placeholder="Select Package"
-												containerStyle={{height:50, width: 300, marginTop: 10, }}
-												style={{backgroundColor:'#cdcdcd',borderTopLeftRadius: 25, borderTopRightRadius: 25, borderBottomLeftRadius: 25, borderBottomRightRadius: 25}}
-												dropDownStyle={{backgroundColor: '#cdcdcd'}}
-												labelStyle={{
-														fontFamily: 'Gotham-Bold',
-														fontSize: 18,
-														textAlign: 'left',
-														color: 'dark-grey'
-												}}
-												onChangeItem={item => this.setState({
-														countryfield: item.value,
-														zonedone: false
-												})}
-										/>
-										
-										{this.renderZone()}
-											<TouchableOpacity
-													onPress={this._showDatePicker}
-													style={styles.signInBut}
+  render() {
+		const {navigate} = this.props.navigation
+		if (this.state.loading){
+			return(
+				<View style={styles.loader}>
+					<Header
+							innerContainerStyles={styles.headerInnerContainer}
+							outerContainerStyles={styles.headerOuterContainer}
+							leftComponent={this.renderLeft()}
+							centerComponent={this.renderCenter()}
+							containerStyle={{
+									backgroundColor: '#000',
+									marginTop:
+											Platform.OS == 'ios' ? 0 : -20,
+									top:
+											Platform.OS == 'ios' ? (iPhoneX ? -10 : 0) : -10,
+									height: Platform.OS == 'ios' ? (iPhoneX ? 90 : 0) : 70,
+							}}
+					/>
+					<ActivityIndicator size="large" color="#0c9" />
+				</View>
+			)
+		}else{
+// 		var list = this.state.dataSource.filter(item => item.top === "1")
+			return(
+				<View style={styles.container}>
+					<Header
+							innerContainerStyles={styles.headerInnerContainer}
+							outerContainerStyles={styles.headerOuterContainer}
+							leftComponent={this.renderLeft()}
+							centerComponent={this.renderCenter()}
+							containerStyle={{
+									backgroundColor: '#000',
+									marginTop:
+											Platform.OS == 'ios' ? 0 : -20,
+									top:
+											Platform.OS == 'ios' ? (iPhoneX ? -10 : 0) : -5,
+									height: Platform.OS == 'ios' ? (iPhoneX ? 90 : 0) : 70,
+							}}
+					/>
+					<FlatList
+						data={this.state.dataSource}
+// 						renderItem={item => this.renderItem(item)}
+						contentContainerStyle={{ flexGrow: 1 }}
+						keyExtractor={item=>item.store_id.toString()}
+						ItemSeparatorComponent = { this.FlatListItemSeparator }
+						renderItem={item => (
+// 							if ({item.item.top} == 1){
+
+									<TouchableOpacity
+											onPress={() =>
+													navigate('DealersList', {
+															prevScreenTitle: 'DealersList',
+															dealersType: item.item.store_id,
+													})
+											}
 											>
-													<Text style={styles.changeDateContent}>
-															{this.state.selectedDateStar}
-													</Text>
-											</TouchableOpacity>
-											<TouchableOpacity
-													onPress={this._showTimePicker}
-													style={styles.signInBut}
+											<ImageBackground
+													source={{uri: item.item.image}}
+													style={styles.rowBg}
 											>
-													<Text style={styles.changeDateContent}>
-															{this.state.selectedTimeStar}
+											<View style={styles.rowTextContent}>
+													<Text allowFontScaling={false} style={styles.rowMessage}>
+														{item.item.name}
 													</Text>
-											</TouchableOpacity>
-                    <TouchableOpacity
-                    		disabled={this.state.submitBtn}
-                        style={styles.signInBut}
-                        onPress={this.filterField.bind(this)}
-                    >
-                        <Text style={styles.signInText}>BOOK NOW</Text>
-                    </TouchableOpacity>
-                    </ImageBackground>
-                </ScrollView>
-            </View>
-        );
-    }
-}
+											</View>
+											</ImageBackground>
+									</TouchableOpacity>
+
+// 								}									
+
+							)}
+					/>
+				</View>
+			)
+		}
+
+  }
+};
+
 
 const styles = StyleSheet.create({
+  scrollView: {
+  	flex: 1,
+    backgroundColor: Colors.lighter,
+  },
+  engine: {
+    position: 'absolute',
+    right: 0,
+  },
+  body: {
+    backgroundColor: Colors.white,
+  },
+  sectionContainer: {
+    marginTop: 0,
+    paddingHorizontal: 0,
+  },
+  sectionTitle: {
+    fontSize: 24,
+    fontWeight: '600',
+    color: Colors.black,
+  },
+  sectionDescription: {
+    marginTop: 8,
+    fontSize: 18,
+    fontWeight: '400',
+    color: Colors.dark,
+  },
+  highlight: {
+    fontWeight: '700',
+  },
+  footer: {
+    color: Colors.dark,
+    fontSize: 12,
+    fontWeight: '600',
+    padding: 4,
+    paddingRight: 12,
+    textAlign: 'right',
+  },
+  menuContainer: {
+  	flexDirection: 'column',
+  	justifyContent: 'center',
+  	alignItems: 'center',
+  	paddingTop: 40,
+  	paddingBottom: 20
+  },
+  menuButton: {
+  	width: 100,
+  	height: 100,
+  },
+  menuBox: {
+  	width: 100,
+  	paddingBottom: 20,
+  	flexDirection: 'column',
+  	alignItems: 'center',
+  },
+  menuText: {
+  	fontSize: 16,
+  	fontWeight: 'bold',
+  	marginTop: -10,
+  },
+  flexContainer: {
+		flex: 1,
+		flexDirection: 'row',
+		flexWrap: 'wrap',
+		justifyContent: 'center',
+		height: 'auto',
+	},
+  testBox: {
+		width: 150,
+		height: 200,
+		borderWidth: 1,
+	},
+    cantLocate: {
+        width: width,
+        height: 250,
+        zIndex: 0,
+        alignItems: 'center',
+        justifyContent: 'center',
+        paddingLeft: 40,
+        paddingRight: 40,
+    },
+    cantLocateImg: {
+        width: 70,
+        height: 70,
+        marginBottom: 15,
+    },
+    cantLocateText: {
+        color: '#3f3f3f',
+        fontSize: 18,
+        textAlign: 'center',
+    },
+    headerOuterContainer: {
+        borderBottomWidth: 1,
+        borderColor: '#5b5b5b',
+        backgroundColor: '#ffffff',
+    },
+    headerInnerContainer: {
+        backgroundColor: '#ffffff',
+    },
+    headerNavTitle: {
+        color: '#000',
+        fontSize: 16,
+        textAlign: 'center',
+    },
     container: {
         flex: 1,
-        backgroundColor: "#fafafa"
+        backgroundColor: '#ffffff',
     },
-    backButton: {
-        width: 25,
-        height: 25,
-        marginTop: Platform.OS == "ios" ? 30 : 0,
-        top: 20,
-        left: 15,
-        position: "absolute"
-    },
-    backImg: {
-        width: 22,
-        height: 22
-    },
-    scrollStyle: {
-        alignSelf: "stretch"
-    },
-    scrollContent: {
-        flexGrow: 1,
-        alignItems: "center"
-    },
-    headerLogo: {
-        marginTop: Platform.OS == "ios" ? 150 : 20,
-        marginRight: 30,
-        marginLeft: 30,
-        marginBottom: 0,
-        alignSelf: "center",
-        height: 48,
-        width: 300,
-    },
-    headerImg: {
+    flatContent: {
         flex: 1,
-        width: null,
-        height: null
     },
-    wrapField: {
-        height: 50,
-        borderRadius: 25,
-        flexDirection: "row",
-        alignSelf: "stretch",
-        marginTop: 10,
-        marginLeft: 30,
-        marginRight: 30,
-        alignItems: "center",
-        elevation: 1
+    rowArrow: {
+        width: 16,
+        height: 16,
+        marginRight: 20,
     },
-    fieldIco: {
-        width: 20,
-        height: 20,
-        marginLeft: 20
+    rowWrap: {
+        flexDirection: 'row',
+        borderBottomWidth: 1,
+        borderColor: '#dedede',
+        height: '25%',
+        backgroundColor: '#ffffff',
+        alignSelf: 'stretch',
+        alignItems: 'center',
     },
-    inputStyles: {
-        flex: 2,
-        fontFamily: "Gotham-Bold",
-        fontSize: 17,
-        color: "black",
-        paddingLeft: 15,
-        paddingRight: 15
+    rowIcon: {
+        width: 100,
+        height: 100,
+        marginLeft: 20,
     },
-    signInBut: {
-        marginTop: 30,
-        backgroundColor: "yellow",
-        height: 50,
-        borderRadius: 25,
-        alignSelf: "stretch",
-        marginLeft: 30,
-        marginRight: 30,
-        justifyContent: "center",
-        alignItems: "center"
+    rowBg: {
+        flexGrow:1, 
+        height: Platform.OS == 'ios' ? (iPhoneX ? (height-90)/datArr : (height-60)/datArr) : (height-65)/datArr,
     },
-    signInText: {
-        fontSize: 16,
-        fontFamily: "Gotham-Bold",
-        color: "black"
+    rowTextContent: {
+        alignSelf: 'stretch',
+        flex:1,
+        justifyContent: 'flex-end',
+        backgroundColor: 'rgba(0,0,0,0.3)',
     },
-    doesntText: {
-        marginTop: 30,
-        fontFamily: "Gotham-Light",
-        fontSize: 16,
-        color: "#a0abba"
-    },
-    signUpButton: {
-        marginTop: 4,
-        marginBottom: 40,
-        fontFamily: "Gotham-Bold",
-        fontSize: 16,
-        color: "#a0abba"
-    },
-    floatingView: {
-        marginLeft: 30,
-        marginRight: 30,
-        height: 50,
-        borderRadius: 25,
-        backgroundColor: "yellow",
-        justifyContent: "center",
-        alignItems: "center"
-    },
-    changeDateContent: {
-        marginTop: 2,
-        fontSize: 19,
-        fontFamily: "Gotham-Bold",
-        marginBottom: 5
+    rowMessage: {
+        color: '#fff',
+        fontFamily: 'Gotham-Bold',
+        fontSize: 18,
+        paddingRight: 10,
+        paddingLeft: 25,
+        bottom: '40%',
     },
 });
