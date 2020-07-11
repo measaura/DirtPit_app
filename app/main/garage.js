@@ -5,6 +5,7 @@ import {
     Text,
     TouchableOpacity,
     Image,
+    ImageBackground,
     TextInput,
     ScrollView,
     Alert,
@@ -46,17 +47,25 @@ export default class GarageScreen extends React.Component {
             zonedone: false,
             countrybefore: '',
             submitBtn: true,
-            isDateTimePickerVisible: false,
+            isDatePickerVisible: false,
+            isTimePickerVisible: false,
             selectedDateStar: 'Select Date',
+            selectedTimeStar: 'Select Time',
         };
     }
 
-    _showDateTimePicker = () =>
-        this.setState({ isDateTimePickerVisible: true });
+    _showDatePicker = () =>
+        this.setState({ isDatePickerVisible: true });
 
-    _hideDateTimePicker = () =>
-        this.setState({ isDateTimePickerVisible: false });
+    _hideDatePicker = () =>
+        this.setState({ isDatePickerVisible: false });
 
+    _showTimePicker = () =>
+        this.setState({ isTimePickerVisible: true });
+
+    _hideTimePicker = () =>
+        this.setState({ isTimePickerVisible: false });
+        
     _handleDatePicked = date => {
     console.log('ok click')
 //         var todayDate = MomentTimezone.tz(date, Moment.tz.guess()).format();
@@ -73,7 +82,28 @@ export default class GarageScreen extends React.Component {
         this.setState(
             {
                 selectedDateStar: today,
-                isDateTimePickerVisible: false
+                isDatePickerVisible: false
+            },
+        );
+//         this._hideDateTimePicker();
+    };
+    
+    _handleTimePicked = date => {
+    console.log('ok click')
+//         var todayDate = MomentTimezone.tz(date, Moment.tz.guess()).format();
+        var todayDate = MomentTimezone.tz(date, timeZone).format();
+        var today = Moment(todayDate)
+            .format("hh:mm a");
+//         this.setState({
+//             startDate: today,
+//             endDate: today
+//         });
+        console.log(this.state.startDate);
+        console.log(this.state.endDate);
+        this.setState(
+            {
+                selectedTimeStar: today,
+                isTimePickerVisible: false
             },
         );
 //         this._hideDateTimePicker();
@@ -326,9 +356,16 @@ console.log("today date: ",today)
                 <DateTimePicker
                     mode={"date"}
 										date={new Date(this.state.todayDate)}
-                    isVisible={this.state.isDateTimePickerVisible}
+                    isVisible={this.state.isDatePickerVisible}
                     onConfirm={this._handleDatePicked}
                     onCancel={this._hideDateTimePicker}
+                />
+                <DateTimePicker
+                    mode={"time"}
+										date={new Date(this.state.todayDate)}
+                    isVisible={this.state.isTimePickerVisible}
+                    onConfirm={this._handleTimePicked}
+                    onCancel={this._hideTimePicker}
                 />
 						<Header
 								innerContainerStyles={styles.headerInnerContainer}
@@ -348,22 +385,18 @@ console.log("today date: ",today)
                     style={styles.scrollStyle}
                     contentContainerStyle={styles.scrollContent}
                 >
+										<ImageBackground
+												source={{uri: "https://demo.shortcircuitworks.com/dirtpit23/image/catalog/app/mx-dealers.jpg"}}
+												style={styles.container}
+										>
                     <View style={styles.headerLogo}>
 											<Text style={{alignSelf: 'center', fontFamily:'Gotham-Bold', fontSize: 20}}>Service Booking</Text>
                     </View>	
-											<TouchableOpacity
-													onPress={this._showDateTimePicker}
-													style={styles.signInBut}
-											>
-													<Text style={styles.changeDateContent}>
-															{this.state.selectedDateStar}
-													</Text>
-											</TouchableOpacity>
 										<DropDownPicker
 												ref="countryfieldRef"
 												items={this.state.countryoption}
 												defaultValue={this.state.countryfield}
-												placeholder="Select Country"
+												placeholder="Select Package"
 												containerStyle={{height:50, width: 300, marginTop: 10, }}
 												style={{backgroundColor:'#cdcdcd',borderTopLeftRadius: 25, borderTopRightRadius: 25, borderBottomLeftRadius: 25, borderBottomRightRadius: 25}}
 												dropDownStyle={{backgroundColor: '#cdcdcd'}}
@@ -380,24 +413,30 @@ console.log("today date: ",today)
 										/>
 										
 										{this.renderZone()}
-
+											<TouchableOpacity
+													onPress={this._showDatePicker}
+													style={styles.signInBut}
+											>
+													<Text style={styles.changeDateContent}>
+															{this.state.selectedDateStar}
+													</Text>
+											</TouchableOpacity>
+											<TouchableOpacity
+													onPress={this._showTimePicker}
+													style={styles.signInBut}
+											>
+													<Text style={styles.changeDateContent}>
+															{this.state.selectedTimeStar}
+													</Text>
+											</TouchableOpacity>
                     <TouchableOpacity
                     		disabled={this.state.submitBtn}
                         style={styles.signInBut}
                         onPress={this.filterField.bind(this)}
                     >
-                        <Text style={styles.signInText}>REGISTER</Text>
+                        <Text style={styles.signInText}>BOOK NOW</Text>
                     </TouchableOpacity>
-                    <Text style={styles.doesntText}>
-                        By clicking REGISTER, I agree to the
-                    </Text>
-                    <TouchableOpacity
-                        onPress={() => navigate("", { screen: "" })}
-                    >
-                        <Text style={styles.signUpButton}>
-                            Terms and Conditions
-                        </Text>
-                    </TouchableOpacity>
+                    </ImageBackground>
                 </ScrollView>
             </View>
         );
