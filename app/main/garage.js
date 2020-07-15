@@ -28,24 +28,26 @@ const randomHexColor = () => {
   });
 };
 
-const datArr = 2;
+const datArr = 5;
 
 export default class GarageScreen extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
 			loading: true,
-			dataSource: []
+			dataSource: [],
+			garageType: this.props.navigation.state.params.garageType,
 		};
 	}
 
 	componentDidMount(){
-		fetch("https://demo.shortcircuitworks.com/dirtpit23/index.php?route=api/category&dealers")
+		fetch("https://demo.shortcircuitworks.com/dirtpit23/index.php?route=api/booking/service&"+this.state.garageType)
 			.then(response => response.json())
 			.then((responseJson)=> {
+// 			console.log(responseJson)
 				this.setState({
 					loading: false,
-					dataSource: responseJson.categories
+					dataSource: responseJson.garage
 				})
 			})
 		.catch(error=>console.log(error)) //to catch the errors if any
@@ -119,16 +121,18 @@ export default class GarageScreen extends Component {
 						data={this.state.dataSource}
 // 						renderItem={item => this.renderItem(item)}
 						contentContainerStyle={{ flexGrow: 1 }}
-						keyExtractor={item=>item.store_id.toString()}
+						keyExtractor={item=>item.service_id.toString()}
 						ItemSeparatorComponent = { this.FlatListItemSeparator }
 						renderItem={item => (
 // 							if ({item.item.top} == 1){
 
 									<TouchableOpacity
 											onPress={() =>
-													navigate('DealersList', {
+													navigate('ServiceList', {
 															prevScreenTitle: 'DealersList',
-															dealersType: item.item.store_id,
+															serviceType: item.item.service_id,
+															serviceName: item.item.name,
+															serviceDesc: item.item.description
 													})
 											}
 											>
@@ -140,6 +144,15 @@ export default class GarageScreen extends Component {
 													<Text allowFontScaling={false} style={styles.rowMessage}>
 														{item.item.name}
 													</Text>
+													<Text allowFontScaling={false} style={styles.rowDescription}>
+														{item.item.description}
+													</Text>
+													<View style={{flexDirection: 'row', paddingLeft: 25, bottom: '10%'}} >
+														<Ionicons name={'ios-timer'} size={18} color={'#fff'} style={{}} />
+														<Text allowFontScaling={false} style={{paddingLeft: 5, color: '#fff'}}>
+															{item.item.duration} {item.item.duration>1?'hours':'hour'}
+														</Text>
+													</View>
 											</View>
 											</ImageBackground>
 									</TouchableOpacity>
@@ -288,7 +301,7 @@ const styles = StyleSheet.create({
     },
     rowBg: {
         flexGrow:1, 
-        height: Platform.OS == 'ios' ? (iPhoneX ? (height-90)/datArr : (height-60)/datArr) : (height-65)/datArr,
+        height: Platform.OS == 'ios' ? (iPhoneX ? (height-90)/datArr : (height-60)/datArr) : (height-75)/datArr,
     },
     rowTextContent: {
         alignSelf: 'stretch',
@@ -302,6 +315,14 @@ const styles = StyleSheet.create({
         fontSize: 18,
         paddingRight: 10,
         paddingLeft: 25,
-        bottom: '40%',
+        bottom: '30%',
+    },
+    rowDescription: {
+        color: '#fff',
+        fontFamily: 'Gotham-Book',
+        fontSize: 14,
+        paddingRight: 10,
+        paddingLeft: 25,
+        bottom: '30%',
     },
 });

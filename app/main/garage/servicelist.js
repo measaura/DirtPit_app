@@ -27,6 +27,9 @@ export default class SeerviceListScreen extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+						serviceType: this.props.navigation.state.params.serviceType,
+						serviceName: this.props.navigation.state.params.serviceName,
+						serviceDesc: this.props.navigation.state.params.serviceDesc,
             firstnamefield: "",
             lastnamefield: "",
             emailfield: "",
@@ -52,6 +55,7 @@ export default class SeerviceListScreen extends React.Component {
             selectedDateStar: 'Select Date',
             selectedTimeStar: 'Select Time',
         };
+    	this.testFetch()
     }
 
     _showDatePicker = () =>
@@ -170,10 +174,34 @@ console.log('zonedone',this.state.zonedone)
             Alert.alert("Please select your state.");
         } else {
         		this.validateEmail(passedEmail);
-            this.validate();
+//             this.validate();
         }
     }
 
+		testFetch(){
+				var myHeaders = new Headers();
+				myHeaders.append("Cookie", "language=en-gb;");
+
+				var formdata = new FormData();
+
+				var requestOptions = {
+					method: 'POST',
+					headers: myHeaders,
+					body: formdata,
+					redirect: 'follow'
+				};
+				
+				fetch("https://demo.shortcircuitworks.com/dirtpit23/index.php?route=api/booking/service&"+this.state.serviceType)
+					.then(response => response.text())
+					.then(result =>{
+						console.log(result)
+						if (result.success) {
+							console.log(result.success)
+							
+						}
+					})
+					.catch(error => console.log('error in testFetch', error));
+		}
     validate() {
         let passedFirstname = this.state.firstnamefield;
         let passedLastname = this.state.lastnamefield;
@@ -228,9 +256,10 @@ console.log('submit', formdata)
     
     getCountries = () => {
 //         return fetch("https://demo.shortcircuitworks.com/dirtpit23/index.php?route=api/country/countries", {
-			fetch('https://demo.shortcircuitworks.com/dirtpit23/index.php?route=api/country/countries')
+			fetch('https://demo.shortcircuitworks.com/dirtpit23/index.php?route=api/booking/timeslot/timeslots')
 			.then(response => response.json())
 			.then(json => {
+			console.log('json',json)
 				const countrytemp = json.map(
 					(item) => ({
 							label: item.name,
@@ -339,14 +368,14 @@ console.log("today date: ",today)
 	renderLeft() {
 			const {navigate} = this.props.navigation
 			return (
-					<TouchableOpacity onPress={() => navigate('Login')}>
+					<TouchableOpacity onPress={() =>  this.props.navigation.goBack()}>
 							<Ionicons name={'ios-arrow-back'} size={35} color={'yellow'} style={{paddingTop: 0}} />
 					</TouchableOpacity>
 			);
 	}
 	
 	renderCenter() {
-			return <Image source={require('../images/dirtpit-logo-181x43.png')} />
+			return <Image source={require('../../images/dirtpit-logo-181x43.png')} />
 	}
 
     render() {
@@ -390,15 +419,24 @@ console.log("today date: ",today)
 												style={styles.container}
 										>
                     <View style={styles.headerLogo}>
-											<Text style={{alignSelf: 'center', fontFamily:'Gotham-Bold', fontSize: 20}}>Service Booking</Text>
+											<Text style={{alignSelf: 'center', fontFamily:'Gotham-Bold', fontSize: 20}}>{this.state.serviceName}</Text>
                     </View>	
+										
+											<TouchableOpacity
+													onPress={this._showDatePicker}
+													style={styles.optionBut}
+											>
+													<Text style={styles.changeDateContent}>
+															{this.state.selectedDateStar}
+													</Text>
+											</TouchableOpacity>
 										<DropDownPicker
 												ref="countryfieldRef"
 												items={this.state.countryoption}
 												defaultValue={this.state.countryfield}
-												placeholder="Select Package"
-												containerStyle={{height:50, width: 300, marginTop: 10, }}
-												style={{backgroundColor:'#cdcdcd',borderTopLeftRadius: 25, borderTopRightRadius: 25, borderBottomLeftRadius: 25, borderBottomRightRadius: 25}}
+												placeholder="Select Time Slot"
+												containerStyle={{height:50, width: 300, marginTop: 10, alignSelf: 'center'}}
+												style={{backgroundColor:'#cdcdcd',zIndex:1000,borderTopLeftRadius: 25, borderTopRightRadius: 25, borderBottomLeftRadius: 25, borderBottomRightRadius: 25}}
 												dropDownStyle={{backgroundColor: '#cdcdcd'}}
 												labelStyle={{
 														fontFamily: 'Gotham-Bold',
@@ -411,24 +449,7 @@ console.log("today date: ",today)
 														zonedone: false
 												})}
 										/>
-										
-										{this.renderZone()}
-											<TouchableOpacity
-													onPress={this._showDatePicker}
-													style={styles.signInBut}
-											>
-													<Text style={styles.changeDateContent}>
-															{this.state.selectedDateStar}
-													</Text>
-											</TouchableOpacity>
-											<TouchableOpacity
-													onPress={this._showTimePicker}
-													style={styles.signInBut}
-											>
-													<Text style={styles.changeDateContent}>
-															{this.state.selectedTimeStar}
-													</Text>
-											</TouchableOpacity>
+
                     <TouchableOpacity
                     		disabled={this.state.submitBtn}
                         style={styles.signInBut}
@@ -504,6 +525,17 @@ const styles = StyleSheet.create({
         color: "black",
         paddingLeft: 15,
         paddingRight: 15
+    },
+    optionBut: {
+        marginTop: 10,
+        backgroundColor: "#cdcdcd",
+        height: 50,
+        borderRadius: 25,
+        alignSelf: "stretch",
+        marginLeft: 30,
+        marginRight: 30,
+        justifyContent: "center",
+        alignItems: "center"
     },
     signInBut: {
         marginTop: 30,

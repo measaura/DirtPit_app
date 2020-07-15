@@ -267,7 +267,9 @@ export default class HomeScreen extends React.Component {
 									</TouchableOpacity>
 									<TouchableOpacity
 											style={styles.logOutBut}
-											onPress={()=>navigate('Garage')}
+											onPress={()=>navigate('Garage',{
+															garageType: 'mx',
+											})}
 									>							
 										<View style={styles.menuBox} >
 											<Image source={require('../images/menu-icon-05.png')}
@@ -279,7 +281,9 @@ export default class HomeScreen extends React.Component {
 									</TouchableOpacity>
 									<TouchableOpacity
 											style={styles.logOutBut}
-											onPress={()=>navigate('BikeGarage')}
+											onPress={()=>navigate('Garage',{
+															garageType: 'mtb',
+											})}
 									>							
 										<View style={styles.menuBox} >
 											<Image source={require('../images/menu-icon-04.png')}

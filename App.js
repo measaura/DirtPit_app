@@ -62,6 +62,7 @@ import DealersListScreen from './app/main/dealers/dealerslist'
 import DealersShopScreen from './app/main/dealers/dealershop'
 import MotoGarageScreen from './app/main/motogarage'
 import BikeGarageScreen from './app/main/bikegarage'
+import ServiceListGarage from './app/main/garage/servicelist'
 import GarageScreen from './app/main/garage'
 import CafeScreen from './app/main/cafe'
 import CommunityScreen from './app/main/community'
@@ -211,6 +212,7 @@ const AppModalStack = createStackNavigator(
         DealerShop: DealersShopScreen,
         MotoGarage: MotoGarageScreen,
         BikeGarage: BikeGarageScreen,
+        ServiceList: ServiceListGarage,
         Garage: GarageScreen,
         Cafe: CafeScreen,
         Community: CommunityScreen,
