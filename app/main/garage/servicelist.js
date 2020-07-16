@@ -9,6 +9,7 @@ import {
     TextInput,
     ScrollView,
     Alert,
+		Dimensions,
     ActivityIndicator
 } from "react-native";
 import { Header } from "react-native-elements";
@@ -23,13 +24,17 @@ var notch = DeviceInfo.hasNotch()
 
 var timeZone = RNLocalize.getTimeZone()
 
+const {width, height} = Dimensions.get('window')
+
 export default class SeerviceListScreen extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
 						serviceType: this.props.navigation.state.params.serviceType,
+						serviceId: this.props.navigation.state.params.serviceId,
 						serviceName: this.props.navigation.state.params.serviceName,
 						serviceDesc: this.props.navigation.state.params.serviceDesc,
+						serviceImg: this.props.navigation.state.params.serviceImg,
             firstnamefield: "",
             lastnamefield: "",
             emailfield: "",
@@ -45,7 +50,7 @@ export default class SeerviceListScreen extends React.Component {
             countrytemp: [],
             stateoption: [],
             statetemp: [],
-            countryfield:'',
+            timeslotfield:'',
             statefield: '',
             zonedone: false,
             countrybefore: '',
@@ -119,62 +124,18 @@ export default class SeerviceListScreen extends React.Component {
 		};
 
     filterField() {
-        let passedFirstname = this.state.firstnamefield;
-        let passedLastname = this.state.lastnamefield;
-        let passedEmail = this.state.emailfield;
-        let passedPhone = this.state.phonefield;
-        let passedPassword = this.state.passwordfield;
-        let passedCoPassword = this.state.copasswordfield;
-        let passedAddress1 = this.state.address1field;
-        let passedCity = this.state.cityfield;
-        let passedCountry = this.state.countryfield;
-        let passedState = this.state.statefield;
 
-console.log('zonedone',this.state.zonedone)
-        if (passedFirstname == "") {
-            Alert.alert("Please enter your first name.");
-            this.refs.firstnamefieldRef.focus();
-        } else if (passedLastname == "") {
-            Alert.alert("Please enter your last name.");
-            this.refs.lastnamefieldRef.focus();
-        } else if (passedEmail == "") {
-            Alert.alert("Please enter your email.");
-            this.refs.emailfieldRef.focus();
-        } else if (!this.validateEmail(passedEmail)) {
-						Alert.alert("Please enter a valid email address")
-				}else if (passedPhone == "") {
-            Alert.alert("Please enter your phone number.");
-            this.refs.phonefieldRef.focus();
-        } else if (passedPassword == "") {
-            Alert.alert("Please enter your password.");
-            this.refs.passwordfieldRef.focus();
-        } else if (passedCoPassword == "") {
-            Alert.alert("Please confirm your password.");
-            this.refs.copasswordfieldRef.focus();
-        } else if (passedPassword != passedCoPassword) {
-            Alert.alert("Password entered does not match!");
-        } else if (passedPassword.length < 4 || passedPassword.length >20) {
-            Alert.alert("Password must be between 4 and 20 characters!");
-            this.refs.passwordfieldRef.focus();
-        } else if (passedAddress1 == "") {
-            Alert.alert("Please enter your address.");
-            this.refs.address1fieldRef.focus();
-        } else if (passedAddress1.length < 3 || passedAddress1.length >128) {
-            Alert.alert("Address 1 must be between 3 and 128 characters!");
-            this.refs.address1fieldRef.focus();
-        } else if (passedCity == "") {
-            Alert.alert("Please enter your city.");
-            this.refs.cityfieldRef.focus();
-        } else if (passedCity.length < 2 || passedCity.length >128) {
-            Alert.alert("City must be between 2 and 128 characters!");
-            this.refs.cityfieldRef.focus();
-        } else if (passedCountry == "") {
-            Alert.alert("Please select your country.");
-        } else if ((this.state.stateoption.length > 0) && passedState == "") {
-            Alert.alert("Please select your state.");
+        let passedSlot = this.state.timeslotfield;
+        let passedDate = this.state.selectedDateStar;
+
+console.log('zonedone',this.state.selectedDateStar)
+
+				if (passedDate == "Select Date") {
+            Alert.alert("Please select Date.");
+        } else if (passedSlot == "") {
+            Alert.alert("Please select Time Slot.");
         } else {
-        		this.validateEmail(passedEmail);
-//             this.validate();
+        	this.validate()
         }
     }
 
@@ -190,7 +151,7 @@ console.log('zonedone',this.state.zonedone)
 					body: formdata,
 					redirect: 'follow'
 				};
-				
+				console.log('type',this.state.serviceType)
 				fetch("https://demo.shortcircuitworks.com/dirtpit23/index.php?route=api/booking/service&"+this.state.serviceType)
 					.then(response => response.text())
 					.then(result =>{
@@ -202,6 +163,7 @@ console.log('zonedone',this.state.zonedone)
 					})
 					.catch(error => console.log('error in testFetch', error));
 		}
+		
     validate() {
         let passedFirstname = this.state.firstnamefield;
         let passedLastname = this.state.lastnamefield;
@@ -254,7 +216,7 @@ console.log('submit', formdata)
 
     }
     
-    getCountries = () => {
+    getTimeslot = () => {
 //         return fetch("https://demo.shortcircuitworks.com/dirtpit23/index.php?route=api/country/countries", {
 			fetch('https://demo.shortcircuitworks.com/dirtpit23/index.php?route=api/booking/timeslot/timeslots')
 			.then(response => response.json())
@@ -263,7 +225,7 @@ console.log('submit', formdata)
 				const countrytemp = json.map(
 					(item) => ({
 							label: item.name,
-							value: item.country_id
+							value: item.time_from
 					})
 				)
 // 				console.log(countrytemp)
@@ -305,7 +267,7 @@ console.log('zone',zonetemp.length)
 												placeholder="Select Region / State"
 												containerStyle={{height:50, width: 300, marginTop: 10, }}
 												style={{backgroundColor:'#cdcdcd',borderTopLeftRadius: 25, borderTopRightRadius: 25, borderBottomLeftRadius: 25, borderBottomRightRadius: 25}}
-												dropDownStyle={{backgroundColor: '#cdcdcd'}}
+												dropDownStyle={{backgroundColor: '#fff'}}
 												labelStyle={{
 														fontFamily: 'Gotham-Bold',
 														fontSize: 18,
@@ -360,7 +322,7 @@ console.log("today date: ",today)
 //             },
 //         );
 
-    	this.getCountries()
+    	this.getTimeslot()
     }
     
 
@@ -389,13 +351,7 @@ console.log("today date: ",today)
                     onConfirm={this._handleDatePicked}
                     onCancel={this._hideDateTimePicker}
                 />
-                <DateTimePicker
-                    mode={"time"}
-										date={new Date(this.state.todayDate)}
-                    isVisible={this.state.isTimePickerVisible}
-                    onConfirm={this._handleTimePicked}
-                    onCancel={this._hideTimePicker}
-                />
+
 						<Header
 								innerContainerStyles={styles.headerInnerContainer}
 								outerContainerStyles={styles.headerOuterContainer}
@@ -414,13 +370,17 @@ console.log("today date: ",today)
                     style={styles.scrollStyle}
                     contentContainerStyle={styles.scrollContent}
                 >
-										<ImageBackground
-												source={{uri: "https://demo.shortcircuitworks.com/dirtpit23/image/catalog/app/mx-dealers.jpg"}}
-												style={styles.container}
-										>
-                    <View style={styles.headerLogo}>
-											<Text style={{alignSelf: 'center', fontFamily:'Gotham-Bold', fontSize: 20}}>{this.state.serviceName}</Text>
-                    </View>	
+
+
+											<Image
+													source={{uri: this.state.serviceImg}}
+													style={{width: width, height: 200, resizeMode: 'stretch'}}
+											/>
+                    	<View style={{backgroundColor: 'rgba(255,255,255,0.9)', borderRadius: 10}}>
+												<Text style={{alignSelf: 'center', fontFamily:'Gotham-Bold', fontSize: 20}}>{this.state.serviceName}</Text>
+												<Text style={{alignSelf: 'center', fontFamily:'Gotham-Bold', fontSize: 16, marginLeft: 10, marginRight: 10}}>{this.state.serviceDesc}</Text>
+											</View>
+
 										
 											<TouchableOpacity
 													onPress={this._showDatePicker}
@@ -444,10 +404,13 @@ console.log("today date: ",today)
 														textAlign: 'left',
 														color: 'dark-grey'
 												}}
-												onChangeItem={item => this.setState({
-														countryfield: item.value,
-														zonedone: false
-												})}
+												onChangeItem={item => {this.setState({
+														timeslotfield: item.value,
+														zonedone: false,
+														submitBtn: false
+												})
+												console.log(item)}
+												}
 										/>
 
                     <TouchableOpacity
@@ -457,7 +420,6 @@ console.log("today date: ",today)
                     >
                         <Text style={styles.signInText}>BOOK NOW</Text>
                     </TouchableOpacity>
-                    </ImageBackground>
                 </ScrollView>
             </View>
         );
@@ -538,7 +500,7 @@ const styles = StyleSheet.create({
         alignItems: "center"
     },
     signInBut: {
-        marginTop: 30,
+        marginTop: 20,
         backgroundColor: "yellow",
         height: 50,
         borderRadius: 25,

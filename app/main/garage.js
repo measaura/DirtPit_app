@@ -130,9 +130,11 @@ export default class GarageScreen extends Component {
 											onPress={() =>
 													navigate('ServiceList', {
 															prevScreenTitle: 'DealersList',
-															serviceType: item.item.service_id,
+															serviceType: this.state.garageType,
+															serviceId: item.item.service_id,
 															serviceName: item.item.name,
-															serviceDesc: item.item.description
+															serviceDesc: item.item.description,
+															serviceImg: item.item.image
 													})
 											}
 											>
