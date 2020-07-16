@@ -52,8 +52,8 @@ const windowHeight = Dimensions.get('window').height;
 const {width, height} = Dimensions.get('window')
 const softNavBar = Platform.OS == 'ios' ? notch ? 116 :68 : 50;
 const bottomTab = 48;
-const sliderHeight = height-width < 300? 340: width;
-
+const sliderHeight = height-width < 300? 325: width;
+const smallScreen = height-width < 300 ? true : false;
 const statusBarHeight = StatusBar.currentHeight;
 const navbarHeight = Platform.OS == 'android'? screenHeight > windowHeight? 0:48 :0;
 
@@ -116,7 +116,7 @@ export default class HomeScreen extends React.Component {
 	
 	componentDidMount() {
   	this.spin()
-	console.log('\nwidth: '+width+'\nheight: '+height)
+	console.log('\nwidth: '+width+'\nheight: '+height+'\nStatusBar: '+statusBarHeight)
 // 	console.log('statusbar height '+StatusBar.currentHeight+', navbarHeight: '+navbarHeight)
 
 		fetch("https://demo.shortcircuitworks.com/dirtpit23/index.php?route=api/banner&id=9")
@@ -141,7 +141,7 @@ export default class HomeScreen extends React.Component {
 	// TODO _renderItem()
 	_renderItem({item, index}) {
 // 	console.warn(item.image); 
-		return <Image source={{uri: item.image}} style={{ width: width}} />
+		return <Image source={{uri: item.image}} style={{ width: width, height: sliderHeight, resizeMode: 'stretch'}} />
 	}
 	// TODO _keyExtractor()
 	_keyExtractor(item, index) {
@@ -206,17 +206,17 @@ export default class HomeScreen extends React.Component {
 												Platform.OS == 'ios' ? (notch ? -52:-18) : -20,
 										top:
 												Platform.OS == 'ios' ? (notch ? 0 : 0) : 0,
-										height: Platform.OS == 'ios' ? (notch ? 90 : 70) : 70,
+										height: Platform.OS == 'ios' ? (notch ? 90 : 70) : smallScreen? 60: 70,
 								}}
 						/>
 						<View style={styles.body}>
-							<View style={{height:sliderHeight}} >
+							<View style={{height:width, justifyContent: 'center'}} >
 							{this.renderSlider()}
 				
 							</View>
 							<View style={{flex:1, justifyContent: 'space-around', alignItems: 'center', backgroundColor: '#ffffff',marginBottom:navbarHeight}}>
 
-								<View style={{flexDirection: 'row',justifyContent: 'space-around', alignSelf: 'stretch', flexWrap: 'wrap',backgroundColor: '#eaeaea', }}>
+								<View style={{flexDirection: 'row',justifyContent: 'space-around', alignSelf: 'stretch', flexWrap: 'wrap', }}>
 									<TouchableOpacity
 											style={styles.logOutBut}
 											onPress={()=>navigate('Segment')}
