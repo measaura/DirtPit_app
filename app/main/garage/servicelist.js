@@ -19,6 +19,7 @@ import DateTimePicker from "react-native-modal-datetime-picker";
 import Moment from "moment";
 import MomentTimezone from "moment-timezone";
 import * as RNLocalize from 'react-native-localize'
+import AwesomeAlert from 'react-native-awesome-alerts'
 import DeviceInfo from 'react-native-device-info'
 var notch = DeviceInfo.hasNotch()
 
@@ -35,32 +36,20 @@ export default class SeerviceListScreen extends React.Component {
 						serviceName: this.props.navigation.state.params.serviceName,
 						serviceDesc: this.props.navigation.state.params.serviceDesc,
 						serviceImg: this.props.navigation.state.params.serviceImg,
-            firstnamefield: "",
-            lastnamefield: "",
-            emailfield: "",
-            phonefield: "",
-            passwordfield: "",
-            copasswordfield: "",
-            companyfield: "",
-            address1field:"",
-            address2field: "",
-            cityfield: "",
-            postcodefield: "",
-            countryoption:[],
-            countrytemp: [],
-            stateoption: [],
-            statetemp: [],
+						showAlert: false,
+						alertMessage: '',
             timeslotfield:'',
             statefield: '',
             zonedone: false,
             countrybefore: '',
+            countryoption: [],
             submitBtn: true,
             isDatePickerVisible: false,
             isTimePickerVisible: false,
             selectedDateStar: 'Select Date',
             selectedTimeStar: 'Select Time',
         };
-    	this.testFetch()
+//     	this.testFetch()
     }
 
     _showDatePicker = () =>
@@ -118,17 +107,30 @@ export default class SeerviceListScreen extends React.Component {
 //         this._hideDateTimePicker();
     };
 
+		showAlert() {
+			this.setState({
+				showAlert: true
+			});
+		};
+
+		hideAlert() {
+			const {navigate} = this.props.navigation
+			this.setState({
+				showAlert: false
+			});
+			navigate('Home')
+		};
+	
 		validateEmail = email => {
 			var re = /^(([^<>()\[\]\\.,;:\s@”]+(\.[^<>()\[\]\\.,;:\s@”]+)*)|(“.+”))@((\[[0–9]{1,3}\.[0–9]{1,3}\.[0–9]{1,3}\.[0–9]{1,3}])|(([a-zA-Z\-0–9]+\.)+[a-zA-Z]{2,}))$/;
 			return re.test(email);
 		};
 
     filterField() {
-
         let passedSlot = this.state.timeslotfield;
         let passedDate = this.state.selectedDateStar;
 
-console.log('zonedone',this.state.selectedDateStar)
+			console.log('zonedone',this.state.selectedDateStar)
 
 				if (passedDate == "Select Date") {
             Alert.alert("Please select Date.");
@@ -138,6 +140,46 @@ console.log('zonedone',this.state.selectedDateStar)
         	this.validate()
         }
     }
+
+		checkLogin() {
+			AsyncStorage.getItem("myLogin", (err, value) => {
+					if (!err && value != null) {
+						let thisLogin = JSON.parse(value);
+						this.setState({
+							email: thisLogin.email,
+							password: thisLogin.password, 
+						});
+
+						console.warn('myLogin', thisLogin )
+					} else {
+					}
+			});
+		
+			AsyncStorage.getItem("tokenKey", (err, value) => {
+					if (!err && value != null) {
+							this.setState({ tokenKey: value });
+						console.log('tokenKey', value)
+					} else {
+					}
+			});
+			const dataForm = new FormData();
+			dataForm.append("access_token", this.state.tokenKey)
+	// 		console.log('loginInfo',myLogin)
+			API.userDetail(dataForm).then(response => {
+	// 			data = response;
+	// 			this.setState({
+	// 					fetchedName: data.firstname+' '+data.lastname,
+	// 					fetchedEmail: data.email,
+	// 					fetchedPhone: data.telephone
+	// 			});
+
+				if (response.customer_id === null) {
+					this.reLogin()
+				}
+			
+				console.log('checkLogin userDetail',response.customer_id)
+			});
+		}
 
 		testFetch(){
 				var myHeaders = new Headers();
@@ -203,12 +245,16 @@ console.log('zonedone',this.state.selectedDateStar)
 					redirect: 'follow'
 				};
 console.log('submit', formdata)
-				fetch("https://demo.shortcircuitworks.com/dirtpit23/index.php?route=api/userregister", requestOptions)
-					.then(response => response.text())
+				fetch("https://demo.shortcircuitworks.com/dirtpit23/index.php?route=api/booking/bookslot", requestOptions)
+					.then(response => response.json())
 					.then(result =>{
 						console.log(result)
 						if (result.success) {
 							console.log(result.success)
+							this.setState({
+								showAlert: true,
+								alertMessage: result.success,
+							})
 							
 						}
 					})
@@ -228,7 +274,7 @@ console.log('submit', formdata)
 							value: item.time_from
 					})
 				)
-// 				console.log(countrytemp)
+				console.log('countrytemp',countrytemp)
 				this.setState({
 					countryoption: countrytemp 
 				})
@@ -393,7 +439,6 @@ console.log("today date: ",today)
 										<DropDownPicker
 												ref="countryfieldRef"
 												items={this.state.countryoption}
-												defaultValue={this.state.countryfield}
 												placeholder="Select Time Slot"
 												containerStyle={{height:50, width: 300, marginTop: 10, alignSelf: 'center'}}
 												style={{backgroundColor:'#cdcdcd',zIndex:1000,borderTopLeftRadius: 25, borderTopRightRadius: 25, borderBottomLeftRadius: 25, borderBottomRightRadius: 25}}
@@ -421,6 +466,25 @@ console.log("today date: ",today)
                         <Text style={styles.signInText}>BOOK NOW</Text>
                     </TouchableOpacity>
                 </ScrollView>
+        <AwesomeAlert
+          show={this.state.showAlert}
+          showProgress={false}
+          title="Thank you!"
+          message={this.state.alertMessage}
+          closeOnTouchOutside={true}
+          closeOnHardwareBackPress={false}
+          showCancelButton={false}
+          showConfirmButton={true}
+          cancelText="No, cancel"
+          confirmText="    OK    "
+          confirmButtonColor="green"
+          onCancelPressed={() => {
+            this.hideAlert();
+          }}
+          onConfirmPressed={() => {
+            this.hideAlert();
+          }}
+        />
             </View>
         );
     }
