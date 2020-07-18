@@ -14,6 +14,7 @@ import {
 import AsyncStorage from '@react-native-community/async-storage'
 import {Header} from 'react-native-elements'
 import Moment from 'moment'
+import Ionicons from 'react-native-vector-icons/Ionicons'
 
 import API from '../helper/APIController'
 
@@ -85,6 +86,31 @@ export default class Notifications extends React.Component {
         })
     }
 
+		testFetch(){
+				var myHeaders = new Headers();
+				myHeaders.append("Cookie", "language=en-gb;");
+
+				var formdata = new FormData();
+
+				var requestOptions = {
+					method: 'POST',
+					headers: myHeaders,
+					body: formdata,
+					redirect: 'follow'
+				};
+				console.log('type',this.state.serviceType)
+				fetch("https://demo.shortcircuitworks.com/dirtpit23/index.php?route=api/notification/orderhistory" )
+					.then(response => response.text())
+					.then(result =>{
+						console.log(result)
+						if (result.success) {
+							console.log(result.success)
+							
+						}
+					})
+					.catch(error => console.log('error in testFetch', error));
+		}
+
     componentDidMount() {
         this.didFocusListener = this.props.navigation.addListener(
             'didFocus',
@@ -101,6 +127,7 @@ export default class Notifications extends React.Component {
             } else {
             }
         })
+        this.testFetch()
     }
 
     componentWillUnmount() {
@@ -112,9 +139,19 @@ export default class Notifications extends React.Component {
         return true
     }
 
-    renderCenter() {
-        return <Text style={styles.headerNavTitle}>NOTIFICATIONS</Text>
-    }
+	renderLeft() {
+			const {navigate} = this.props.navigation
+			return (
+					<TouchableOpacity onPress={() =>  this.props.navigation.goBack()}>
+							<Ionicons name={'ios-arrow-back'} size={35} color={'yellow'} style={{paddingTop: 0}} />
+					</TouchableOpacity>
+			);
+	}
+	
+	renderCenter() {
+			return <Image source={require('../images/dirtpit-logo-181x43.png')} />
+	}
+
 
     static navigationOptions = {
         title: 'Home',
@@ -160,20 +197,20 @@ export default class Notifications extends React.Component {
         if (this.state.dataStatus) {
             return (
                 <View style={styles.container}>
-                    <Header
-                        innerContainerStyles={styles.headerInnerContainer}
-                        centerContainerStyle={styles.headerInnerContainer}
-                        outerContainerStyles={styles.headerOuterContainer}
-                        centerComponent={this.renderCenter()}
-                        containerStyle={{
-                            backgroundColor: '#fff',
-                            marginTop:
-                                Platform.OS == 'ios' ? (iPhoneX ? 20 : 0) : -10,
-                            top:
-                                Platform.OS == 'ios' ? (iPhoneX ? -15 : 0) : -5,
-                            height: 70,
-                        }}
-                    />
+						<Header
+								innerContainerStyles={styles.headerInnerContainer}
+								outerContainerStyles={styles.headerOuterContainer}
+								leftComponent={this.renderLeft()}
+								centerComponent={this.renderCenter()}
+								containerStyle={{
+										backgroundColor: '#000',
+										marginTop:
+												Platform.OS == 'ios' ? 0 : -20,
+										top:
+												Platform.OS == 'ios' ? (notch ? -10 : 0) : 0,
+										height: Platform.OS == 'ios' ? (notch ? 90 : 0) : 70,
+								}}
+						/>
                     <View style={styles.flatContent}>
                         <FlatList
                             data={this.state.fetchedData}
@@ -220,20 +257,20 @@ export default class Notifications extends React.Component {
         } else {
             return (
                 <View style={styles.container}>
-                    <Header
-                        innerContainerStyles={styles.headerInnerContainer}
-                        centerContainerStyle={styles.headerInnerContainer}
-                        outerContainerStyles={styles.headerOuterContainer}
-                        centerComponent={this.renderCenter()}
-                        containerStyle={{
-                            backgroundColor: '#fff',
-                            marginTop:
-                                Platform.OS == 'ios' ? (iPhoneX ? 20 : 0) : -10,
-                            top:
-                                Platform.OS == 'ios' ? (iPhoneX ? -15 : 0) : -5,
-                            height: 70,
-                        }}
-                    />
+						<Header
+								innerContainerStyles={styles.headerInnerContainer}
+								outerContainerStyles={styles.headerOuterContainer}
+								leftComponent={this.renderLeft()}
+								centerComponent={this.renderCenter()}
+								containerStyle={{
+										backgroundColor: '#000',
+										marginTop:
+												Platform.OS == 'ios' ? 0 : -20,
+										top:
+												Platform.OS == 'ios' ? (notch ? -10 : 0) : 0,
+										height: Platform.OS == 'ios' ? (notch ? 90 : 0) : 70,
+								}}
+						/>
                     <View style={styles.cantLocate}>
                         <Image
                             source={require('../images/noNoti.png')}
