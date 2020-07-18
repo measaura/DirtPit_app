@@ -8,16 +8,15 @@ import {
   Text,
   StatusBar,
   Image,
-  Dimensions,
   ImageBackground,
+  Dimensions,
   TouchableOpacity,
   ActivityIndicator,
 } from 'react-native';
 import {Colors} from '../NewAppScreen';
-import {Header} from 'react-native-elements'
+import { Header } from "react-native-elements";
 import Ionicons from 'react-native-vector-icons/Ionicons'
 
-import {showLocation} from 'react-native-map-link'
 import DeviceInfo from 'react-native-device-info'
 var iPhoneX = DeviceInfo.hasNotch()
 
@@ -29,23 +28,25 @@ const randomHexColor = () => {
   });
 };
 
+const datArr = 2;
+
 export default class CommunityScreen extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
 			loading: true,
-			dataSource: [],
+			dataSource: []
 		};
 	}
 
 	componentDidMount(){
-// 	console.log(this.state.segId)
-		fetch("https://demo.shortcircuitworks.com/dirtpit23/index.php?route=api/community")
+		fetch("https://demo.shortcircuitworks.com/dirtpit23/index.php?route=api/category&community")
 			.then(response => response.json())
 			.then((responseJson)=> {
+			console.log(responseJson)
 				this.setState({
 					loading: false,
-					dataSource: responseJson.dealers
+					dataSource: responseJson.categories
 				})
 			})
 		.catch(error=>console.log(error)) //to catch the errors if any
@@ -54,9 +55,9 @@ export default class CommunityScreen extends Component {
 	FlatListItemSeparator = () => {
 		return (
 			<View style={{
-				 height: .5,
+				 height: 5,
 				 width:"100%",
-				 backgroundColor:"rgba(0,0,0,0.5)",
+				 backgroundColor: '#fff',
 				}}
 			/>
 		);
@@ -65,8 +66,8 @@ export default class CommunityScreen extends Component {
 	renderLeft() {
 			const {navigate} = this.props.navigation
 			return (
-					<TouchableOpacity onPress={() => this.props.navigation.goBack()}>
-							<Ionicons name={'ios-arrow-dropleft-circle'} size={30} color={'yellow'} style={{paddingTop: 0}} />
+					<TouchableOpacity onPress={() => navigate('Home')}>
+							<Ionicons name={'ios-home'} size={30} color={'yellow'} style={{paddingTop: 0}} />
 					</TouchableOpacity>
 			);
 	}
@@ -80,14 +81,25 @@ export default class CommunityScreen extends Component {
 		if (this.state.loading){
 			return(
 				<View style={styles.loader}>
+					<Header
+							innerContainerStyles={styles.headerInnerContainer}
+							outerContainerStyles={styles.headerOuterContainer}
+							leftComponent={this.renderLeft()}
+							centerComponent={this.renderCenter()}
+							containerStyle={{
+									backgroundColor: '#000',
+									marginTop:
+											Platform.OS == 'ios' ? 0 : -20,
+									top:
+											Platform.OS == 'ios' ? (iPhoneX ? -10 : 0) : -10,
+									height: Platform.OS == 'ios' ? (iPhoneX ? 90 : 0) : 70,
+							}}
+					/>
 					<ActivityIndicator size="large" color="#0c9" />
 				</View>
 			)
-		}else if (this.state.dataSource){
+		}else{
 // 		var list = this.state.dataSource.filter(item => item.top === "1")
-// 		console.log('-------------------- ')
-// 		console.log(list)
-// 		console.log('=====================')
 			return(
 				<View style={styles.container}>
 					<Header
@@ -107,73 +119,43 @@ export default class CommunityScreen extends Component {
 					<FlatList
 						data={this.state.dataSource}
 // 						renderItem={item => this.renderItem(item)}
+						contentContainerStyle={{ flexGrow: 1 }}
+						keyExtractor={item=>item.store_id.toString()}
+						ItemSeparatorComponent = { this.FlatListItemSeparator }
 						renderItem={item => (
 // 							if ({item.item.top} == 1){
+
 									<TouchableOpacity
 											onPress={() =>
-												showLocation({
-														dialogTitle: 'Open map application',
-														dialogMessage:
-																'Get directions to "' +
-																item.item.dealer_name +
-																'" using selected app',
-														latitude: item.item.latitude,
-														longitude: item.item.longitude,
-												})
+													navigate(item.item.navigate, {
+															prevScreenTitle: item.item.navigate,
+															dealersType: item.item.store_id,
+													})
 											}
-											style={styles.rowWrap}>
+											>
+											<ImageBackground
+													source={{uri: item.item.image}}
+													style={styles.rowBg}
+											>
 											<View style={styles.rowTextContent}>
 													<Text allowFontScaling={false} style={styles.rowMessage}>
-														{item.item.dealer_name}
-													</Text>
-													<Text allowFontScaling={false} style={styles.rowTime}>
-														{item.item.address}
-													</Text>
-													<Text allowFontScaling={false} style={styles.rowTime}>
-														{item.item.in_charge}{': '}{item.item.contact_no}
+														{item.item.name}
 													</Text>
 											</View>
-
+											</ImageBackground>
 									</TouchableOpacity>
+
 // 								}									
-									
+
 							)}
-						keyExtractor={item=>item.store_id.toString()}
 					/>
 				</View>
 			)
-		}else{
-            return (
-                <View style={styles.container}>
-										<Header
-												innerContainerStyles={styles.headerInnerContainer}
-												outerContainerStyles={styles.headerOuterContainer}
-												leftComponent={this.renderLeft()}
-												centerComponent={this.renderCenter()}
-												containerStyle={{
-														backgroundColor: '#000',
-														marginTop:
-																Platform.OS == 'ios' ? (iPhoneX ? 20 : 0) : -20,
-														top:
-																Platform.OS == 'ios' ? (iPhoneX ? -15 : 0) : -5,
-														height: 70,
-												}}
-										/>
-                    <View style={styles.cantLocate}>
-                        <Image
-                            source={require('../images/DirtPit_icon_1024.png')}
-                            style={styles.cantLocateImg}
-                        />
-                        <Text allowFontScaling={false} style={styles.cantLocateText}>
-                            More Contents soon...
-                        </Text>
-                    </View>
-                </View>
-            )
 		}
-		
+
   }
 };
+
 
 const styles = StyleSheet.create({
   scrollView: {
@@ -295,29 +277,32 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         borderBottomWidth: 1,
         borderColor: '#dedede',
-        height: 125,
+        height: '25%',
         backgroundColor: '#ffffff',
         alignSelf: 'stretch',
         alignItems: 'center',
     },
     rowIcon: {
-        width: 120,
-        height: 120,
+        width: 100,
+        height: 100,
         marginLeft: 20,
+    },
+    rowBg: {
+        flexGrow:1, 
+        height: Platform.OS == 'ios' ? (iPhoneX ? (height-90)/datArr : (height-60)/datArr) : (height-65)/datArr,
     },
     rowTextContent: {
         alignSelf: 'stretch',
-        height: 125,
-        marginLeft: 10,
-        justifyContent: 'center',
-        flex: 1,
+        flex:1,
+        justifyContent: 'flex-end',
+        backgroundColor: 'rgba(0,0,0,0.3)',
     },
     rowMessage: {
-        color: '#3f3f3f',
-        fontSize: 25,
-    },
-    rowTime: {
-        color: '#a0abba',
-        fontSize: 15,
+        color: '#fff',
+        fontFamily: 'Gotham-Bold',
+        fontSize: 18,
+        paddingRight: 10,
+        paddingLeft: 25,
+        bottom: '40%',
     },
 });
