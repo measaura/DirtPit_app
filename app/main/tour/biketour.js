@@ -18,8 +18,14 @@ import {
 import {Colors} from '../../NewAppScreen';
 import {Header} from 'react-native-elements'
 import { NavigationEvents } from 'react-navigation'
+import DropDownPicker from 'react-native-dropdown-picker';
+import DateTimePicker from "react-native-modal-datetime-picker";
 import Toast, {DURATION} from 'react-native-easy-toast'
 import Ionicons from 'react-native-vector-icons/Ionicons'
+import Moment from "moment";
+import MomentTimezone from "moment-timezone";
+import * as RNLocalize from 'react-native-localize'
+import AwesomeAlert from 'react-native-awesome-alerts'
 
 import {showLocation} from 'react-native-map-link'
 import DeviceInfo from 'react-native-device-info'
@@ -32,6 +38,8 @@ const randomHexColor = () => {
     return (~~(Math.random() * 16)).toString(16);
   });
 };
+
+var timeZone = RNLocalize.getTimeZone()
 
 const DATA = [
         {
@@ -91,6 +99,12 @@ export default class BikeTourScreen extends Component {
 		this.state = {
 			loading: true,
 			dataSource: [],
+			countryoption: [],
+			submitBtn: true,
+			isDatePickerVisible: false,
+			isTimePickerVisible: false,
+			selectedDateStar: 'Select Date',
+			selectedTimeStar: 'Select Time',
 		};
 	}
 	
@@ -106,10 +120,205 @@ export default class BikeTourScreen extends Component {
 		).start(() => this.spin())
 	}
 
+    _showDatePicker = () =>
+        this.setState({ isDatePickerVisible: true });
+
+    _hideDatePicker = () =>
+        this.setState({ isDatePickerVisible: false });
+
+    _showTimePicker = () =>
+        this.setState({ isTimePickerVisible: true });
+
+    _hideTimePicker = () =>
+        this.setState({ isTimePickerVisible: false });
+        
+    _handleDatePicked = date => {
+    console.log('ok click')
+//         var todayDate = MomentTimezone.tz(date, Moment.tz.guess()).format();
+        var todayDate = MomentTimezone.tz(date, timeZone).format();
+        var today = Moment(todayDate)
+            .add(1, "minutes")
+            .format("DD-MM-YYYY");
+//         this.setState({
+//             startDate: today,
+//             endDate: today
+//         });
+        console.log(this.state.startDate);
+        console.log(this.state.endDate);
+        this.setState(
+            {
+                selectedDateStar: today,
+                isDatePickerVisible: false
+            },
+        );
+//         this._hideDateTimePicker();
+    };
+    
+    _handleTimePicked = date => {
+    console.log('ok click')
+//         var todayDate = MomentTimezone.tz(date, Moment.tz.guess()).format();
+        var todayDate = MomentTimezone.tz(date, timeZone).format();
+        var today = Moment(todayDate)
+            .format("hh:mm a");
+//         this.setState({
+//             startDate: today,
+//             endDate: today
+//         });
+        console.log(this.state.startDate);
+        console.log(this.state.endDate);
+        this.setState(
+            {
+                selectedTimeStar: today,
+                isTimePickerVisible: false
+            },
+        );
+//         this._hideDateTimePicker();
+    };
+
+		showAlert() {
+			this.setState({
+				showAlert: true
+			});
+		};
+
+		hideAlert() {
+			const {navigate} = this.props.navigation
+			this.setState({
+				showAlert: false
+			});
+			navigate('Home')
+		};
+
+    filterField() {
+        let passedSlot = this.state.timeslotfield;
+        let passedDate = this.state.selectedDateStar;
+
+			console.log('zonedone',this.state.selectedDateStar)
+
+				if (passedDate == "Select Date") {
+            Alert.alert("Please select Date.");
+        } else if (passedSlot == "") {
+            Alert.alert("Please select Time Slot.");
+        } else {
+        	this.validate()
+        }
+    }
+
+    validate() {
+        let passedFirstname = this.state.firstnamefield;
+        let passedLastname = this.state.lastnamefield;
+        let passedEmail = this.state.emailfield;
+        let passedPhone = this.state.phonefield;
+        let passedPassword = this.state.passwordfield;
+        let passedCoPassword = this.state.copasswordfield;
+        let passedAddress1 = this.state.address1field;
+        let passedAddress2 = this.state.address2field;
+        let passedCity = this.state.cityfield;
+        let passedPostcode = this.state.postcodefield;
+        let passedCountry = this.state.countryfield;
+        let passedState = this.state.statefield;
+
+				var formdata = new FormData();
+				formdata.append("firstname", passedFirstname);
+				formdata.append("lastname", passedLastname);
+				formdata.append("email", passedEmail);
+				formdata.append("telephone", passedPhone);
+				formdata.append("address_1", passedAddress1);
+				formdata.append("address_2", passedAddress2);
+				formdata.append("city", passedCity);
+				formdata.append("postcode", passedPostcode);
+				formdata.append("country_id", passedCountry);
+				formdata.append("zone_id", passedState);
+				formdata.append("password", passedPassword);
+				formdata.append("confirm", passedCoPassword);
+				formdata.append("agree", true);
+
+				var myHeaders = new Headers();
+				myHeaders.append("Cookie", "language=en-gb;");
+
+				var requestOptions = {
+					method: 'POST',
+					headers: myHeaders,
+					body: formdata,
+					redirect: 'follow'
+				};
+console.log('submit', formdata)
+				fetch("https://demo.shortcircuitworks.com/dirtpit23/index.php?route=api/booking/bookslot", requestOptions)
+					.then(response => response.json())
+					.then(result =>{
+						console.log(result)
+						if (result.success) {
+							console.log(result.success)
+							this.setState({
+								showAlert: true,
+								alertMessage: result.success,
+							})
+							
+						}
+					})
+					.catch(error => console.log('error', error));
+
+    }
+    getTimeslot = () => {
+//         return fetch("https://demo.shortcircuitworks.com/dirtpit23/index.php?route=api/country/countries", {
+			fetch('https://demo.shortcircuitworks.com/dirtpit23/index.php?route=api/booking/service&tour=mtb')
+			.then(response => response.json())
+			.then(json => {
+			console.log('json',json)
+				const countrytemp = json.tour.map(
+					(item) => ({
+							label: item.name,
+							value: item.time_from
+					})
+				)
+				console.log('countrytemp',countrytemp)
+				this.setState({
+					countryoption: countrytemp 
+				})
+			})
+    }
+
+
 	componentDidMount(){
 		this.spin()
+    console.log("componentDidMount")
+  
+        var dateGen = Moment.utc().format();
+        var todayDate = MomentTimezone.tz(
+            dateGen,
+            timeZone
+        ).format();
+
+        var today = Moment(todayDate)
+            .add(1, "minutes")
+            .format("D-MM-YYYY");
+            
+        var todaySelect = Moment(todayDate)
+            .add(1, "minutes")
+            .format("YYYY/MM/D");
+            
+        this.setState({
+            todayDate: todaySelect,
+            startDate: today,
+            endDate: today
+        });
+
+console.log("TZ: ", timeZone)
+console.log("today date: ",today)  
+// 
+//         this.setState({
+//             selectedDateStar: today
+//         });
+// 
+//         this.setState(
+//             {
+//                 startDate: today,
+//                 endDate: today
+//             },
+//         );
+
 // 	console.log(this.state.segId)
-		fetch("https://demo.shortcircuitworks.com/dirtpit23/index.php?route=api/banner&id=10")
+		fetch("https://demo.shortcircuitworks.com/dirtpit23/index.php?route=api/banner&id=11")
 			.then(response => response.json())
 			.then((responseJson)=> {
 				console.log(responseJson.banner[0])
@@ -119,7 +328,11 @@ export default class BikeTourScreen extends Component {
 					popupimg: responseJson.banner[0].image
 				})
 			})
-		.catch(error=>console.log(error)) //to catch the errors if any
+		.catch(error=>{console.err(error)}) //to catch the errors if any
+
+
+    	this.getTimeslot()
+    	
 	}
 
 	FlatListItemSeparator = () => {
@@ -133,6 +346,70 @@ export default class BikeTourScreen extends Component {
 		);
 	}
 
+	renderContent() {
+		this.state.dataSource.map((item) => {
+				console.log(item.image)
+					return (
+					<View style={styles.mainContainer}>
+						<ScrollView
+							style={styles.scrollStyle}
+						>
+						<Image
+								source={{uri: this.state.popupimg}}
+								style={styles.imageLarge}
+						/>
+						<View style={{height:(height*0.15)+10}} >
+							<FlatList
+									style={{flex:1, flexDirection: 'row', width: width, paddingTop: 0, paddingBottom: 0, backgroundColor: "#ffffff"}}
+									horizontal={true}
+									data={this.state.dataSource}
+									renderItem={({item,index}) => 
+										<TouchableOpacity 
+											onPress={()=>this.renderPopup(item,index)}>
+																		<Image
+																				source={{uri: item.image}}
+																				style={styles.imageThumb}
+																		/>
+										</TouchableOpacity>
+									}
+
+									ItemSeparatorComponent={() => {
+											return (
+													<View
+															style={{
+															height: (height*0.15)+10,
+															width: 5,
+															backgroundColor: "#fff",
+
+															}}
+													/>
+											);
+									}}
+
+									keyExtractor={(item, index) => index.toString()}
+							/>
+						</View>
+							<View style={{justifyContent: 'center'}} >
+
+								<Image 
+										source={{uri: "https://demo.shortcircuitworks.com/dirtpit23/image/catalog/app/cafe/menu7.jpg"}}
+										style={styles.imageMenu}
+								/>
+								<Image 
+										source={{uri: "https://demo.shortcircuitworks.com/dirtpit23/image/catalog/app/cafe/menu8.jpg"}}
+										style={styles.imageMenu}
+								/>
+								<Image 
+										source={{uri: "https://demo.shortcircuitworks.com/dirtpit23/image/catalog/app/cafe/menu9.jpg"}}
+										style={styles.imageMenu}
+								/>
+							</View>
+					</ScrollView>						
+				</View>
+				)
+			})
+	}
+	
 	renderPopup(item) {
 		console.warn(item)
 		this.setState({
@@ -180,6 +457,13 @@ export default class BikeTourScreen extends Component {
 console.log(this.state.dataSource[0].image)
 			return(
 				<View style={styles.container}>
+					<DateTimePicker
+							mode={"date"}
+							date={new Date(this.state.todayDate)}
+							isVisible={this.state.isDatePickerVisible}
+							onConfirm={this._handleDatePicked}
+							onCancel={this._hideDateTimePicker}
+					/>
 					<Header
 							innerContainerStyles={styles.headerInnerContainer}
 							outerContainerStyles={styles.headerOuterContainer}
@@ -194,10 +478,7 @@ console.log(this.state.dataSource[0].image)
 									height: Platform.OS == 'ios' ? (iPhoneX ? 90 : 0) : 70,
 							}}
 					/>
-					{this.state.dataSource.map((item) => {
-					console.log(item.image)
-						return (
-						<View style={styles.mainContainer}>
+
 							<ScrollView
 								style={styles.scrollStyle}
 							>
@@ -205,7 +486,8 @@ console.log(this.state.dataSource[0].image)
 									source={{uri: this.state.popupimg}}
 									style={styles.imageLarge}
 							/>
-							<View style={{height:(height*0.15)+10}} >
+
+							<View style={{height:(height*0.15)}} >
 								<FlatList
 										style={{flex:1, flexDirection: 'row', width: width, paddingTop: 0, paddingBottom: 0, backgroundColor: "#ffffff"}}
 										horizontal={true}
@@ -224,8 +506,8 @@ console.log(this.state.dataSource[0].image)
 												return (
 														<View
 																style={{
-																height: (height*0.15)+10,
-																width: 5,
+																height: (height*0.15),
+																width: 1,
 																backgroundColor: "#fff",
 
 																}}
@@ -236,25 +518,66 @@ console.log(this.state.dataSource[0].image)
 										keyExtractor={(item, index) => index.toString()}
 								/>
 							</View>
-								<View style={{justifyContent: 'center'}} >
+							<View style={{height:350}}>
+											<Text style={{alignSelf: 'center', fontFamily:'Gotham-Bold', fontSize: 20, marginTop: 10}}>MTB Tours</Text>
+											<TouchableOpacity
+													onPress={this._showDatePicker}
+													style={styles.optionBut}
+											>
+													<Text style={styles.changeDateContent}>
+															{this.state.selectedDateStar}
+													</Text>
+											</TouchableOpacity>
+										<DropDownPicker
+												ref="countryfieldRef"
+												items={this.state.countryoption}
+												placeholder="Select Tour Package"
+												containerStyle={{height:50, width: 300, marginTop: 10, alignSelf: 'center'}}
+												style={{backgroundColor:'#cdcdcd',zIndex:1000,borderTopLeftRadius: 25, borderTopRightRadius: 25, borderBottomLeftRadius: 25, borderBottomRightRadius: 25}}
+												dropDownStyle={{backgroundColor: '#cdcdcd'}}
+												labelStyle={{
+														fontFamily: 'Gotham-Bold',
+														fontSize: 18,
+														textAlign: 'left',
+														color: 'dark-grey'
+												}}
+												onChangeItem={item => {this.setState({
+														timeslotfield: item.value,
+														zonedone: false,
+														submitBtn: false
+												})
+												console.log(item)}
+												}
+										/>
 
-									<Image 
-											source={{uri: "https://demo.shortcircuitworks.com/dirtpit23/image/catalog/app/cafe/menu7.jpg"}}
-											style={styles.imageMenu}
-									/>
-									<Image 
-											source={{uri: "https://demo.shortcircuitworks.com/dirtpit23/image/catalog/app/cafe/menu8.jpg"}}
-											style={styles.imageMenu}
-									/>
-									<Image 
-											source={{uri: "https://demo.shortcircuitworks.com/dirtpit23/image/catalog/app/cafe/menu9.jpg"}}
-											style={styles.imageMenu}
-									/>
-								</View>
+                    <TouchableOpacity
+                    		disabled={this.state.submitBtn}
+                        style={styles.signInBut}
+                        onPress={this.filterField.bind(this)}
+                    >
+                        <Text style={styles.signInText}>BOOK NOW</Text>
+                    </TouchableOpacity>
+                </View>
 						</ScrollView>						
-					</View>
-					)
-				})}
+        <AwesomeAlert
+          show={this.state.showAlert}
+          showProgress={false}
+          title="Thank you!"
+          message={this.state.alertMessage}
+          closeOnTouchOutside={true}
+          closeOnHardwareBackPress={false}
+          showCancelButton={false}
+          showConfirmButton={true}
+          cancelText="No, cancel"
+          confirmText="    OK    "
+          confirmButtonColor="green"
+          onCancelPressed={() => {
+            this.hideAlert();
+          }}
+          onConfirmPressed={() => {
+            this.hideAlert();
+          }}
+        />
 				</View>
 			)
 		}else{
@@ -468,4 +791,40 @@ const styles = StyleSheet.create({
     color: Colors.black,
     marginLeft: 8,
   },
+    scrollStyle: {
+        height: 900,
+    },
+    optionBut: {
+        marginTop: 10,
+        backgroundColor: "#cdcdcd",
+        height: 50,
+        borderRadius: 25,
+        alignSelf: "stretch",
+        marginLeft: 30,
+        marginRight: 30,
+        justifyContent: "center",
+        alignItems: "center"
+    },
+    signInBut: {
+        marginTop: 20,
+        backgroundColor: "yellow",
+        height: 50,
+        borderRadius: 25,
+        alignSelf: "stretch",
+        marginLeft: 30,
+        marginRight: 30,
+        justifyContent: "center",
+        alignItems: "center"
+    },
+    signInText: {
+        fontSize: 16,
+        fontFamily: "Gotham-Bold",
+        color: "black"
+    },
+    changeDateContent: {
+        marginTop: 2,
+        fontSize: 19,
+        fontFamily: "Gotham-Bold",
+        marginBottom: 5
+    },
 });
