@@ -194,7 +194,7 @@ export default class SeerviceListScreen extends React.Component {
 					redirect: 'follow'
 				};
 				console.log('type',this.state.serviceType)
-				fetch("https://demo.shortcircuitworks.com/dirtpit23/index.php?route=api/booking/service&"+this.state.serviceType)
+				fetch("https://demo.shortcircuitworks.com/dirtpit23/index.php?route=api/booking/service&garage="+this.state.serviceType)
 					.then(response => response.text())
 					.then(result =>{
 						console.log(result)

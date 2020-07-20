@@ -41,7 +41,7 @@ export default class GarageScreen extends Component {
 	}
 
 	componentDidMount(){
-		fetch("https://demo.shortcircuitworks.com/dirtpit23/index.php?route=api/booking/service&"+this.state.garageType)
+		fetch("https://demo.shortcircuitworks.com/dirtpit23/index.php?route=api/booking/service&garage="+this.state.garageType)
 			.then(response => response.json())
 			.then((responseJson)=> {
 // 			console.log(responseJson)
@@ -74,7 +74,7 @@ export default class GarageScreen extends Component {
 	}
 
 	renderCenter() {
-			return <Image source={require('../images/DirtPit_logo-180x35.png')} />
+			return <Image source={require('../images/dirtpit-logo-181x43.png')} />
 	}
 
   render() {
