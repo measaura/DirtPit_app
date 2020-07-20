@@ -13,7 +13,7 @@ import {
   TouchableOpacity,
   ActivityIndicator,
 } from 'react-native';
-import {Colors} from '../NewAppScreen';
+import {Colors} from '../../NewAppScreen';
 import { Header } from "react-native-elements";
 import Ionicons from 'react-native-vector-icons/Ionicons'
 
@@ -30,7 +30,7 @@ const randomHexColor = () => {
 
 const datArr = 2;
 
-export default class CommunityScreen extends Component {
+export default class CommunityFtwScreen extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
@@ -73,7 +73,7 @@ export default class CommunityScreen extends Component {
 	}
 
 	renderCenter() {
-			return <Image source={require('../images/DirtPit_logo-180x35.png')} />
+			return <Image source={require('../../images/DirtPit_logo-180x35.png')} />
 	}
 
   render() {

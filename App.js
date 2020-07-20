@@ -48,6 +48,7 @@ import BikeTourScreen from './app/main/tour/biketour'
 import MotoTourScreen from './app/main/tour/mototour'
 import BikeTourTmpScreen from './app/main/tour/biketourtmp'
 import FourByFourTourTmpScreen from './app/main/tour/4x4tourtmp'
+import FourByFourTourScreen from './app/main/tour/atvtour'
 import ShopScreen from './app/main/shop/retail'
 import SegmentScreen from './app/main/shop/segment'
 import CategoryScreen from './app/main/shop/category'
@@ -66,6 +67,7 @@ import ServiceListGarage from './app/main/garage/servicelist'
 import GarageScreen from './app/main/garage'
 import CafeScreen from './app/main/cafe'
 import CommunityScreen from './app/main/community'
+import CommunityFtwScreen from './app/main/community/ftwracing'
 import ConceptList from './app/main/concept'
 import ConceptScreen from './app/main/concept/conceptshop'
 import Profile from './app/main/profile'
@@ -202,9 +204,9 @@ const AppModalStack = createStackNavigator(
         App: Tabs,
         Shop: ShopStack,
         Tour: TourScreen,
-        BikeTour: BikeTourTmpScreen,
+        BikeTour: BikeTourScreen,
         MotoTour: MotoTourScreen,
-        FourByFourTour: FourByFourTourTmpScreen,
+        FourByFourTour: FourByFourTourScreen,
         Concept: ConceptList,
         ConceptScreen: ConceptScreen,
         Dealers: DealersScreen,
@@ -216,6 +218,7 @@ const AppModalStack = createStackNavigator(
         Garage: GarageScreen,
         Cafe: CafeScreen,
         Community: CommunityScreen,
+        CommunityFtw: CommunityFtwScreen,
         Cart: CartScreen,
         CartNew: CartNewScreen,
         Checkout: CheckoutScreen,
