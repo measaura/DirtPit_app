@@ -33,57 +33,6 @@ const randomHexColor = () => {
   });
 };
 
-const DATA = [
-        {
-            "store_id":"1",
-            "image":"http://demo.shortcircuitworks.com/dirtpit23/image/catalog/app/kuantan.png",
-            "parent_id":"0",
-            "top":"1",
-            "column":"1",
-            "sort_order":"0",
-            "status":"1",
-            "name":"Kuantan Concept Store",
-            "description":"Kuantan Concept Store",
-            "meta_title":"Kuantan",
-            "meta_description":"No 9, \nJalan Bukit Sekilau, \n25300 Kuantan, \nPahang",
-            "meta_keyword":"",
-            "latitude":"3.814205",
-            "longitude":"103.325233",
-        },
-        {
-            "store_id":"2",
-            "image":"http://demo.shortcircuitworks.com/dirtpit23/image/catalog/app/johor.jpg",
-            "parent_id":"0",
-            "top":"1",
-            "column":"1",
-            "sort_order":"0",
-            "status":"1",
-            "name":"Johor Bahru Concept Store",
-            "description":"Johor Bahru Concept Store",
-            "meta_title":"Johor Bahru",
-            "meta_description":"Lot L1.23 & L1.24, \nPlaza Angsana, \nJalan Skudai, \nPusat Bandar Tampoi, \n81200 Johor Bharu, \nJohor",
-            "meta_keyword":"",
-            "latitude":"1.495196",
-            "longitude":"103.705745",
-        },
-        {
-            "store_id":"3",
-            "image":"http://demo.shortcircuitworks.com/dirtpit23/image/catalog/app/penang.jpg",
-            "parent_id":"0",
-            "top":"1",
-            "column":"1",
-            "sort_order":"0",
-            "status":"1",
-            "name":"Penang Concept Store",
-            "description":"Penang Concept Store",
-            "meta_title":"Penang",
-            "meta_description":"170-01-05/06/07/08, \nPlaza Gurney, \nPersiaran Gurney, \nPulau Tikus, \n10250 George Town, \nPenang",
-            "meta_keyword":"",
-            "latitude":"5.437492",
-            "longitude":"100.309398",
-        }
-];
-
 export default class CafeScreen extends Component {
 	constructor(props) {
 		super(props);
