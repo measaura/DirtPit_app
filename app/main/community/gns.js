@@ -34,7 +34,7 @@ const randomHexColor = () => {
   });
 };
 
-export default class CommunityActivityScreen extends Component {
+export default class CommunityGnsScreen extends Component {
 	constructor(props) {
 		super(props);
      this.spinValue = new Animated.Value(0);
@@ -61,7 +61,7 @@ export default class CommunityActivityScreen extends Component {
 	componentDidMount(){
 		this.spin()
 // 	console.log(this.state.segId)
-		fetch("https://demo.shortcircuitworks.com/dirtpit23/index.php?route=api/banner&id=13")
+		fetch("https://demo.shortcircuitworks.com/dirtpit23/index.php?route=api/banner&id=14")
 			.then(response => response.json())
 			.then((responseJson)=> {
 				console.log(responseJson.banner[0])
@@ -187,7 +187,7 @@ console.log(this.state.dataSource[0].image)
 									style={styles.scrollStyle}
 								>
 								<Text allowFontScaling={false} style={{fontFamily: 'Gotham-Bold', fontSize: 20, textAlign: 'center'}}>
-										SHERCO PLAYDAY
+										GN SYNDICATE
 								</Text>
 
 
