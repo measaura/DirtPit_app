@@ -40,7 +40,7 @@ export default class CommunityFtwScreen extends Component {
 	}
 
 	componentDidMount(){
-		fetch("https://demo.shortcircuitworks.com/dirtpit23/index.php?route=api/category&community")
+		fetch("https://demo.shortcircuitworks.com/dirtpit23/index.php?route=api/category&communityftw")
 			.then(response => response.json())
 			.then((responseJson)=> {
 			console.log(responseJson)
@@ -66,14 +66,14 @@ export default class CommunityFtwScreen extends Component {
 	renderLeft() {
 			const {navigate} = this.props.navigation
 			return (
-					<TouchableOpacity onPress={() => navigate('Home')}>
-							<Ionicons name={'ios-home'} size={30} color={'yellow'} style={{paddingTop: 0}} />
+					<TouchableOpacity onPress={() => this.props.navigation.goBack()}>
+							<Ionicons name={'ios-arrow-dropleft-circle'} size={30} color={'yellow'} style={{paddingTop: 0}} />
 					</TouchableOpacity>
 			);
 	}
 
 	renderCenter() {
-			return <Image source={require('../../images/DirtPit_logo-180x35.png')} />
+			return <Image source={require('../../images/dirtpit-logo-181x43.png')} />
 	}
 
   render() {

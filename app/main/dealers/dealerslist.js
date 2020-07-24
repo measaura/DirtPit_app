@@ -72,7 +72,7 @@ export default class DealersListScreen extends Component {
 	}
 
 	renderCenter() {
-			return <Image source={require('../../images/DirtPit_logo-180x35.png')} />
+			return <Image source={require('../../images/dirtpit-logo-181x43.png')} />
 	}
 
   render() {
@@ -114,11 +114,13 @@ export default class DealersListScreen extends Component {
 						renderItem={item => (
 							<TouchableOpacity
 									onPress={() =>
-													navigate('DealerShop', {
+													{navigate('DealerShop', {
 															prevScreenTitle: 'DealerShop',
 															dealerType: this.state.dealersType,
 															storeId: item.item.store_id,
+															bannerId: item.item.banner_id,
 													})
+													console.log('section item',item)}
 									}
 									style={styles.rowWrap}>
 									<View style={styles.rowTextContent}>

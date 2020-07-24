@@ -73,7 +73,7 @@ export default class TourScreen extends Component {
 	}
 
 	renderCenter() {
-			return <Image source={require('../images/DirtPit_logo-180x35.png')} />
+			return <Image source={require('../images/dirtpit-logo-181x43.png')} />
 	}
 
   render() {
