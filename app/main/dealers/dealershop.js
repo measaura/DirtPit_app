@@ -1,9 +1,11 @@
-import React, {Component} from 'react';
+import React, {Component, createRef} from 'react';
 import {
   SafeAreaView,
   StyleSheet,
   ScrollView,
   FlatList,
+  Animated,
+  Easing,
   View,
   Text,
   StatusBar,
@@ -22,7 +24,21 @@ import {showLocation} from 'react-native-map-link'
 import DeviceInfo from 'react-native-device-info'
 var iPhoneX = DeviceInfo.hasNotch()
 
+let CurrentSlide = 0;
+let IntervalTime = 4000;
+
+const screenHeight = Dimensions.get('screen').height;
+const windowHeight = Dimensions.get('window').height;
+// const navbarHeight = screenHeight - windowHeight + Constants.statusBarHeight;
+
 const {width, height} = Dimensions.get('window')
+const softNavBar = Platform.OS == 'ios' ? notch ? 116 :68 : 50;
+const bottomTab = 48;
+const sliderHeight = height*0.8;
+const smallScreen = height-width < 300 ? true : false;
+const statusBarHeight = StatusBar.currentHeight;
+const navbarHeight = Platform.OS == 'android'? screenHeight > windowHeight? 0:48 :0;
+
 
 const randomHexColor = () => {
   return '#000000'.replace(/0/g, function() {
@@ -33,34 +49,128 @@ const randomHexColor = () => {
 export default class DealersShopScreen extends Component {
 	constructor(props) {
 		super(props);
+     this.spinValue = new Animated.Value(0);
 		this.state = {
 			loading: true,
 			dataSource: [],
+			images: [],
 			storeId: this.props.navigation.state.params.storeId,
+			bannerId: this.props.navigation.state.params.bannerId,
 			dealersType: this.props.navigation.state.params.dealerType
 		};
 	}
-
-	componentDidMount(){
-		fetch("https://demo.shortcircuitworks.com/dirtpit23/index.php?route=api/dealers&"+this.state.dealersType)
-			.then(response => response.json())
-			.then((responseJson)=> {
-			console.log('response',JSON.stringify(responseJson))
-				this.setState({
-					loading: false,
-					dataSource: responseJson
-				})
-			})
-		.catch(error=>console.log(error)) //to catch the errors if any
-		
-	console.log(this.state.storeId)
-// 
-// 				this.setState({
-// 					loading: false,
-// 					dataSource: DATA,
-// 				})
+	
+	spin () {
+		this.spinValue.setValue(0)
+		Animated.timing(
+			this.spinValue,
+			{
+				toValue: 1,
+				duration: 1500,
+				easing: Easing.linear
+			}
+		).start(() => this.spin())
 	}
 
+	renderLeft() {
+			const {navigate} = this.props.navigation
+			return (
+					<TouchableOpacity onPress={() => navigate('Home')}>
+							<Ionicons name={'ios-home'} size={30} color={'yellow'} style={{paddingTop: 0}} />
+					</TouchableOpacity>
+			);
+	}
+	
+	flatList = createRef();
+	// TODO _goToNextPage()
+	_goToNextPage = () => {
+		if (CurrentSlide >= this.state.images.length){
+			CurrentSlide = 0;
+
+		}
+// 		console.log(CurrentSlide); 
+		this.flatList.current.scrollToIndex({
+			index: CurrentSlide++,
+			animated: true,
+		});
+	};
+	
+	_startAutoPlay = () => {
+		this._timerId = setInterval(this._goToNextPage, IntervalTime);
+	};
+	
+	_stopAutoPlay = () => {
+		if (this._timerId) {
+			clearInterval(this._timerId);
+			this._timerId = null;
+		}
+	};
+	
+	componentDidMount() {
+  	this.spin()
+	console.log('\nwidth: '+width+'\nheight: '+height+'\nStatusBar: '+statusBarHeight)
+// 	console.log('statusbar height '+StatusBar.currentHeight+', navbarHeight: '+navbarHeight)
+
+		fetch("https://demo.shortcircuitworks.com/dirtpit23/index.php?route=api/banner&id="+this.state.bannerId)
+			.then(response => response.json())
+			.then((responseJson)=> {
+// 			console.info(responseJson)
+				this.setState({
+					loading: false,
+					images: responseJson.banner
+				})
+						this._stopAutoPlay();
+		this._startAutoPlay();
+			})
+		.catch(error=>console.log(error)) //to catch the errors if any
+
+	}
+	
+	componentWillUnmount() {
+		this._stopAutoPlay();
+	}
+	// TODO _renderItem()
+	_renderItem({item, index}) {
+	console.warn(item.image); 
+		return <Image source={{uri: item.image}} style={{ width: width, height: sliderHeight, resizeMode: 'center'}} />
+	}
+	// TODO _keyExtractor()
+	_keyExtractor(item, index) {
+		// console.log(item);
+		return index.toString();
+	}
+	
+	renderSlider() {
+		if(this.state.images){
+			return(<FlatList
+							data={this.state.images}
+							keyExtractor={this._keyExtractor.bind(this)}
+							renderItem={this._renderItem.bind(this)}
+							horizontal={true}
+							flatListRef={React.createRef()}
+							ref={this.flatList}
+						/>
+			)
+		}else{
+			const spin = this.spinValue.interpolate({
+				inputRange: [0, 1],
+				outputRange: ['0deg', '360deg']
+			})
+	
+			return(
+					<View style={{flex:1,alignItems: 'center', justifyContent: 'center',backgroundColor:'black'}}>
+							<Animated.Image
+						style={{
+							width: 100,
+							height: 100,
+							transform: [{rotate: spin}] }}
+							source={require('../../images/DirtPit_icon_1024.png')}
+					/>
+					</View>
+			)
+		}
+	}
+	
 	FlatListItemSeparator = () => {
 		return (
 			<View style={{
@@ -98,19 +208,30 @@ export default class DealersShopScreen extends Component {
 	}
 
 	renderCenter() {
-			return <Image source={require('../../images/DirtPit_logo-180x35.png')} />
+			return <Image source={require('../../images/dirtpit-logo-181x43.png')} />
 	}
 
   render() {
 		if (this.state.loading){
+			const spin = this.spinValue.interpolate({
+				inputRange: [0, 1],
+				outputRange: ['0deg', '360deg']
+			})
+	
 			return(
-				<View style={styles.loader}>
-					<ActivityIndicator size="large" color="#0c9" />
-				</View>
+					<View style={{flex:1,alignItems: 'center', justifyContent: 'center',backgroundColor:'black'}}>
+							<Animated.Image
+						style={{
+							width: 100,
+							height: 100,
+							transform: [{rotate: spin}] }}
+							source={require('../../images/DirtPit_icon_1024.png')}
+					/>
+					</View>
 			)
 		}else if (this.state.dataSource){
-		console.log('datasource',JSON.stringify(this.state.dataSource.filter(item=>item.data[0].retail_name)))
-		var list = this.state.dataSource.filter(item =>{})
+		console.warn('datasource',JSON.stringify(this.state.dataSource.filter(item=>item.data.store_id == this.state.storeId)))
+		var list = this.state.dataSource.filter(item=>item.data[0].store_id == this.state.storeId)
 // 		console.log('-------------------- ')
 		console.log('list',JSON.stringify(list))
 // 		console.log('=====================')
@@ -131,45 +252,14 @@ export default class DealersShopScreen extends Component {
 									height: Platform.OS == 'ios' ? (iPhoneX ? 90 : 0) : 70,
 							}}
 					/>
-					{list.map((item) => {
-						return (
+
+
 						<View style={styles.mainContainer}>
-
-							<ScrollView
-								style={styles.scrollStyle}
-								contentContainerStyle={styles.scrollContent}
-							>
-
-								<View style={styles.testBox} >
-									{this.renderThumbs(item)}
-									<Text style={styles.sectionTitle} >{item.name}</Text>
-									<Text style={styles.sectionPrice} >{item.price}</Text>
-									<View style={styles.decriptionContainer} >
-										<Text style={styles.rowDescription}>{item.meta_description}</Text>
-									</View>
-								</View>
-						</ScrollView>
-						<View style={styles.footerBar}>
-							<TouchableOpacity
-								style={{flex:1, flexDirection:'row',justifyContent: 'center', alignItems: 'center',}}
-								onPress={() =>
-										showLocation({
-												dialogTitle: 'Open map application',
-												dialogMessage:
-														'Get directions to "' +
-														item.item.retail_name +
-														'" using selected app',
-												latitude: item.item.latitude,
-												longitude: item.item.longitude,
-												title: item.item.retail_name + ', ' + item.item.address,
-										})
-								}>
-									<Text style={{fontFamily: 'Gotham-Bold', fontSize: 18, color: 'black'}}>NAVIGATE TO CONCEPT STORE</Text>
-							</TouchableOpacity>
+						<View style={{alignItems:'center'}}>
+						<Text style={{fontFamily:'Gotham-Bold', fontSize: 30}}>PROMOTIONS</Text>
 						</View>
+						{this.renderSlider()}
 					</View>
-					)
-				})}
 				</View>
 
 			)
