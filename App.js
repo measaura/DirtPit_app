@@ -68,6 +68,9 @@ import GarageScreen from './app/main/garage'
 import CafeScreen from './app/main/cafe'
 import CommunityScreen from './app/main/community'
 import CommunityFtwScreen from './app/main/community/ftwracing'
+import CommunityGnsScreen from './app/main/community/gns'
+import CommunityActivityScreen from './app/main/community/activity'
+import CommunityRidersScreen from './app/main/community/rider'
 import ConceptList from './app/main/concept'
 import ConceptScreen from './app/main/concept/conceptshop'
 import Profile from './app/main/profile'
@@ -219,6 +222,9 @@ const AppModalStack = createStackNavigator(
         Cafe: CafeScreen,
         Community: CommunityScreen,
         CommunityFtw: CommunityFtwScreen,
+        CommunityGns: CommunityGnsScreen,
+        CommunityActivity: CommunityActivityScreen,
+        CommunityRider: CommunityRidersScreen,
         Cart: CartScreen,
         CartNew: CartNewScreen,
         Checkout: CheckoutScreen,
