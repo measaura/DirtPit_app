@@ -32,7 +32,7 @@ const windowHeight = Dimensions.get('window').height;
 // const navbarHeight = screenHeight - windowHeight + Constants.statusBarHeight;
 
 const {width, height} = Dimensions.get('window')
-const softNavBar = Platform.OS == 'ios' ? notch ? 116 :68 : 50;
+const softNavBar = Platform.OS == 'ios' ? iPhoneX ? 116 :68 : 50;
 const bottomTab = 48;
 const sliderHeight = height*0.8;
 const smallScreen = height-width < 300 ? true : false;
