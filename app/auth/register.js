@@ -8,11 +8,16 @@ import {
     TextInput,
     ScrollView,
     Alert,
-    ActivityIndicator
+    ActivityIndicator,
+    Keyboard,
+    KeyboardAvoidingView,
+    TouchableWithoutFeedback
 } from "react-native";
 import { Header } from "react-native-elements";
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import DropDownPicker from 'react-native-dropdown-picker';
+import DeviceInfo from "react-native-device-info";
+var notch = DeviceInfo.hasNotch();
 
 export default class Register extends React.Component {
     constructor(props) {
@@ -58,7 +63,7 @@ export default class Register extends React.Component {
         let passedCountry = this.state.countryfield;
         let passedState = this.state.statefield;
 
-console.log('zonedone',this.state.zonedone)
+// console.log('zonedone',this.state.zonedone)
         if (passedFirstname == "") {
             Alert.alert("Please enter your first name.");
             this.refs.firstnamefieldRef.focus();
@@ -69,8 +74,8 @@ console.log('zonedone',this.state.zonedone)
             Alert.alert("Please enter your email.");
             this.refs.emailfieldRef.focus();
         } else if (!this.validateEmail(passedEmail)) {
-						Alert.alert("Please enter a valid email address")
-				}else if (passedPhone == "") {
+			Alert.alert("Please enter a valid email address")
+		}else if (passedPhone == "") {
             Alert.alert("Please enter your phone number.");
             this.refs.phonefieldRef.focus();
         } else if (passedPassword == "") {
@@ -101,7 +106,7 @@ console.log('zonedone',this.state.zonedone)
         } else if ((this.state.stateoption.length > 0) && passedState == "") {
             Alert.alert("Please select your state.");
         } else {
-        		this.validateEmail(passedEmail);
+        	this.validateEmail(passedEmail);
             this.validate();
         }
     }
@@ -119,42 +124,53 @@ console.log('zonedone',this.state.zonedone)
         let passedPostcode = this.state.postcodefield;
         let passedCountry = this.state.countryfield;
         let passedState = this.state.statefield;
+		const {navigate} = this.props.navigation
+		
+		var formdata = new FormData();
+		formdata.append("firstname", passedFirstname);
+		formdata.append("lastname", passedLastname);
+		formdata.append("email", passedEmail);
+		formdata.append("telephone", passedPhone);
+		formdata.append("address_1", passedAddress1);
+		formdata.append("address_2", passedAddress2);
+		formdata.append("city", passedCity);
+		formdata.append("postcode", passedPostcode);
+		formdata.append("country_id", passedCountry);
+		formdata.append("zone_id", passedState);
+		formdata.append("password", passedPassword);
+		formdata.append("confirm", passedCoPassword);
+		formdata.append("agree", true);
 
-				var formdata = new FormData();
-				formdata.append("firstname", passedFirstname);
-				formdata.append("lastname", passedLastname);
-				formdata.append("email", passedEmail);
-				formdata.append("telephone", passedPhone);
-				formdata.append("address_1", passedAddress1);
-				formdata.append("address_2", passedAddress2);
-				formdata.append("city", passedCity);
-				formdata.append("postcode", passedPostcode);
-				formdata.append("country_id", passedCountry);
-				formdata.append("zone_id", passedState);
-				formdata.append("password", passedPassword);
-				formdata.append("confirm", passedCoPassword);
-				formdata.append("agree", true);
+		var myHeaders = new Headers();
+		myHeaders.append("Cookie", "language=en-gb;");
 
-				var myHeaders = new Headers();
-				myHeaders.append("Cookie", "language=en-gb;");
-
-				var requestOptions = {
-					method: 'POST',
-					headers: myHeaders,
-					body: formdata,
-					redirect: 'follow'
-				};
-console.log('submit', formdata)
-				fetch("https://demo.shortcircuitworks.com/dirtpit23/index.php?route=api/userregister", requestOptions)
-					.then(response => response.text())
-					.then(result =>{
-						console.log(result)
-						if (result.success) {
-							console.log(result.success)
-							
-						}
-					})
-					.catch(error => console.log('error', error));
+		var requestOptions = {
+			method: 'POST',
+			headers: myHeaders,
+			body: formdata,
+			redirect: 'follow'
+		};
+// console.log('submit', formdata)
+		fetch("https://demo.shortcircuitworks.com/dirtpit23/index.php?route=api/userregister", requestOptions)
+			.then(response => response.json())
+			.then(json =>{
+				console.log(json.success)
+				if (json.success) {
+					console.log('success registered')
+					Alert.alert(
+					'Registration Successful',
+					'You are successfully registered to DirtPit app',
+					[
+						{
+							text: 'Okay',
+							onPress: () => navigate('Login'),
+							style: 'cancel',
+						},
+					],
+				)
+				}
+			})
+			.catch(error => console.log('error', error));
 
     }
     
@@ -177,7 +193,7 @@ console.log('submit', formdata)
     }
     
 		renderZone() {
-		console.log('countryfield',this.state.countryfield)
+// 		console.log('countryfield',this.state.countryfield)
 
 		let country_id = this.state.countryfield
 		if ((country_id != this.state.countrybefore) && !this.state.zonedone){
@@ -191,7 +207,7 @@ console.log('submit', formdata)
 								value: item.zone_id
 						})
 					)
-console.log('zone',zonetemp.length)
+// console.log('zone',zonetemp.length)
 
 					this.setState({
 						stateoption: zonetemp,
@@ -201,27 +217,27 @@ console.log('zone',zonetemp.length)
 			}
 			
 			if (this.state.stateoption.length > 0 && this.state.zonedone){
-							return(<DropDownPicker
-												ref="statefieldRef"
-												items={this.state.stateoption}
-												defaultValue={this.state.statefield}
-												placeholder="Select Region / State"
-												containerStyle={{height:50, width: 300, marginTop: 10, }}
-												style={{backgroundColor:'#cdcdcd',borderTopLeftRadius: 25, borderTopRightRadius: 25, borderBottomLeftRadius: 25, borderBottomRightRadius: 25}}
-												dropDownStyle={{backgroundColor: '#cdcdcd'}}
-												labelStyle={{
-														fontFamily: 'Gotham-Bold',
-														fontSize: 18,
-														textAlign: 'left',
-														color: 'dark-grey'
-												}}
-												onChangeItem={item => this.setState({
-														statefield: item.value,
-														submitBtn: false
-												})}
-										/>
-							)
-							this.setState({countrybefore: country_id})
+				return(<DropDownPicker
+					ref="statefieldRef"
+					items={this.state.stateoption}
+					defaultValue={this.state.statefield}
+					placeholder="Select Region / State"
+					containerStyle={{height:50, width: 300, marginTop: 10, }}
+					style={{backgroundColor:'#cdcdcd',borderTopLeftRadius: 25, borderTopRightRadius: 25, borderBottomLeftRadius: 25, borderBottomRightRadius: 25}}
+					dropDownStyle={{backgroundColor: '#cdcdcd'}}
+					labelStyle={{
+							fontFamily: 'Gotham-Bold',
+							fontSize: 18,
+							textAlign: 'left',
+							color: 'dark-grey'
+					}}
+					onChangeItem={item => this.setState({
+							statefield: item.value,
+							submitBtn: false
+					})}
+			/>
+				)
+				this.setState({countrybefore: country_id})
 			}
 		}
 		
@@ -247,7 +263,12 @@ console.log('zone',zonetemp.length)
     render() {
         const { navigate } = this.props.navigation;
         return (
-            <View style={styles.container}>
+        	<KeyboardAvoidingView
+			  behavior={Platform.OS === "ios" ? "padding" : "height"}
+			  style={styles.container}
+			>
+			  <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+            		<View style={styles.container}>
 						<Header
 								innerContainerStyles={styles.headerInnerContainer}
 								outerContainerStyles={styles.headerOuterContainer}
@@ -467,27 +488,27 @@ console.log('zone',zonetemp.length)
                             keyboardType="number-pad"
                         />
                     </View>
-										<DropDownPicker
-												ref="countryfieldRef"
-												items={this.state.countryoption}
-												defaultValue={this.state.countryfield}
-												placeholder="Select Country"
-												containerStyle={{height:50, width: 300, marginTop: 10, }}
-												style={{backgroundColor:'#cdcdcd',borderTopLeftRadius: 25, borderTopRightRadius: 25, borderBottomLeftRadius: 25, borderBottomRightRadius: 25}}
-												dropDownStyle={{backgroundColor: '#cdcdcd'}}
-												labelStyle={{
-														fontFamily: 'Gotham-Bold',
-														fontSize: 18,
-														textAlign: 'left',
-														color: 'dark-grey'
-												}}
-												onChangeItem={item => this.setState({
-														countryfield: item.value,
-														zonedone: false
-												})}
-										/>
-										
-										{this.renderZone()}
+					<DropDownPicker
+						ref="countryfieldRef"
+						items={this.state.countryoption}
+						defaultValue={this.state.countryfield}
+						placeholder="Select Country"
+						containerStyle={{height:50, width: 300, marginTop: 10, }}
+						style={{backgroundColor:'#cdcdcd',borderTopLeftRadius: 25, borderTopRightRadius: 25, borderBottomLeftRadius: 25, borderBottomRightRadius: 25}}
+						dropDownStyle={{backgroundColor: '#cdcdcd'}}
+						labelStyle={{
+								fontFamily: 'Gotham-Bold',
+								fontSize: 18,
+								textAlign: 'left',
+								color: 'dark-grey'
+						}}
+						onChangeItem={item => this.setState({
+								countryfield: item.value,
+								zonedone: false
+						})}
+					/>
+					
+					{this.renderZone()}
 
                     <TouchableOpacity
                     		disabled={this.state.submitBtn}
@@ -508,6 +529,8 @@ console.log('zone',zonetemp.length)
                     </TouchableOpacity>
                 </ScrollView>
             </View>
+            </TouchableWithoutFeedback>
+		</KeyboardAvoidingView>
         );
     }
 }
@@ -537,7 +560,7 @@ const styles = StyleSheet.create({
         alignItems: "center"
     },
     headerLogo: {
-        marginTop: Platform.OS == "ios" ? 150 : 20,
+        marginTop: 20,
         marginRight: 30,
         marginLeft: 30,
         marginBottom: 0,

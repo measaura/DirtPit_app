@@ -132,8 +132,8 @@ android {
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         multiDexEnabled true
-        versionCode 5
-        versionName "1.0"
+        versionCode 10
+        versionName "1.1"
         missingDimensionStrategy 'react-native-camera', 'general'
     }
     splits {
@@ -194,7 +194,7 @@ dependencies {
     
     // React Navigation
     implementation 'androidx.appcompat:appcompat:1.1.0-rc01'
-		implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0-alpha02'
+    implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0-alpha02'
     
     // Firebase
     implementation "com.google.android.gms:play-services-base:17.0.0"
