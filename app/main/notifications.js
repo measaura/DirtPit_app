@@ -19,7 +19,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons'
 import API from '../helper/APIController'
 
 import DeviceInfo from 'react-native-device-info'
-var iPhoneX = DeviceInfo.hasNotch()
+var notch = DeviceInfo.hasNotch()
 
 const {width, height} = Dimensions.get('window')
 
