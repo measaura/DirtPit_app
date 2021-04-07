@@ -85,6 +85,7 @@ class AuthLoadingScreen extends React.Component {
 
 
     // Fetch the token from storage then navigate to our appropriate place
+    // Test push
     _bootstrapAsync = async () => {
 				// Get cookies for a url
 				CookieManager.get('https://demo.shortcircuitworks.com')
