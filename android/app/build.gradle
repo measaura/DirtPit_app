@@ -1,5 +1,4 @@
 apply plugin: "com.android.application"
-
 import com.android.build.OutputFile
 
 /**
@@ -132,7 +131,7 @@ android {
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         multiDexEnabled true
-        versionCode 10
+        versionCode 11
         versionName "1.1"
         missingDimensionStrategy 'react-native-camera', 'general'
     }
