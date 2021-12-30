@@ -15,8 +15,9 @@ import AsyncStorage from '@react-native-community/async-storage'
 // import Spinner from "react-native-loading-spinner-overlay";
 // import Permissions from "react-native-permissions";
 import {Permissions, request} from 'react-native-permissions'
+import CookieManager from '@react-native-community/cookies';
 // import FCM from "react-native-fcm";
-import firebase from 'react-native-firebase'
+import firebase from '@react-native-firebase/app'
 import API from '../helper/APIController'
 
 const {width, height} = Dimensions.get('window')
@@ -97,7 +98,55 @@ export default class Login extends React.Component {
         )
     }
 
+    getCartItems(cookies) {
+        console.log('Login getCartItem');
+            // this.checkLogin();
+        // console.warn('lepas checkLogin dalam getCartItems')
+        //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+                    // const mySession = AsyncStorage.getItem('tokenKey');
+                    var myHeaders = new Headers();
+                        // myHeaders.append("Cookie", "PHPSESSID=5ced9d47de30662f5c90669690b3e639; currency=MYR; default=10d6c3d15ed030c60616c4b52b91d73e; language=en-gb;");
+        				// myHeaders.append("Cookie", "language=en-gb; currency=MYR; PHPSESSID="+cookies.PHPSESSID.value+"; default="+cookies.default.value+";");
+        				// myHeaders.append("Cookie", "language=en-gb; currency=MYR; PHPSESSID=10d6c3d15ed030c60616c4b52b91d73e; default=1a35eecf04505679307390daaadd9651");
+        				// console.log(AsyncStorage.getItem('tokenKey'))
+        				console.log('myheaders',myHeaders)
     
+                    var requestOptions = {
+                        method: 'POST',
+                        headers: myHeaders,
+                        // redirect: 'follow'
+                    };
+    
+                    fetch("https://ftwventures.com.my/index.php?route=api/showcart", requestOptions)
+                        .then(response =>response.json())
+                        .then(result =>{
+                            console.log('result' ,result)
+                            this.setState({
+                                newCart: result[0].products,
+                                cartTotal: result[0].totals,
+                //   isLoading: false,
+                            })
+                        console.log('fetch showcart',result[0].products)
+                        })
+                        .catch(error => console.log('error', error));
+                        
+        //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++	
+        AsyncStorage.getItem('cart').then((cart)=>{
+          if (cart !== null) {
+            // We have data!!
+        //         console.log('cart not null', cart)
+            const shopcart = JSON.parse(cart)
+            this.setState({dataCart:shopcart})
+    
+    
+        //         AsyncStorage.getItem('cart').then((res) => console.log(res))
+          }
+        }) 
+        .catch((err)=>{
+          console.warn(err)
+        })
+    }
+
 //     _askPermission() {
 //     console.log('ask permission')
 //             firebase
@@ -179,6 +228,18 @@ export default class Login extends React.Component {
         try {
             let value = await AsyncStorage.getItem('tokenKey')
             if (value != null) {
+                console.log('in login.js')
+                // Get cookies for a url
+				CookieManager.get('https://ftwventures.com.my')
+                .then((cookies) => {
+                    console.log('cookies',cookies)
+                    if(cookies){
+                        this.getCartItems(cookies);
+                        // console.log('CookieManager.get =>', cookies);
+                        console.log('default', cookies?cookies.default.value:false);
+                        console.log('PHPSESSID' ,cookies?cookies.PHPSESSID.value:false);
+                    }
+                });
                 navigate('Home', {prevScreenTitle: 'Home'})
                 setTimeout(
                     function() {
@@ -223,14 +284,15 @@ export default class Login extends React.Component {
                 AsyncStorage.setItem('tokenKey', response.access_token)
                 AsyncStorage.setItem('myLogin', JSON.stringify(response))
                 AsyncStorage.setItem('myEmail', emailfieldpassed)
+                AsyncStorage.setItem('myPass', passwordfieldpassed)
                 this.fetchProfile()
-								navigate('Home', {prevScreenTitle: 'Home'})
+                navigate('Home', {prevScreenTitle: 'Home'})
             })
         }
     }
 
     fetchProfile() {
-        console.log('fetch profile')
+        // console.log('fetch profile')
         const formData = new FormData();
 
         formData.append("access_token", this.state.tokenKey);
@@ -247,8 +309,8 @@ export default class Login extends React.Component {
                             .getToken()
                             .then(token => {
                                 console.log('login.js fetchProfile FCM TOKEN: ', token)
-                                this.setState({fcm_token: token})
-                                this.updateProfile(response)
+                                // this.setState({fcm_token: token})
+                                this.updateProfile(response, token)
                             })
                         // user has permissions
                     } else {
@@ -261,12 +323,12 @@ export default class Login extends React.Component {
                                     .messaging()
                                     .getToken()
                                     .then(token => {
-                                        this.setState({fcm_token: token})
+                                        // this.setState({fcm_token: token})
                                         console.log(
                                             'login.js FCM TOKEN: ',
                                             token,
                                         )
-                                        console.log('login.js FCM TOKEN: ',this.state.fcm_token)
+                                        // console.log('login.js FCM TOKEN state: ',this.state.fcm_token)
                                         this.updateProfile(response, token)
                                     })
                             })
@@ -348,7 +410,7 @@ export default class Login extends React.Component {
                             style={styles.inputStyles}
                             placeholder="Email"
                             underlineColorAndroid="transparent"
-                            placeholderTextColor="dark-grey"
+                            placeholderTextColor="grey"
                             keyboardType="email-address"
                             returnKeyType="next"
                         />
@@ -370,7 +432,7 @@ export default class Login extends React.Component {
                             style={styles.inputStyles}
                             placeholder="Password"
                             underlineColorAndroid="transparent"
-                            placeholderTextColor="dark-grey"
+                            placeholderTextColor="grey"
                         />
                     </View>
                     <TouchableOpacity

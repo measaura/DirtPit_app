@@ -41,7 +41,7 @@ export default class GarageScreen extends Component {
 	}
 
 	componentDidMount(){
-		fetch("https://demo.shortcircuitworks.com/dirtpit23/index.php?route=api/booking/service&garage="+this.state.garageType)
+		fetch("https://ftwventures.com.my/index.php?route=api/booking/service&garage="+this.state.garageType)
 			.then(response => response.json())
 			.then((responseJson)=> {
 // 			console.log(responseJson)

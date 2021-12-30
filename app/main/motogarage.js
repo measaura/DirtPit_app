@@ -56,7 +56,7 @@ export default class MotoGarageScreen extends Component {
 	componentDidMount(){
 		this.spin()
 // 	console.log(this.state.segId)
-		fetch("https://demo.shortcircuitworks.com/dirtpit23/index.php?route=api/garage&moto")
+		fetch("https://ftwventures.com.my/index.php?route=api/garage&moto")
 			.then(response => response.json())
 			.then((responseJson)=> {
 				this.setState({

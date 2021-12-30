@@ -61,13 +61,64 @@ const navbarHeight = Platform.OS == 'android'? screenHeight > windowHeight? 0:48
 export default class HomeScreen extends React.Component {
 	constructor(props) {
 		super(props)
-     this.spinValue = new Animated.Value(0);
-    this.state = {
-    	loading: true,
-      images: []
-    };
+		this.spinValue = new Animated.Value(0);
+		this.state = {
+			loading: true,
+			images: []
+		};
+		this.getCartItems();
 	}
-	
+
+    getCartItems() {
+        console.log('Home getCartItem');
+            // this.checkLogin();
+        // console.warn('lepas checkLogin dalam getCartItems')
+        //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+                    // const mySession = AsyncStorage.getItem('tokenKey');
+                    var myHeaders = new Headers();
+                        // myHeaders.append("Cookie", "PHPSESSID=5ced9d47de30662f5c90669690b3e639; currency=MYR; default=10d6c3d15ed030c60616c4b52b91d73e; language=en-gb;");
+        				// myHeaders.append("Cookie", "language=en-gb; currency=MYR; PHPSESSID="+cookies.PHPSESSID.value+"; default="+cookies.default.value+";");
+        				// myHeaders.append("Cookie", "language=en-gb; currency=MYR; PHPSESSID=10d6c3d15ed030c60616c4b52b91d73e; default=1a35eecf04505679307390daaadd9651");
+        				// console.log(AsyncStorage.getItem('tokenKey'))
+        				// console.log('myheaders',myHeaders)
+    
+                    var requestOptions = {
+                        method: 'POST',
+                        // headers: myHeaders,
+                        redirect: 'follow'
+                    };
+    
+                    fetch("https://ftwventures.com.my/index.php?route=api/showcart", requestOptions)
+                        .then(response =>response.json())
+                        .then(result =>{
+                            console.log('Home result' ,JSON.stringify(result))
+                            this.setState({
+                                newCart: result[0].products,
+                                cartTotal: result[0].totals,
+                //   isLoading: false,
+                            })
+							AsyncStorage.setItem('cart', JSON.stringify(result))
+                        console.log('Home fetch showcart',result[0].item_count)
+                        })
+                        .catch(error => console.log('error', error));
+                        
+        //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++	
+        AsyncStorage.getItem('cart').then((cart)=>{
+          if (cart !== null) {
+            // We have data!!
+                console.log('cart not null', cart)
+            const shopcart = JSON.parse(cart)
+            this.setState({dataCart:shopcart})
+    
+    
+        //         AsyncStorage.getItem('cart').then((res) => console.log(res))
+          }
+        }) 
+        .catch((err)=>{
+          console.warn(err)
+        })
+    }
+
 	spin () {
 		this.spinValue.setValue(0)
 		Animated.timing(
@@ -75,6 +126,7 @@ export default class HomeScreen extends React.Component {
 			{
 				toValue: 1,
 				duration: 1500,
+				useNativeDriver: true,
 				easing: Easing.linear
 			}
 		).start(() => this.spin())
@@ -119,7 +171,7 @@ export default class HomeScreen extends React.Component {
 	console.log('\nwidth: '+width+'\nheight: '+height+'\nStatusBar: '+statusBarHeight)
 // 	console.log('statusbar height '+StatusBar.currentHeight+', navbarHeight: '+navbarHeight)
 
-		fetch("https://demo.shortcircuitworks.com/dirtpit23/index.php?route=api/banner&id=9")
+		fetch("https://ftwventures.com.my/index.php?route=api/banner&id=9")
 			.then(response => response.json())
 			.then((responseJson)=> {
 				this.setState({
@@ -129,7 +181,7 @@ export default class HomeScreen extends React.Component {
 						this._stopAutoPlay();
 		this._startAutoPlay();
 			})
-		.catch(error=>console.log(error)) //to catch the errors if any
+		.catch(error=>console.warn(error)) //to catch the errors if any
 		
 
 
@@ -202,11 +254,10 @@ export default class HomeScreen extends React.Component {
 								centerComponent={this.renderCenter()}
 								containerStyle={{
 										backgroundColor: '#000',
-										marginTop:
-												Platform.OS == 'ios' ? (notch ? -52:-18) : -20,
+										justifyContent: 'center',
 										top:
-												Platform.OS == 'ios' ? (notch ? 0 : 0) : 0,
-										height: Platform.OS == 'ios' ? (notch ? 90 : 70) : smallScreen? 60: 70,
+												Platform.OS == 'ios' ? (notch ? 0 : -50) : 0,
+										height: Platform.OS == 'ios' ? (notch ? 90 : 95) : smallScreen? 60: 70,
 								}}
 						/>
 						<View style={styles.body}>
@@ -214,7 +265,7 @@ export default class HomeScreen extends React.Component {
 							{this.renderSlider()}
 				
 							</View>
-							<View style={{flex:1, justifyContent: 'space-around', alignItems: 'center', backgroundColor: '#ffffff',marginBottom:navbarHeight}}>
+							<View style={{flex:1, justifyContent: 'space-around', alignItems: 'center', backgroundColor: '#ffffff',marginBottom:navbarHeight+50, }}>
 
 								<View style={{flexDirection: 'row',justifyContent: 'space-around', alignSelf: 'stretch', flexWrap: 'wrap', }}>
 									<TouchableOpacity
@@ -341,10 +392,12 @@ const styles = StyleSheet.create({
   body: {
   	height:height-bottomTab-softNavBar,
     backgroundColor: Colors.white,
+	top:-51,
   },
   sectionContainer: {
     marginTop: 0,
     paddingHorizontal: 0,
+	// backgroundColor:'yellow',
   },
   sectionTitle: {
   	fontFamily: 'Gotham-Bold',

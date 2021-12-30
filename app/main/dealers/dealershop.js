@@ -111,7 +111,7 @@ export default class DealersShopScreen extends Component {
 	console.log('\nwidth: '+width+'\nheight: '+height+'\nStatusBar: '+statusBarHeight)
 // 	console.log('statusbar height '+StatusBar.currentHeight+', navbarHeight: '+navbarHeight)
 
-		fetch("https://demo.shortcircuitworks.com/dirtpit23/index.php?route=api/banner&id="+this.state.bannerId)
+		fetch("https://ftwventures.com.my/index.php?route=api/banner&id="+this.state.bannerId)
 			.then(response => response.json())
 			.then((responseJson)=> {
 // 			console.info(responseJson)

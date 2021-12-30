@@ -49,7 +49,7 @@ export default class SegmentScreen extends Component {
 	}
 
 	componentDidMount(){
-		fetch("https://demo.shortcircuitworks.com/dirtpit23/index.php?route=api/category&dealer")
+		fetch("https://ftwventures.com.my/index.php?route=api/category&dealer")
 			.then(response => response.json())
 			.then((responseJson)=> {
 				this.setState({

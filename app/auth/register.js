@@ -151,7 +151,7 @@ export default class Register extends React.Component {
 			redirect: 'follow'
 		};
 // console.log('submit', formdata)
-		fetch("https://demo.shortcircuitworks.com/dirtpit23/index.php?route=api/userregister", requestOptions)
+		fetch("https://ftwventures.com.my/index.php?route=api/userregister", requestOptions)
 			.then(response => response.json())
 			.then(json =>{
 				console.log(json.success)
@@ -175,8 +175,8 @@ export default class Register extends React.Component {
     }
     
     getCountries = () => {
-//         return fetch("https://demo.shortcircuitworks.com/dirtpit23/index.php?route=api/country/countries", {
-			fetch('https://demo.shortcircuitworks.com/dirtpit23/index.php?route=api/country/countries')
+//         return fetch("https://ftwventures.com.my/index.php?route=api/country/countries", {
+			fetch('https://ftwventures.com.my/index.php?route=api/country/countries')
 			.then(response => response.json())
 			.then(json => {
 				const countrytemp = json.map(
@@ -197,7 +197,7 @@ export default class Register extends React.Component {
 
 		let country_id = this.state.countryfield
 		if ((country_id != this.state.countrybefore) && !this.state.zonedone){
-				fetch('https://demo.shortcircuitworks.com/dirtpit23/index.php?route=api/country/country&country_id='+this.state.countryfield)
+				fetch('https://ftwventures.com.my/index.php?route=api/country/country&country_id='+this.state.countryfield)
 				.then(response => response.json())
 				.then(json => {
 					console.log(json.zone)

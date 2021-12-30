@@ -58,7 +58,7 @@ export default class CafeScreen extends Component {
 	componentDidMount(){
 		this.spin()
 // 	console.log(this.state.segId)
-		fetch("https://demo.shortcircuitworks.com/dirtpit23/index.php?route=api/banner&id=10")
+		fetch("https://ftwventures.com.my/index.php?route=api/banner&id=10")
 			.then(response => response.json())
 			.then((responseJson)=> {
 				console.log(responseJson.banner[0])
@@ -188,15 +188,15 @@ console.log(this.state.dataSource[0].image)
 								<View style={{justifyContent: 'center'}} >
 
 									<Image 
-											source={{uri: "https://demo.shortcircuitworks.com/dirtpit23/image/catalog/app/cafe/menu7.jpg"}}
+											source={{uri: "https://ftwventures.com.my/image/catalog/app/cafe/menu7.jpg"}}
 											style={styles.imageMenu}
 									/>
 									<Image 
-											source={{uri: "https://demo.shortcircuitworks.com/dirtpit23/image/catalog/app/cafe/menu8.jpg"}}
+											source={{uri: "https://ftwventures.com.my/image/catalog/app/cafe/menu8.jpg"}}
 											style={styles.imageMenu}
 									/>
 									<Image 
-											source={{uri: "https://demo.shortcircuitworks.com/dirtpit23/image/catalog/app/cafe/menu9.jpg"}}
+											source={{uri: "https://ftwventures.com.my/image/catalog/app/cafe/menu9.jpg"}}
 											style={styles.imageMenu}
 									/>
 								</View>

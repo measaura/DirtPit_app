@@ -70,8 +70,8 @@ export default class ProductScreen extends Component {
 
 	componentDidMount(){
 	console.log(this.state.prodId)
-// 		fetch("http://demo.shortcircuitworks.com/dirtpit23/index.php?route=api/product&id="+this.state.prodId)
-		fetch("https://demo.shortcircuitworks.com/dirtpit23/index.php?route=api/productdetails&product_id="+this.state.prodId)
+// 		fetch("http://ftwventures.com.my/index.php?route=api/product&id="+this.state.prodId)
+		fetch("https://ftwventures.com.my/index.php?route=api/productdetails&product_id="+this.state.prodId)
 			.then(response => response.json())
 			.then((responseJson)=> {
 				this.setState({
@@ -215,7 +215,7 @@ export default class ProductScreen extends Component {
 						redirect: 'follow'
 					};
 
-					fetch("https://demo.shortcircuitworks.com/dirtpit23/index.php?route=api/usercart/add", requestOptions)
+					fetch("https://ftwventures.com.my/index.php?route=api/usercart/add", requestOptions)
 						.then(response => response.text())
 						.then(result => console.log(result))
 						.catch(error => console.log('error', error));
@@ -289,7 +289,7 @@ export default class ProductScreen extends Component {
 						redirect: 'follow'
 					};
 
-					fetch("https://demo.shortcircuitworks.com/dirtpit23/index.php?route=api/usercart/add", requestOptions)
+					fetch("https://ftwventures.com.my/index.php?route=api/usercart/add", requestOptions)
 						.then(response => response.text())
 						.then(result => console.log(result))
 						.catch(error => console.log('error', error));
@@ -411,7 +411,7 @@ export default class ProductScreen extends Component {
 			const {navigate} = this.props.navigation
 			return (
 					<TouchableOpacity onPress={() => this.props.navigation.goBack()}>
-							<Ionicons name={'ios-arrow-dropleft-circle'} size={30} color={'yellow'} style={{paddingTop: 0}} />
+							<Ionicons name={'ios-arrow-back-circle'} size={30} color={'yellow'} style={{paddingTop: 0}} />
 					</TouchableOpacity>
 			);
 	}
@@ -487,7 +487,7 @@ console.log('statusbar',navbarHeight)
 											Platform.OS == 'ios' ? 0 : -20,
 									top:
 											Platform.OS == 'ios' ? (iPhoneX ? -10 : 0) : -5,
-									height: Platform.OS == 'ios' ? (iPhoneX ? 90 : 0) : 70,
+									height: Platform.OS == 'ios' ? (iPhoneX ? 90 : 95) : 70,
 							}}
 					/>
 					{this.state.dataSource.map((item) => {
@@ -554,21 +554,21 @@ console.log('statusbar',navbarHeight)
 						</ScrollView>
 						<View style={{
 			left: 0,
-			bottom: navbarHeight,
-			height: Platform.OS == 'ios' ? 70 : 50,
+			bottom: navbarHeight+10,
+			height: Platform.OS == 'ios' ? 60 : 50,
 			flexDirection: 'row', alignSelf:'flex-end',
 		}}>
-							<View style={{flexDirection:'row', width: width*0.5, alignItems:'center', paddingLeft: 15, backgroundColor: 'white'}}>
+							<View style={{flexDirection:'row', width: width*0.5, alignItems:'center', paddingLeft: 25, paddingBottom:10, backgroundColor: Colors.lighter}}>
 								<Text style={{fontFamily: 'Gotham-Bold', color: 'black',paddingRight: 5}}>Quantity</Text>
 								 <TouchableOpacity onPress={()=>this.onChangeQuan('neg')}>
 									 <Ionicons name="ios-remove-circle-outline" size={30} color={"black"} />
 								 </TouchableOpacity>
-								 <Text style={{paddingHorizontal:8, fontWeight:'bold', fontSize:20, backgroundColor: 'white', border:1}}>{this.state.quantity}</Text>
+								 <Text style={{paddingHorizontal:8, fontWeight:'bold', fontSize:20, backgroundColor: Colors.lighter, border:1}}>{this.state.quantity}</Text>
 								 <TouchableOpacity onPress={()=>this.onChangeQuan('pos')}>
 									 <Ionicons name="ios-add-circle-outline" size={30} color={"black"} backgroundColor={'black'}/>
 								 </TouchableOpacity>
 							 </View>
-							<View style={{flexDirection:'row', width: width*0.5, alignItems:'center', justifyContent: 'center', backgroundColor: 'green'}}>
+							<View style={{flexDirection:'row', width: width*0.5, alignItems:'center', justifyContent: 'center', paddingBottom:10, backgroundColor: 'green'}}>
 								<TouchableOpacity 
 									onPress={()=>this.addToCart(item)} >
 
@@ -643,7 +643,7 @@ console.log('statusbar',navbarHeight)
 
 
 const styles = StyleSheet.create({
-	MainContainer: {
+MainContainer: {
     justifyContent: 'center',
     flex: 1,
   },

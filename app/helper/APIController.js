@@ -4,7 +4,8 @@ import * as RNLocalize from 'react-native-localize'
 import DeviceInfo from 'react-native-device-info'
 
 // var base_url = 'http://192.168.0.100:8000/api'
-var base_url = 'https://demo.shortcircuitworks.com/dirtpit23/index.php?route='
+// var base_url = 'https://ftwventures.com.my/index.php?route='
+var base_url = 'https://ftwventures.com.my/index.php?route='
 var tz = RNLocalize.getTimeZone()
 let iPhoneX = DeviceInfo.hasNotch()
 
@@ -89,7 +90,7 @@ export default API = {
             this.fetchHandlerMultiPart('POST', base_url + 'api/userlogin', data).then(
             	([code, response]) => {
                 if (code === 200) {
-                console.log(response)
+                console.log('APIcontroller',response)
                     if (!response.error_warning){
 											AsyncStorage.setItem('tokenKey', response.access_token)
 											resolve(response)
@@ -127,7 +128,7 @@ export default API = {
     },
 
     userUpdate(data) {
-    console.log('userUpdate',data.fcm_token)
+    console.log('API userUpdate',data.fcm_token)
 			const dataForm = new FormData();
 			dataForm.append(data);
 			

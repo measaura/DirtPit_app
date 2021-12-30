@@ -40,7 +40,7 @@ export default class DealersScreen extends Component {
 	}
 
 	componentDidMount(){
-		fetch("https://demo.shortcircuitworks.com/dirtpit23/index.php?route=api/category&dealers")
+		fetch("https://ftwventures.com.my/index.php?route=api/category&dealers")
 			.then(response => response.json())
 			.then((responseJson)=> {
 				this.setState({

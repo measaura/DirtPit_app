@@ -6,13 +6,13 @@ import {
     Image,
     ScrollView,
     TouchableOpacity,
-    AsyncStorage,
     BackHandler
 } from "react-native";
 import { Header } from "react-native-elements";
 import { StackActions, NavigationActions } from "react-navigation";
 import VersionNumber from "react-native-version-number";
 import CookieManager from '@react-native-community/cookies';
+import AsyncStorage from '@react-native-community/async-storage';
 
 import API from "../helper/APIController";
 
@@ -40,16 +40,16 @@ export default class Profile extends React.Component {
     };
 
     componentDidMount() {
-			fetch('https://demo.shortcircuitworks.com/dirtpit23/chk.php')
+			fetch('https://ftwventures.com.my/chk.php')
 			.then(response => response.json())
 			.then(json => {
 				console.log('session', json) 
 			})
 			
 				// Get cookies for a url
-				CookieManager.get('https://demo.shortcircuitworks.com')
+				CookieManager.get('https://ftwventures.com.my/')
 					.then((cookies) => {
-						console.log('CookieManager.get =>', cookies);
+						console.log('Profile CookieManager.get =>', cookies);
 					});
 
         this.props.navigation.setParams({
@@ -77,16 +77,7 @@ export default class Profile extends React.Component {
                 fetchedPhone: data.telephone
             });
 
-//             if (data.imgUrl) {
-//                 this.setState({
-//                     avatarCheck: "http://iot.adamana.my/uploads/",
-//                     avatarContent: data.imgUrl
-//                 });
-//             } else {
-//                 this.setState({
-//                     avatarCheck: ""
-//                 });
-//             }
+
         });
     }
 
@@ -128,11 +119,12 @@ export default class Profile extends React.Component {
 
     logout = () => {
         API.logout().then(response => {
-						// clear cookies
-						CookieManager.clearAll()
-							.then((success) => {
-								console.log('CookieManager.clearAll =>', success);
-							});
+            // clear cookies
+            CookieManager.clearAll()
+                .then((success) => {
+                    console.log('CookieManager.clearAll =>', success);
+                });
+            AsyncStorage.clear();
             const resetAction = StackActions.reset({
                 index: 0,
                 actions: [
@@ -178,8 +170,8 @@ export default class Profile extends React.Component {
 										marginTop:
 												Platform.OS == 'ios' ? 0 : -20,
 										top:
-												Platform.OS == 'ios' ? (notch ? -10 : 0) : 0,
-										height: Platform.OS == 'ios' ? (notch ? 90 : 0) : 70,
+												Platform.OS == 'ios' ? (notch ? -10 : 0) : 5,
+										height: Platform.OS == 'ios' ? (notch ? 90 : 95) : 70,
 								}}
 						/>
                 <ScrollView

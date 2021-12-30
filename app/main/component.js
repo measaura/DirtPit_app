@@ -53,9 +53,9 @@ export default class Slider extends Component {
 	}
 	state = {
 		link: [
-        "https://demo.shortcircuitworks.com/dirtpit23/image/catalog/app/slider/Cafe.png",
-        "https://demo.shortcircuitworks.com/dirtpit23/image/catalog/app/slider/FTWRacingRetail.jpg",
-        "https://demo.shortcircuitworks.com/dirtpit23/image/catalog/app/slider/MotoManiac.jpg",
+        "https://ftwventures.com.my/image/catalog/app/slider/Cafe.png",
+        "https://ftwventures.com.my/image/catalog/app/slider/FTWRacingRetail.jpg",
+        "https://ftwventures.com.my/image/catalog/app/slider/MotoManiac.jpg",
 		],
 	};
 	

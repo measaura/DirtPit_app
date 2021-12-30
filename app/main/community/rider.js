@@ -84,7 +84,7 @@ export default class CommunityRidersScreen extends Component {
   
 	getBanner() {
 // 	console.log(this.state.segId)
-		fetch("https://demo.shortcircuitworks.com/dirtpit23/index.php?route=api/banner&id=12")
+		fetch("https://ftwventures.com.my/index.php?route=api/banner&id=12")
 			.then(response => response.json())
 			.then((responseJson)=> {
 				console.log(responseJson.banner[0])
@@ -98,7 +98,7 @@ export default class CommunityRidersScreen extends Component {
 	
 	getRiders() {
 // 	console.log(this.state.segId)
-		fetch("https://demo.shortcircuitworks.com/dirtpit23/index.php?route=api/community&riders")
+		fetch("https://ftwventures.com.my/index.php?route=api/community&riders")
 			.then(response => response.json())
 			.then((responseJson)=> {
 // 				console.log(responseJson)

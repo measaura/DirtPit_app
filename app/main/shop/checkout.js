@@ -60,6 +60,7 @@ export default class CheckoutScreen extends Component {
 			{
 				toValue: 1,
 				duration: 1500,
+				useNativeDriver: true,
 				easing: Easing.linear
 			}
 		).start(() => this.spin())
@@ -79,7 +80,7 @@ export default class CheckoutScreen extends Component {
 					redirect: 'follow'
 				};
 
-				fetch("https://demo.shortcircuitworks.com/dirtpit23/index.php?route=api/showcart", requestOptions)
+				fetch("https://ftwventures.com.my/index.php?route=api/showcart", requestOptions)
 					.then(response =>response.json())
 					.then(result =>{
 
@@ -124,7 +125,7 @@ export default class CheckoutScreen extends Component {
 					redirect: 'follow'
 				};
 
-				fetch("https://demo.shortcircuitworks.com/dirtpit23/index.php?route=api/usercart/products", requestOptions)
+				fetch("https://ftwventures.com.my/index.php?route=api/usercart/products", requestOptions)
 					.then(response =>response.json())
 					.then(result =>{
 						console.log('getCartItems',result)
@@ -163,7 +164,7 @@ export default class CheckoutScreen extends Component {
 					redirect: 'follow'
 				};
 
-				fetch("https://demo.shortcircuitworks.com/dirtpit23/index.php?route=api/checkout/payment_address", requestOptions)
+				fetch("https://ftwventures.com.my/index.php?route=api/checkout/payment_address", requestOptions)
 					.then(response =>response.json())
 					.then(result =>{
 
@@ -192,7 +193,7 @@ export default class CheckoutScreen extends Component {
 					redirect: 'follow'
 				};
 
-				fetch("https://demo.shortcircuitworks.com/dirtpit23/index.php?route=api/checkout/payment_address/save", requestOptions)
+				fetch("https://ftwventures.com.my/index.php?route=api/checkout/payment_address/save", requestOptions)
 					.then(response =>response.json())
 					.then(result =>{
 
@@ -216,7 +217,7 @@ export default class CheckoutScreen extends Component {
 					redirect: 'follow'
 				};
 
-				fetch("https://demo.shortcircuitworks.com/dirtpit23/index.php?route=api/checkout/shipping_address", requestOptions)
+				fetch("https://ftwventures.com.my/index.php?route=api/checkout/shipping_address", requestOptions)
 					.then(response =>response.json())
 					.then(result =>{
 
@@ -246,7 +247,7 @@ export default class CheckoutScreen extends Component {
 					redirect: 'follow'
 				};
 
-				fetch("https://demo.shortcircuitworks.com/dirtpit23/index.php?route=api/checkout/shipping_address/save", requestOptions)
+				fetch("https://ftwventures.com.my/index.php?route=api/checkout/shipping_address/save", requestOptions)
 					.then(response =>response.json())
 					.then(result =>{
 
@@ -270,7 +271,7 @@ export default class CheckoutScreen extends Component {
 					redirect: 'follow'
 				};
 
-				fetch("https://demo.shortcircuitworks.com/dirtpit23/index.php?route=api/checkout/shipping_method", requestOptions)
+				fetch("https://ftwventures.com.my/index.php?route=api/checkout/shipping_method", requestOptions)
 					.then(response =>response.json())
 					.then(result =>{
 
@@ -299,7 +300,7 @@ export default class CheckoutScreen extends Component {
 					redirect: 'follow'
 				};
 
-				fetch("https://demo.shortcircuitworks.com/dirtpit23/index.php?route=api/checkout/shipping_method/save", requestOptions)
+				fetch("https://ftwventures.com.my/index.php?route=api/checkout/shipping_method/save", requestOptions)
 					.then(response =>response.json())
 					.then(result =>{
 
@@ -323,7 +324,7 @@ export default class CheckoutScreen extends Component {
 					redirect: 'follow'
 				};
 
-				fetch("https://demo.shortcircuitworks.com/dirtpit23/index.php?route=api/checkout/payment_method", requestOptions)
+				fetch("https://ftwventures.com.my/index.php?route=api/checkout/payment_method", requestOptions)
 					.then(response =>response.json())
 					.then(result =>{
 
@@ -351,7 +352,7 @@ export default class CheckoutScreen extends Component {
 					redirect: 'follow'
 				};
 
-				fetch("https://demo.shortcircuitworks.com/dirtpit23/index.php?route=api/checkout/payment_method/save", requestOptions)
+				fetch("https://ftwventures.com.my/index.php?route=api/checkout/payment_method/save", requestOptions)
 					.then(response =>response.json())
 					.then(result =>{
 
@@ -378,7 +379,7 @@ export default class CheckoutScreen extends Component {
 					redirect: 'follow'
 				};
 
-				fetch("https://demo.shortcircuitworks.com/dirtpit23/index.php?route=api/checkout/confirm", requestOptions)
+				fetch("https://ftwventures.com.my/index.php?route=api/checkout/confirm", requestOptions)
 					.then(response =>response.json())
 					.then(result =>{
 
@@ -417,7 +418,7 @@ export default class CheckoutScreen extends Component {
 					redirect: 'follow'
 				};
 
-				fetch("https://demo.shortcircuitworks.com/dirtpit23/index.php?route=api/payment/billplz/proceed", requestOptions)
+				fetch("https://ftwventures.com.my/index.php?route=api/payment/billplz/proceed", requestOptions)
 					.then(response =>response.json())
 					.then(result =>{
 
@@ -466,7 +467,7 @@ export default class CheckoutScreen extends Component {
 			const {navigate} = this.props.navigation
 			return (
 					<TouchableOpacity onPress={()=>this.goBack()}>
-							<Ionicons name={'ios-arrow-dropleft-circle'} size={30} color={'yellow'} style={{paddingTop: 0}} />
+							<Ionicons name={'ios-arrow-back-circle'} size={30} color={'yellow'} style={{paddingTop: 0}} />
 					</TouchableOpacity>
 			);
 	}
@@ -494,7 +495,7 @@ if (!this.state.isLoading){
 											Platform.OS == 'ios' ? 0 : -20,
 									top:
 											Platform.OS == 'ios' ? (iPhoneX ? -10 : 0) : -5,
-									height: Platform.OS == 'ios' ? (iPhoneX ? 90 : 0) : 70,
+									height: Platform.OS == 'ios' ? (iPhoneX ? 90 : 95) : 70,
 							}}
 					/>
 

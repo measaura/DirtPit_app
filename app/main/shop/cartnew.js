@@ -12,6 +12,8 @@ import {
   Dimensions,
   TouchableOpacity,
   ActivityIndicator,
+  Animated,
+  Easing,
 } from 'react-native';
 import {Colors} from '../../NewAppScreen';
 import { Header } from "react-native-elements";
@@ -48,7 +50,7 @@ const list =[
         "total": "RM96.00", 
         "option": [], 
         "price": "RM48.00", 
-        "thumb": "https://demo.shortcircuitworks.com/dirtpit23/image/cache/catalog/Motorex/Bike%20Clean%20500ml-47x47.jpg", 
+        "thumb": "https://ftwventures.com.my/image/cache/catalog/Motorex/Bike%20Clean%20500ml-47x47.jpg", 
         "model": "CLEAN AND CARE", 
         "quantity": "2", 
         "recurring": "", 
@@ -65,7 +67,7 @@ const list =[
           }
         ], 
         "price": "RM999.00", 
-        "thumb": "https://demo.shortcircuitworks.com/dirtpit23/image/cache/catalog/LIFESTYLE/JACKET/LEGION%20JACKET%20[BLK]%20-1-47x47.jpeg", 
+        "thumb": "https://ftwventures.com.my/image/cache/catalog/LIFESTYLE/JACKET/LEGION%20JACKET%20[BLK]%20-1-47x47.jpeg", 
         "model": "JACKETS", 
         "quantity": "2", 
         "recurring": "", 
@@ -76,7 +78,7 @@ const list =[
         "total": "RM516.00", 
         "option": [], 
         "price": "RM129.00", 
-        "thumb": "https://demo.shortcircuitworks.com/dirtpit23/image/cache/catalog/LIFESTYLE/TEES/TLD/ADDICT%20TEE;%20ONYX%20SNOW/ADDICT%20TEE-47x47.jpg", 
+        "thumb": "https://ftwventures.com.my/image/cache/catalog/LIFESTYLE/TEES/TLD/ADDICT%20TEE;%20ONYX%20SNOW/ADDICT%20TEE-47x47.jpg", 
         "model": "SHORT SLEEVES", 
         "quantity": "4", 
         "recurring": "", 
@@ -87,7 +89,7 @@ const list =[
         "total": "RM499.00", 
         "option": [], 
         "price": "RM499.00", 
-        "thumb": "https://demo.shortcircuitworks.com/dirtpit23/image/cache/catalog/MX%20APPARELS/HELMET/FLY/FLY%20KINETIC%20FLEX%20PINK.BK.WH/Untitled-1-07-47x47.jpg", 
+        "thumb": "https://ftwventures.com.my/image/cache/catalog/MX%20APPARELS/HELMET/FLY/FLY%20KINETIC%20FLEX%20PINK.BK.WH/Untitled-1-07-47x47.jpg", 
         "model": "FLY KINETIC", 
         "quantity": "1", 
         "recurring": "", 
@@ -103,14 +105,29 @@ const list =[
 export default class CartNewScreen extends Component {
   constructor(props) {
      super(props);
+     this.spinValue = new Animated.Value(0);
      this.state = {
        dataCart:[],
        newCart:[],
        cartTotal:[],
        email:'',
        password:'',
+       isLoading: true,
      };
   }
+
+	spin () {
+		this.spinValue.setValue(0)
+		Animated.timing(
+			this.spinValue,
+			{
+				toValue: 1,
+				duration: 1500,
+				useNativeDriver: true,
+				easing: Easing.linear
+			}
+		).start(() => this.spin())
+	}
 
 	FlatListItemSeparator = () => {
 		return (
@@ -125,7 +142,7 @@ export default class CartNewScreen extends Component {
 	
 	reLogin() {
 		const formData = new FormData();
-console.log(this.state.my)
+    console.log('relogin '+this.state.my);
 		formData.append("email", this.state.email);
 		formData.append("password", this.state.password);
 		API.login(formData).then(response => {
@@ -136,9 +153,11 @@ console.log(this.state.my)
 			})
 			AsyncStorage.setItem('tokenKey', response.access_token)
 			AsyncStorage.setItem('myLogin', JSON.stringify(response))
-// 			this.fetchProfile()
-// 			navigate('Home', {prevScreenTitle: 'Home'})
+  // 			this.fetchProfile()
+  // 			navigate('Home', {prevScreenTitle: 'Home'})
+          this.getCartItems()
 		})
+    return true;
 	}
 
 	checkLogin() {
@@ -155,72 +174,77 @@ console.log(this.state.my)
 				}
 		});
 		
+		const dataForm = new FormData();
 		AsyncStorage.getItem("tokenKey", (err, value) => {
 				if (!err && value != null) {
-						this.setState({ tokenKey: value });
+          this.setState({ tokenKey: value });
 					console.log('tokenKey', value)
+          dataForm.append("access_token", value)
+          console.log('dataForm',dataForm);
+          API.userDetail(dataForm).then(response => {
+            // 			data = response;
+            // 			this.setState({
+            // 					fetchedName: data.firstname+' '+data.lastname,
+            // 					fetchedEmail: data.email,
+            // 					fetchedPhone: data.telephone
+            // 			});
+            console.info('response:',response);
+            if (response.customer_id === null) {
+              this.reLogin()
+            }
+            
+            console.log('checkLogin userDetail',response.customer_id)
+          });
 				} else {
 				}
 		});
-		const dataForm = new FormData();
-		dataForm.append("access_token", this.state.tokenKey)
-// 		console.log('loginInfo',myLogin)
-		API.userDetail(dataForm).then(response => {
-// 			data = response;
-// 			this.setState({
-// 					fetchedName: data.firstname+' '+data.lastname,
-// 					fetchedEmail: data.email,
-// 					fetchedPhone: data.telephone
-// 			});
 
-			if (response.customer_id === null) {
-				this.reLogin()
-			}
-			
-			console.log('checkLogin userDetail',response.customer_id)
-		});
+    return true;
 	}
 	
 	getCartItems() {
-	
-		this.checkLogin();
-//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-// 				let mySession = AsyncStorage.getItem('tokenKey');
+    console.log('cartnew getCartItem');
+		// this.checkLogin();
+    console.warn('lepas checkLogin dalam getCartItems')
+    //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    				let mySession = AsyncStorage.getItem('tokenKey');
 				var myHeaders = new Headers();
-// 				myHeaders.append("Cookie", "language=en-gb;");
-// 				myHeaders.append("Cookie", "default="+mySession+";");
-// 				myHeaders.append("Cookie", "language=en-gb; currency=MYR; PHPSESSID=473df23cb16c59c23d61cf2254bc32e0; default=ab3122bd90780f42debb797e1de4449a");
-// 				console.log(AsyncStorage.getItem('tokenKey'))
-// 				console.log(myHeaders)
+    				// myHeaders.append("Cookie", "language=en-gb;");
+    				// myHeaders.append("Cookie", "default="+mySession+";");
+    // 				myHeaders.append("Cookie", "language=en-gb; currency=MYR; PHPSESSID=473df23cb16c59c23d61cf2254bc32e0; default=ab3122bd90780f42debb797e1de4449a");
+    // 				console.log(AsyncStorage.getItem('tokenKey'))
+    // 				console.log(myHeaders)
 
 				var requestOptions = {
 					method: 'POST',
-					headers: myHeaders,
+					// headers: myHeaders,
 					redirect: 'follow'
 				};
 
-				fetch("https://demo.shortcircuitworks.com/dirtpit23/index.php?route=api/showcart", requestOptions)
+				fetch("https://ftwventures.com.my/index.php?route=api/showcart", requestOptions)
 					.then(response =>response.json())
 					.then(result =>{
-
+            // console.log('ewcart getcartitem', result)
 						this.setState({
 							newCart: result[0].products,
 							cartTotal: result[0].totals,
+              isLoading: false,
 						})
-					console.log(result[0].products)
+					console.log('fetch showcart',result[0].products)
 					})
 					.catch(error => console.log('error', error));
 					
-//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++	
+    //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++	
     AsyncStorage.getItem('cart').then((cart)=>{
       if (cart !== null) {
         // We have data!!
-//         console.log('cart not null', cart)
+    //         console.log('cart not null', cart)
         const shopcart = JSON.parse(cart)
+        console.info('shopcart',shopcart[0].products)
         this.setState({dataCart:shopcart})
 
 
-//         AsyncStorage.getItem('cart').then((res) => console.log(res))
+    //         AsyncStorage.getItem('cart').then((res) => console.log(res))
       }
     }) 
     .catch((err)=>{
@@ -229,24 +253,38 @@ console.log(this.state.my)
   }
 
   componentDidMount() {
+		// this.getCartItems()
+  	this.spin()
+		// this.checkLogin();
+    console.warn('componentDidMount');
+    AsyncStorage.getItem('cart', (err,value) => {
+      if(!err && value != null){
+        const asCart = JSON.parse(value)
+        console.log('cart', asCart[0].products)
+        this.setState({
+          isLoading: false,
+          asyncCart: asCart[0].products,
+        })
+      }
+    });
 		AsyncStorage.getItem("tokenKey", (err, value) => {
 				if (!err && value != null) {
-						this.setState({ tokenKey: value }, this.connectAPI);
+          console.log('tokenKey: '+value);
+						this.setState({ tokenKey: value });
 				} else {
 				}
 		});
-		this.getCartItems()
   }
 
   cartCheckout() {
-//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-// 				let mySession = AsyncStorage.getItem('tokenKey');
+  //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  // 				let mySession = AsyncStorage.getItem('tokenKey');
 				var myHeaders = new Headers();
-// 				myHeaders.append("Cookie", "language=en-gb;");
-// 				myHeaders.append("Cookie", "default="+mySession+";");
-// 				myHeaders.append("Cookie", "language=en-gb; currency=MYR; PHPSESSID=473df23cb16c59c23d61cf2254bc32e0; default=ab3122bd90780f42debb797e1de4449a");
-// 				console.log(AsyncStorage.getItem('tokenKey'))
-// 				console.log(myHeaders)
+  // 				myHeaders.append("Cookie", "language=en-gb;");
+  // 				myHeaders.append("Cookie", "default="+mySession+";");
+  // 				myHeaders.append("Cookie", "language=en-gb; currency=MYR; PHPSESSID=473df23cb16c59c23d61cf2254bc32e0; default=ab3122bd90780f42debb797e1de4449a");
+  // 				console.log(AsyncStorage.getItem('tokenKey'))
+  // 				console.log(myHeaders)
 
 				var requestOptions = {
 					method: 'POST',
@@ -254,7 +292,7 @@ console.log(this.state.my)
 					redirect: 'follow'
 				};
 
-				fetch("https://demo.shortcircuitworks.com/dirtpit23/index.php?route=api/showcart", requestOptions)
+				fetch("https://ftwventures.com.my/index.php?route=api/showcart", requestOptions)
 					.then(response =>response.json())
 					.then(result =>{
 
@@ -266,16 +304,17 @@ console.log(this.state.my)
 					})
 					.catch(error => console.log('error', error));
 					
-//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++	
+  //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++	
   }
   
   goBack() {
     const {  navigation, route  } = this.props;
     navigation.goBack()
-//     navigation.state.params.updateCount({itemCount:4});
+  //     navigation.state.params.updateCount({itemCount:4});
   }
   
   renderOptions(item) {
+    console.log('options' ,item.item)
   	if (item.item.option.length > 0) {
   	console.log(item.item.option[0].name)
 			return(
@@ -291,7 +330,7 @@ console.log(this.state.my)
 			const {navigate} = this.props.navigation
 			return (
 					<TouchableOpacity onPress={()=>this.goBack()}>
-							<Ionicons name={'ios-arrow-dropleft-circle'} size={30} color={'yellow'} style={{paddingTop: 0}} />
+							<Ionicons name={'ios-arrow-back-circle'} size={30} color={'yellow'} style={{paddingTop: 0}} />
 					</TouchableOpacity>
 			);
 	}
@@ -302,114 +341,133 @@ console.log(this.state.my)
 	
   render() {
 	const {navigate} = this.props.navigation
-//   var rmTotal=this.state.cartTotal.toFixed(2)
+  //   var rmTotal=this.state.cartTotal.toFixed(2)
  const grandTotal = []
-//  var list = this.state.newCart.filter(item => item.products)
-	if (this.state.newCart.length >0){
-    return (
-    
-      <View style={{flex:1,alignItems: 'center', justifyContent: 'center'}}>
-					<Header
-							innerContainerStyles={styles.headerInnerContainer}
-							outerContainerStyles={styles.headerOuterContainer}
-							leftComponent={this.renderLeft()}
-							centerComponent={this.renderCenter()}
-							containerStyle={{
-									backgroundColor: '#000',
-									marginTop:
-											Platform.OS == 'ios' ? 0 : -20,
-									top:
-											Platform.OS == 'ios' ? (iPhoneX ? -10 : 0) : -5,
-									height: Platform.OS == 'ios' ? (iPhoneX ? 90 : 0) : 70,
-							}}
-					/>
-
-         <View style={{flex:1, width: width}}>
-							<NavigationEvents
-                onDidFocus={() => this.getCartItems()}
+  //  var list = this.state.newCart.filter(item => item.products)
+    if(!this.state.isLoading){
+      if (this.state.asyncCart.length >0){
+        return (
+        
+          <View style={{flex:1,alignItems: 'center', justifyContent: 'center'}}>
+              <Header
+                  innerContainerStyles={styles.headerInnerContainer}
+                  outerContainerStyles={styles.headerOuterContainer}
+                  leftComponent={this.renderLeft()}
+                  centerComponent={this.renderCenter()}
+                  containerStyle={{
+                      backgroundColor: '#000',
+                      marginTop:
+                          Platform.OS == 'ios' ? 0 : -20,
+                      top:
+                          Platform.OS == 'ios' ? (iPhoneX ? -10 : 0) : -5,
+                      height: Platform.OS == 'ios' ? (iPhoneX ? 90 : 95) : 70,
+                  }}
               />
-					<FlatList
-						data={this.state.newCart}
-						contentContainerStyle={{ flexGrow: 1 }}
-						ItemSeparatorComponent = { this.FlatListItemSeparator }
-						keyExtractor={item=>item.cart_id}
-						renderItem={item => (
-// 							if ({item.item.top} == 1){
-									<TouchableOpacity
-											onPress={() =>
-													console.log(item.item.name)
-											}
-											style={styles.rowWrap}>
-											<Image
-													source={{uri: item.item.thumb}}
-													style={styles.rowIcon}
-											/>
-											<View style={styles.rowTextContent}>
-													<Text allowFontScaling={false} style={styles.rowMessage}>
-														{item.item.name}{' '}
-													</Text>
-													<Text allowFontScaling={false} style={styles.rowQty}>
-														Quantity: {item.item.quantity}{' '}
-													</Text>
-													{this.renderOptions(item)}
-													<Text allowFontScaling={false} style={styles.rowTime}>
-														{item.item.total}{' '}
-													</Text>
-											</View>
 
-									</TouchableOpacity>							
+            <View style={{flex:1, width: width}}>
+                  <NavigationEvents
+                    onDidFocus={() => this.getCartItems()}
+                  />
+              <FlatList
+                data={this.state.asyncCart}
+                contentContainerStyle={{ flexGrow: 1 }}
+                ItemSeparatorComponent = { this.FlatListItemSeparator }
+                keyExtractor={item=>item.cart_id}
+                renderItem={item => (
+        // 							if ({item.item.top} == 1){
+                      <TouchableOpacity
+                          onPress={() =>
+                              console.log(item.item.name)
+                          }
+                          style={styles.rowWrap}>
+                          <Image
+                              source={{uri: item.item.thumb}}
+                              style={styles.rowIcon}
+                          />
+                          <View style={styles.rowTextContent}>
+                              <Text allowFontScaling={false} style={styles.rowMessage}>
+                                {item.item.name}{' '}
+                              </Text>
+                              <Text allowFontScaling={false} style={styles.rowQty}>
+                                Quantity: {item.item.quantity}{' '}
+                              </Text>
+                              {this.renderOptions(item)}
+                              <Text allowFontScaling={false} style={styles.rowTime}>
+                                {item.item.total}{' '}
+                              </Text>
+                          </View>
 
-							)}
-					/>
-						<View style={styles.footerBar}>
-							{this.state.cartTotal.map((item)=>{
-								return(
-									<View style={{flex:1, width: width+3, height:40,  flexDirection:'row', alignItems: 'center', justifyContent: 'flex-end', marginBottom:-1, marginLeft:-1, borderWidth:1, borderColor: 'black'}} >
-										<Text allowFontScaling={false} style={{fontFamily: 'Gotham-Medium', color: 'black', justifyContent: 'flex-start', paddingRight: 10}}>{item.title}: </Text>
-										<Text allowFontScaling={false} style={{fontFamily: 'Gotham-Bold', color: 'black', justifyContent: 'flex-end', paddingRight: 10}}>{item.text}</Text>
-									</View>
-								)
-							})}
-							<View style={{ width: width, height:50, flexDirection:'row',justifyContent: 'space-around', alignItems: 'center',}} >
-								<TouchableOpacity 
-									onPress={()=>navigate('Checkout')} >
-										<View style={{flex:1, width: width+5, marginLeft:1,  flexDirection:'row',justifyContent: 'space-around', alignItems: 'center', backgroundColor: 'yellow', borderWidth: 2, borderColor: 'black'}} >
-											<Text allowFontScaling={false} style={{fontFamily: 'Gotham-Bold',fontSize: 18, color: 'black'}}>CHECKOUT</Text>
-										</View>
-								</TouchableOpacity>
-							</View>
-						</View>
+                      </TouchableOpacity>							
 
-         </View>
+                  )}
+              />
+                <View style={styles.footerBar}>
+                  {this.state.cartTotal.map((item)=>{
+                    return(
+                      <View key={item.title} style={{flex:1, width: width+3, height:40,  flexDirection:'row', alignItems: 'center', justifyContent: 'flex-end', marginBottom:-1, marginLeft:-1, borderWidth:1, borderColor: 'black'}} >
+                        <Text allowFontScaling={false} style={{fontFamily: 'Gotham-Medium', color: 'black', justifyContent: 'flex-start', paddingRight: 10}}>{item.title}: </Text>
+                        <Text allowFontScaling={false} style={{fontFamily: 'Gotham-Bold', color: 'black', justifyContent: 'flex-end', paddingRight: 10}}>{item.text}</Text>
+                      </View>
+                    )
+                  })}
+                  <View style={{ width: width, height:50, flexDirection:'row',justifyContent: 'space-around', alignItems: 'center',}} >
+                    <TouchableOpacity 
+                      onPress={()=>navigate('Checkout')} >
+                        <View style={{flex:1, width: width+5, marginLeft:1,  flexDirection:'row',justifyContent: 'space-around', alignItems: 'center', backgroundColor: 'yellow', borderWidth: 2, borderColor: 'black'}} >
+                          <Text allowFontScaling={false} style={{fontFamily: 'Gotham-Bold',fontSize: 18, color: 'black'}}>CHECKOUT</Text>
+                        </View>
+                    </TouchableOpacity>
+                  </View>
+                </View>
 
-      </View>
-    )}else{
-			return (
-				<View style={{flex:1,alignItems: 'center'}}>
-						<Header
-								innerContainerStyles={styles.headerInnerContainer}
-								outerContainerStyles={styles.headerOuterContainer}
-								leftComponent={this.renderLeft()}
-								centerComponent={this.renderCenter()}
-								containerStyle={{
-										backgroundColor: '#000',
-										marginTop:
-												Platform.OS == 'ios' ? 0 : -20,
-										top:
-												Platform.OS == 'ios' ? (iPhoneX ? -10 : 0) : -5,
-										height: Platform.OS == 'ios' ? (iPhoneX ? 90 : 0) : 70,
-								}}
-						/>
-						<NavigationEvents
-							onDidFocus={() => this.getCartItems()}
-						/>
+            </View>
 
-						<View style={{flex:1, alignItems: 'center', justifyContent: 'center'}}>
-							<Text style={{alignSelf: 'center', paddingLeft: 10, paddingRight: 10, paddingBottom: 30, fontSize: 16, fontFamily: 'Gotham-Bold'}}>Your cart is empty. Add some products before you can see it here.</Text>
-							<Image source={require('../../images/empty-cart.png')} style={{width: 200, height:200}}/>
-						</View>
-    		</View>
-    )}
+          </View>
+      )}else{
+          return (
+            <View style={{flex:1,alignItems: 'center'}}>
+                <Header
+                    innerContainerStyles={styles.headerInnerContainer}
+                    outerContainerStyles={styles.headerOuterContainer}
+                    leftComponent={this.renderLeft()}
+                    centerComponent={this.renderCenter()}
+                    containerStyle={{
+                        backgroundColor: '#000',
+                        marginTop:
+                            Platform.OS == 'ios' ? 0 : -20,
+                        top:
+                            Platform.OS == 'ios' ? (iPhoneX ? -10 : 0) : -5,
+                        height: Platform.OS == 'ios' ? (iPhoneX ? 90 : 95) : 70,
+                    }}
+                />
+                <NavigationEvents
+                  onDidFocus={() => this.getCartItems()}
+                />
+
+                <View style={{flex:1, alignItems: 'center', justifyContent: 'center'}}>
+                  <Text style={{alignSelf: 'center', paddingLeft: 10, paddingRight: 10, paddingBottom: 30, fontSize: 16, fontFamily: 'Gotham-Bold'}}>Your cart is empty. Add some products before you can see it here.</Text>
+                  <Image source={require('../../images/empty-cart.png')} style={{width: 200, height:200}}/>
+                </View>
+            </View>
+      )}
+    } else {
+      const spin = this.spinValue.interpolate({
+        inputRange: [0, 1],
+        outputRange: ['0deg', '360deg']
+      })
+
+      return(
+          <View style={{flex:1,alignItems: 'center', justifyContent: 'center',backgroundColor:'black'}}>
+              <Animated.Image
+            style={{
+              width: 100,
+              height: 100,
+              transform: [{rotate: spin}] }}
+              source={require('../../images/DirtPit_icon_1024.png')}
+          />
+          </View>
+      )
+    }
   }
 
   onChangeQuan(i,type)
@@ -587,7 +645,7 @@ const styles = StyleSheet.create({
 		footerBar: {
 			left: 0,
 			bottom: 0,
-			height: Platform.OS == 'ios' ? iPhoneX ? 100:70 : 120,
+			height: Platform.OS == 'ios' ? iPhoneX ? 100:90 : 120,
 			flexDirection: 'column',
 		},
 });

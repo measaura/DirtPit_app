@@ -45,7 +45,7 @@ var timeZone = RNLocalize.getTimeZone()
 const DATA = [
         {
             "store_id":"1",
-            "image":"http://demo.shortcircuitworks.com/dirtpit23/image/catalog/app/kuantan.png",
+            "image":"http://ftwventures.com.my/image/catalog/app/kuantan.png",
             "parent_id":"0",
             "top":"1",
             "column":"1",
@@ -61,7 +61,7 @@ const DATA = [
         },
         {
             "store_id":"2",
-            "image":"http://demo.shortcircuitworks.com/dirtpit23/image/catalog/app/johor.jpg",
+            "image":"http://ftwventures.com.my/image/catalog/app/johor.jpg",
             "parent_id":"0",
             "top":"1",
             "column":"1",
@@ -77,7 +77,7 @@ const DATA = [
         },
         {
             "store_id":"3",
-            "image":"http://demo.shortcircuitworks.com/dirtpit23/image/catalog/app/penang.jpg",
+            "image":"http://ftwventures.com.my/image/catalog/app/penang.jpg",
             "parent_id":"0",
             "top":"1",
             "column":"1",
@@ -247,7 +247,7 @@ export default class MotoTourScreen extends Component {
 					redirect: 'follow'
 				};
 console.log('submit', formdata)
-				fetch("https://demo.shortcircuitworks.com/dirtpit23/index.php?route=api/booking/bookslot", requestOptions)
+				fetch("https://ftwventures.com.my/index.php?route=api/booking/bookslot", requestOptions)
 					.then(response => response.json())
 					.then(result =>{
 						console.log(result)
@@ -265,8 +265,8 @@ console.log('submit', formdata)
     }
 
     getTimeslot = () => {
-//         return fetch("https://demo.shortcircuitworks.com/dirtpit23/index.php?route=api/country/countries", {
-			fetch('https://demo.shortcircuitworks.com/dirtpit23/index.php?route=api/booking/service&tour=mx')
+//         return fetch("https://ftwventures.com.my/index.php?route=api/country/countries", {
+			fetch('https://ftwventures.com.my/index.php?route=api/booking/service&tour=mx')
 			.then(response => response.json())
 			.then(json => {
 			console.log('json',json)
@@ -284,8 +284,8 @@ console.log('submit', formdata)
     }
 
     getBikes = () => {
-//         return fetch("https://demo.shortcircuitworks.com/dirtpit23/index.php?route=api/country/countries", {
-			fetch('https://demo.shortcircuitworks.com/dirtpit23/index.php?route=api/booking/service/getbike')
+//         return fetch("https://ftwventures.com.my/index.php?route=api/country/countries", {
+			fetch('https://ftwventures.com.my/index.php?route=api/booking/service/getbike')
 			.then(response => response.json())
 			.then(json => {
 			console.log('json',json)
@@ -341,7 +341,7 @@ console.log("today date: ",today)
 //         );
 
 // 	console.log(this.state.segId)
-		fetch("https://demo.shortcircuitworks.com/dirtpit23/index.php?route=api/banner&id=11")
+		fetch("https://ftwventures.com.my/index.php?route=api/banner&id=11")
 			.then(response => response.json())
 			.then((responseJson)=> {
 				console.log(responseJson.banner[0])
@@ -416,15 +416,15 @@ console.log("today date: ",today)
 							<View style={{justifyContent: 'center'}} >
 
 								<Image 
-										source={{uri: "https://demo.shortcircuitworks.com/dirtpit23/image/catalog/app/cafe/menu7.jpg"}}
+										source={{uri: "https://ftwventures.com.my/image/catalog/app/cafe/menu7.jpg"}}
 										style={styles.imageMenu}
 								/>
 								<Image 
-										source={{uri: "https://demo.shortcircuitworks.com/dirtpit23/image/catalog/app/cafe/menu8.jpg"}}
+										source={{uri: "https://ftwventures.com.my/image/catalog/app/cafe/menu8.jpg"}}
 										style={styles.imageMenu}
 								/>
 								<Image 
-										source={{uri: "https://demo.shortcircuitworks.com/dirtpit23/image/catalog/app/cafe/menu9.jpg"}}
+										source={{uri: "https://ftwventures.com.my/image/catalog/app/cafe/menu9.jpg"}}
 										style={styles.imageMenu}
 								/>
 							</View>

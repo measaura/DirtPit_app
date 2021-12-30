@@ -61,7 +61,7 @@ export default class CommunityActivityScreen extends Component {
 	componentDidMount(){
 		this.spin()
 // 	console.log(this.state.segId)
-		fetch("https://demo.shortcircuitworks.com/dirtpit23/index.php?route=api/banner&id=13")
+		fetch("https://ftwventures.com.my/index.php?route=api/banner&id=13")
 			.then(response => response.json())
 			.then((responseJson)=> {
 				console.log(responseJson.banner[0])

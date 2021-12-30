@@ -33,7 +33,7 @@ const randomHexColor = () => {
 const DATA = [
         {
             "store_id":"1",
-            "image":"http://demo.shortcircuitworks.com/dirtpit23/image/catalog/app/kuantan.png",
+            "image":"http://ftwventures.com.my/image/catalog/app/kuantan.png",
             "parent_id":"0",
             "top":"1",
             "column":"1",
@@ -49,7 +49,7 @@ const DATA = [
         },
         {
             "store_id":"2",
-            "image":"http://demo.shortcircuitworks.com/dirtpit23/image/catalog/app/johor.jpg",
+            "image":"http://ftwventures.com.my/image/catalog/app/johor.jpg",
             "parent_id":"0",
             "top":"1",
             "column":"1",
@@ -65,7 +65,7 @@ const DATA = [
         },
         {
             "store_id":"3",
-            "image":"http://demo.shortcircuitworks.com/dirtpit23/image/catalog/app/penang.jpg",
+            "image":"http://ftwventures.com.my/image/catalog/app/penang.jpg",
             "parent_id":"0",
             "top":"1",
             "column":"1",
@@ -92,7 +92,7 @@ export default class ConceptScreen extends Component {
 	}
 
 	componentDidMount(){
-		fetch("https://demo.shortcircuitworks.com/dirtpit23/index.php?route=api/category&concept")
+		fetch("https://ftwventures.com.my/index.php?route=api/category&concept")
 			.then(response => response.json())
 			.then((responseJson)=> {
 				this.setState({
@@ -176,7 +176,7 @@ export default class ConceptScreen extends Component {
 											Platform.OS == 'ios' ? 0 : -20,
 									top:
 											Platform.OS == 'ios' ? (iPhoneX ? -10 : 0) : -5,
-									height: Platform.OS == 'ios' ? (iPhoneX ? 90 : 0) : 70,
+									height: Platform.OS == 'ios' ? (iPhoneX ? 90 : 95) : 70,
 							}}
 					/>
 					{list.map((item) => {

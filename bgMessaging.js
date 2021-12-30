@@ -1,7 +1,7 @@
 // @flow
 import React, {Component} from 'react';
 import {Platform} from 'react-native';
-import firebase from 'react-native-firebase';
+import firebase from '@react-native-firebase/app';
 
 // Optional flow type
 // import type { RemoteMessage } from 'react-native-firebase';

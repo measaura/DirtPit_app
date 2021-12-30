@@ -40,7 +40,7 @@ export default class CategoryScreen extends Component {
 
 	componentDidMount(){
 // 	console.log(this.state.segId)
-		fetch("https://demo.shortcircuitworks.com/dirtpit23/index.php?route=api/category&parent="+this.state.segId)
+		fetch("https://ftwventures.com.my/index.php?route=api/category&parent="+this.state.segId)
 			.then(response => response.json())
 			.then((responseJson)=> {
 				this.setState({
@@ -107,7 +107,7 @@ export default class CategoryScreen extends Component {
 			const {navigate} = this.props.navigation
 			return (
 					<TouchableOpacity onPress={() => this.props.navigation.goBack()}>
-							<Ionicons name={'ios-arrow-dropleft-circle'} size={30} color={'yellow'} style={{paddingTop: 0}} />
+							<Ionicons name={'ios-arrow-back-circle'} size={30} color={'yellow'} style={{paddingTop: 0}} />
 					</TouchableOpacity>
 			);
 	}
@@ -142,7 +142,7 @@ export default class CategoryScreen extends Component {
 											Platform.OS == 'ios' ? 0 : -20,
 									top:
 											Platform.OS == 'ios' ? (iPhoneX ? -10 : 0) : -5,
-									height: Platform.OS == 'ios' ? (iPhoneX ? 90 : 0) : 70,
+									height: Platform.OS == 'ios' ? (iPhoneX ? 90 : 95) : 70,
 							}}
 					/>
 					{this.renderFlatlist()}
@@ -162,7 +162,7 @@ export default class CategoryScreen extends Component {
 																Platform.OS == 'ios' ? (iPhoneX ? 20 : 0) : -20,
 														top:
 																Platform.OS == 'ios' ? (iPhoneX ? -15 : 0) : -5,
-														height: 70,
+														height: 90,
 												}}
 										/>
                     <View style={styles.cantLocate}>

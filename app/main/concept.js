@@ -40,7 +40,7 @@ export default class ConceptList extends Component {
 	}
 
 	componentDidMount(){
-		fetch("https://demo.shortcircuitworks.com/dirtpit23/index.php?route=api/category&concept")
+		fetch("https://ftwventures.com.my/index.php?route=api/category&concept")
 			.then(response => response.json())
 			.then((responseJson)=> {
 				this.setState({
@@ -91,7 +91,7 @@ export default class ConceptList extends Component {
 											Platform.OS == 'ios' ? 0 : -20,
 									top:
 											Platform.OS == 'ios' ? (iPhoneX ? -10 : 0) : -10,
-									height: Platform.OS == 'ios' ? (iPhoneX ? 90 : 0) : 70,
+									height: Platform.OS == 'ios' ? (iPhoneX ? 90 : 95) : 70,
 							}}
 					/>
 					<ActivityIndicator size="large" color="#0c9" />
@@ -112,7 +112,7 @@ export default class ConceptList extends Component {
 											Platform.OS == 'ios' ? 0 : -20,
 									top:
 											Platform.OS == 'ios' ? (iPhoneX ? -10 : 0) : -5,
-									height: Platform.OS == 'ios' ? (iPhoneX ? 90 : 0) : 70,
+									height: Platform.OS == 'ios' ? (iPhoneX ? 90 : 95) : 70,
 							}}
 					/>
 					<FlatList

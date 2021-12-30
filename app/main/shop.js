@@ -39,7 +39,7 @@ export default class ShopScreen extends React.Component  {
     return (
 
       <WebView
-        source={{uri: 'http://demo.shortcircuitworks.com/dirtpit23/index.php?route=product/category&path=59'}}
+        source={{uri: 'http://ftwventures.com.my/index.php?route=product/category&path=59'}}
         style={{flex: 1, marginTop: 10, height: 100}}
       />
 

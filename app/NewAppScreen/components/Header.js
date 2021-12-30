@@ -10,11 +10,11 @@
 
 'use strict';
 import Colors from './Colors';
-import type {Node} from 'react';
+import  {Node} from 'react';
 import {Text, StyleSheet, ImageBackground} from 'react-native';
 import React from 'react';
 
-const Header = (): Node => (
+const Header = () => (
   <ImageBackground
     accessibilityRole={'image'}
     source={require('./logo.png')}

@@ -38,7 +38,7 @@ export default class SegmentScreen extends Component {
 	}
 
 	componentDidMount(){
-		fetch("https://demo.shortcircuitworks.com/dirtpit23/index.php?route=api/category&segment")
+		fetch("https://ftwventures.com.my/index.php?route=api/category&segment")
 			.then(response => response.json())
 			.then((responseJson)=> {
 // 				console.log(responseJson)
@@ -130,8 +130,8 @@ export default class SegmentScreen extends Component {
 									marginTop:
 											Platform.OS == 'ios' ? 0 : -20,
 									top:
-											Platform.OS == 'ios' ? (iPhoneX ? -10 : 0) : -5,
-									height: Platform.OS == 'ios' ? (iPhoneX ? 90 : 0) : 70,
+											Platform.OS == 'ios' ? (iPhoneX ? -10 : -50) : -5,
+									height: Platform.OS == 'ios' ? (iPhoneX ? 90 : 95) : 70,
 							}}
 					/>
 					<ActivityIndicator size="large" color="#0c9" />
@@ -151,7 +151,7 @@ export default class SegmentScreen extends Component {
 											Platform.OS == 'ios' ? 0 : -20,
 									top:
 											Platform.OS == 'ios' ? (iPhoneX ? -10 : 0) : -5,
-									height: Platform.OS == 'ios' ? (iPhoneX ? 90 : 0) : 70,
+									height: Platform.OS == 'ios' ? (iPhoneX ? 90 : 95) : 70,
 							}}
 					/>
 					{this.renderFlatlist()}

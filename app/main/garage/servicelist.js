@@ -194,7 +194,7 @@ export default class SeerviceListScreen extends React.Component {
 					redirect: 'follow'
 				};
 				console.log('type',this.state.serviceType)
-				fetch("https://demo.shortcircuitworks.com/dirtpit23/index.php?route=api/booking/service&garage="+this.state.serviceType)
+				fetch("https://ftwventures.com.my/index.php?route=api/booking/service&garage="+this.state.serviceType)
 					.then(response => response.text())
 					.then(result =>{
 						console.log(result)
@@ -245,7 +245,7 @@ export default class SeerviceListScreen extends React.Component {
 					redirect: 'follow'
 				};
 console.log('submit', formdata)
-				fetch("https://demo.shortcircuitworks.com/dirtpit23/index.php?route=api/booking/bookslot", requestOptions)
+				fetch("https://ftwventures.com.my/index.php?route=api/booking/bookslot", requestOptions)
 					.then(response => response.json())
 					.then(result =>{
 						console.log(result)
@@ -263,8 +263,8 @@ console.log('submit', formdata)
     }
     
     getTimeslot = () => {
-//         return fetch("https://demo.shortcircuitworks.com/dirtpit23/index.php?route=api/country/countries", {
-			fetch('https://demo.shortcircuitworks.com/dirtpit23/index.php?route=api/booking/timeslot/timeslots')
+//         return fetch("https://ftwventures.com.my/index.php?route=api/country/countries", {
+			fetch('https://ftwventures.com.my/index.php?route=api/booking/timeslot/timeslots')
 			.then(response => response.json())
 			.then(json => {
 			console.log('json',json)
@@ -286,7 +286,7 @@ console.log('submit', formdata)
 
 		let country_id = this.state.countryfield
 		if ((country_id != this.state.countrybefore) && !this.state.zonedone){
-				fetch('https://demo.shortcircuitworks.com/dirtpit23/index.php?route=api/country/country&country_id='+this.state.countryfield)
+				fetch('https://ftwventures.com.my/index.php?route=api/country/country&country_id='+this.state.countryfield)
 				.then(response => response.json())
 				.then(json => {
 					console.log(json.zone)

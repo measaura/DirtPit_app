@@ -99,7 +99,7 @@ export default class Notifications extends React.Component {
 					redirect: 'follow'
 				};
 				console.log('type',this.state.serviceType)
-				fetch("https://demo.shortcircuitworks.com/dirtpit23/index.php?route=api/notification/orderhistory" )
+				fetch("https://ftwventures.com.my/index.php?route=api/notification/orderhistory" )
 					.then(response => response.text())
 					.then(result =>{
 						console.log(result)
@@ -204,11 +204,11 @@ export default class Notifications extends React.Component {
 								centerComponent={this.renderCenter()}
 								containerStyle={{
 										backgroundColor: '#000',
-										marginTop:
-												Platform.OS == 'ios' ? 0 : -20,
-										top:
-												Platform.OS == 'ios' ? (notch ? -10 : 0) : 0,
-										height: Platform.OS == 'ios' ? (notch ? 90 : 0) : 70,
+									marginTop:
+											Platform.OS == 'ios' ? 0 : -20,
+									top:
+											Platform.OS == 'ios' ? (iPhoneX ? -10 : 0) : -5,
+									height: Platform.OS == 'ios' ? (iPhoneX ? 90 : 95) : 70,
 								}}
 						/>
                     <View style={styles.flatContent}>
@@ -267,8 +267,8 @@ export default class Notifications extends React.Component {
 										marginTop:
 												Platform.OS == 'ios' ? 0 : -20,
 										top:
-												Platform.OS == 'ios' ? (notch ? -10 : 0) : 0,
-										height: Platform.OS == 'ios' ? (notch ? 90 : 0) : 70,
+												Platform.OS == 'ios' ? (notch ? -10 : 0) : 5,
+										height: Platform.OS == 'ios' ? (notch ? 90 : 95) : 70,
 								}}
 						/>
                     <View style={styles.cantLocate}>

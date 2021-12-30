@@ -56,7 +56,7 @@ export default class BikeGarageScreen extends Component {
 	componentDidMount(){
 		this.spin()
 // 	console.log(this.state.segId)
-		fetch("https://demo.shortcircuitworks.com/dirtpit23/index.php?route=api/garage&bike")
+		fetch("https://ftwventures.com.my/index.php?route=api/garage&bike")
 			.then(response => response.json())
 			.then((responseJson)=> {
 				this.setState({

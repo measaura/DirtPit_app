@@ -58,7 +58,7 @@ export default class CartScreen extends Component {
 					redirect: 'follow'
 				};
 
-				fetch("https://demo.shortcircuitworks.com/dirtpit23/index.php?route=api/usercart/products", requestOptions)
+				fetch("https://ftwventures.com.my/index.php?route=api/usercart/products", requestOptions)
 					.then(response =>response.json())
 					.then(result =>{
 						console.log('getCartItems',JSON.stringify(result))
@@ -69,7 +69,7 @@ export default class CartScreen extends Component {
 // 						}
 						this.setState({
 							dataCart: result.products,
-							cartTotal: result.totals
+							// cartTotal: result.totals
 						})
 					})
 					.catch(error => console.log('error', error));
@@ -107,7 +107,7 @@ export default class CartScreen extends Component {
 			const {navigate} = this.props.navigation
 			return (
 					<TouchableOpacity onPress={()=>this.goBack()}>
-							<Ionicons name={'ios-arrow-dropleft-circle'} size={30} color={'yellow'} style={{paddingTop: 0}} />
+							<Ionicons name={'ios-arrow-back-circle'} size={30} color={'yellow'} style={{paddingTop: 0}} />
 					</TouchableOpacity>
 			);
 	}
@@ -117,7 +117,7 @@ export default class CartScreen extends Component {
 	}
 	
   render() {
-//   var rmTotal=this.state.cartTotal.toFixed(2)
+  var rmTotal=0
  const grandTotal = []
     return (
       <View style={{flex:1,alignItems: 'center', justifyContent: 'center'}}>
@@ -132,7 +132,7 @@ export default class CartScreen extends Component {
 											Platform.OS == 'ios' ? 0 : -20,
 									top:
 											Platform.OS == 'ios' ? (iPhoneX ? -10 : 0) : -5,
-									height: Platform.OS == 'ios' ? (iPhoneX ? 90 : 0) : 70,
+									height: Platform.OS == 'ios' ? (iPhoneX ? 90 : 95) : 70,
 							}}
 					/>
 
@@ -153,22 +153,24 @@ export default class CartScreen extends Component {
 														 }else{
 																var stockErr = '';
 														 }
-               	var price = Number(item.price*item.quantity);
+               	var price = Number(item.price.replace(/^RM|,/g,""))*Number(item.quantity);
+                 console.log('price '+Number(item.price.replace(/^RM|,/g,"")))
                	var itemprice = price.toFixed(2);
 								const total = {
 									prodTot: itemprice,
 								}
 
 								grandTotal.push(total)
-								console.log(grandTotal)
-							const productsTotal = grandTotal.reduce((itemTotal, meal) => itemTotal + Number(meal.prodTot), 0)
-		console.log('total '+productsTotal); // 45 calories
-// 		rmTotal = productsTotal.toFixed(2)
-		
+								console.log('graTotal '+JSON.stringify(grandTotal))
+                const productsTotal = grandTotal.reduce((total, meal) => total + Number(meal.prodTot), 0)
+                console.log('total '+productsTotal); // 45 calories
+                rmTotal = productsTotal.toFixed(2);
+                console.log('rmTotal: '+rmTotal);
+                // console.log(this.state.cartTotal);
                  return(
                    <View style={{width:width-20,margin:10,backgroundColor:'transparent', flexDirection:'row', borderBottomWidth:2, borderColor:"#cccccc", paddingBottom:10}}>
                      <Image resizeMode={"contain"} style={{width:width/3,height:width/3}} source={{uri: item.thumb}} />
-                     <View style={{flex:1, backgroundColor:'trangraysparent', padding:10, justifyContent:"space-between"}}>
+                     <View style={{flex:1, backgroundColor:'transparent', padding:10, justifyContent:"space-between"}}>
                        <View>
                        		<View style={{flexDirection:'row'}}>
 													 <Text style={{fontWeight:"bold", fontSize:16, fontFamily: "Gotham-Bold"}}>{item.name}</Text>
@@ -192,15 +194,13 @@ export default class CartScreen extends Component {
                    </View>
                  )
 
-		this.setState({cartTotal:productsTotal})
                })
-
              }
 
            </ScrollView>
 						<View style={styles.footerBar}>
 						<View style={{flex:1, width: width*0.7,  flexDirection:'row',justifyContent: 'space-around', alignItems: 'center', backgroundColor: 'white', borderColor: 'black'}} >
-							<Text allowFontScaling={false} style={{fontFamily: 'Gotham-Bold', color: 'black'}}>TOTAL: RM{}</Text>
+							<Text allowFontScaling={false} style={{fontFamily: 'Gotham-Bold', color: 'black'}}>TOTAL: RM{rmTotal}</Text>
 						</View>
 						<TouchableOpacity 
 							onPress={()=>console.log('checkout')} >

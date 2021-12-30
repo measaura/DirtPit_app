@@ -40,7 +40,7 @@ export default class CommunityScreen extends Component {
 	}
 
 	componentDidMount(){
-		fetch("https://demo.shortcircuitworks.com/dirtpit23/index.php?route=api/category&community")
+		fetch("https://ftwventures.com.my/index.php?route=api/category&community")
 			.then(response => response.json())
 			.then((responseJson)=> {
 			console.log(responseJson)

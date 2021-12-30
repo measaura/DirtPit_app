@@ -20,22 +20,23 @@ import {
 } from 'react-native';
 
 import {
-  Header,
+//   Header,
   LearnMoreLinks,
   Colors,
   DebugInstructions,
   ReloadInstructions,
 } from './app/NewAppScreen';
 
-import AsyncStorage from '@react-native-community/async-storage'
-import {createAppContainer, createSwitchNavigator} from 'react-navigation'
-import { useNavigation } from '@react-navigation/native'
-import {createStackNavigator} from 'react-navigation-stack'
-import {createBottomTabNavigator} from 'react-navigation-tabs'
-import Ionicons from 'react-native-vector-icons/Ionicons'
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
-import firebase from 'react-native-firebase'
-import CookieManager from '@react-native-community/cookies'
+import AsyncStorage from '@react-native-community/async-storage';
+import {createAppContainer, createSwitchNavigator} from 'react-navigation';
+// import { useNavigation } from '@react-navigation/native';
+import {createStackNavigator} from 'react-navigation-stack';
+import {createBottomTabNavigator} from 'react-navigation-tabs';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import firebase from '@react-native-firebase/app';
+import messaging from '@react-native-firebase/messaging';
+import CookieManager from '@react-native-community/cookies';
 
 
 import Login from './app/auth/login'
@@ -83,25 +84,59 @@ class AuthLoadingScreen extends React.Component {
         this._bootstrapAsync()
     }
 
+	reLogin(email, passwd) {
+		const formData = new FormData();
+        console.log('relogin email',email)
+        console.log('relogin passwd',passwd);
+		formData.append("email", email);
+		formData.append("password", passwd);
+		API.login(formData).then(response => {
+			console.log('API.login',response)
+			AsyncStorage.setItem('tokenKey', response.access_token)
+			AsyncStorage.setItem('myLogin', JSON.stringify(response))
+  // 			this.fetchProfile()
+  // 			navigate('Home', {prevScreenTitle: 'Home'})
+        //   this.getCartItems()
+		})
+    return true;
+	}
 
     // Fetch the token from storage then navigate to our appropriate place
     _bootstrapAsync = async () => {
+        console.log('_bootstrapAsync')
+
+        const email = await AsyncStorage.getItem('myEmail')
+        const passwd = await AsyncStorage.getItem('myPass')
 				// Get cookies for a url
-				CookieManager.get('https://demo.shortcircuitworks.com')
+				CookieManager.get('https://ftwventures.com.my')
 					.then((cookies) => {
-					
-						if(cookies.length > 0){
-							console.log('CookieManager.get =>', cookies);
-							console.log(cookies?cookies.default.value:false);
-						}
+                        console.log('cookies',cookies)
+                        if(cookies){
+                            if(cookies.PHPSESSID){
+                                // this.getCartItems(cookies);
+                                // console.log('CookieManager.get =>', cookies);
+                                console.log('default', cookies?cookies.default.value:false);
+                                console.log('PHPSESSID' ,cookies?cookies.PHPSESSID.value:false);
+                                AsyncStorage.setItem('PHPSESSID', cookies.PHPSESSID.value)
+                            }else{
+                                console.log('App relogin')
+                                if(email && passwd){
+                                    this.reLogin(email, passwd)
+                                }
+                                
+                            }
+                        }
+                            
 					});
 
         const userToken = await AsyncStorage.getItem('tokenKey')
+        const PHPSESSID = await AsyncStorage.getItem('PHPSESSID')
+        // console.info('tokenKey', userToken)
         setTimeout(() => {
             // go to Home page
             // This will switch to the App screen or Auth screen and this loading
             // screen will be unmounted and thrown away.
-            this.props.navigation.navigate(userToken ? 'App' : 'Auth')
+            this.props.navigation.navigate(userToken && PHPSESSID ? 'App' : 'Auth')
         }, 200)
     }
 
@@ -125,13 +160,13 @@ class AuthLoadingScreen extends React.Component {
     }
 }
 
-const defaultChannel = new firebase.notifications.Android.Channel(
-    'default-channel',
-    'Default Notification',
-    firebase.notifications.Android.Importance.High,
-	)
-	.setDescription('Default notification for general information')
-	.setSound('default')
+// const defaultChannel = new firebase.messaging.Android.Channel(
+//     'default-channel',
+//     'Default Notification',
+//     firebase.messaging.Android.Importance.High,
+// 	)
+// 	.setDescription('Default notification for general information')
+// 	.setSound('default')
     
 const AuthStack = createStackNavigator(
     {
@@ -170,7 +205,7 @@ const Tabs = createBottomTabNavigator(
                 let IconComponent = Ionicons
                 let iconName
                 if (routeName === 'Home') {
-									iconName = `ios-home`;
+                    iconName = `ios-home`;
                 } else if (routeName === 'Notifications') {
                     iconName = `ios-notifications`;
                 } else if (routeName === 'CartNew') {
@@ -181,12 +216,19 @@ const Tabs = createBottomTabNavigator(
                 // You can return any component that you like here!
                 return <Ionicons name={iconName} size={25} color={tintColor} style={{paddingTop: 0}} />;
             },
+            // tabBarBadge: ({focused, horizontal, tintColor}) => {
+            //     const {routeName} = navigation.state
+            //     if (routeName === 'CartNew') {
+            //         return true;
+            //     }
+            // },
         }),
         tabBarOptions: {
             activeTintColor: Colors.primary,
             inactiveTintColor: 'gray',
             showLabel: false,
             style: {backgroundColor: 'darkgray'},
+            tabBarBadge: 5,
         },
     },
 // )
@@ -273,19 +315,21 @@ const AppContainer = createAppContainer(AppDefault)
 export default class App extends Component {
     async componentDidMount() {
         // Create the channel
-        firebase
-            .notifications()
-            .android.createChannels([
-                defaultChannel,
-            ])
+
+        // firebase
+        //     .notifications()
+        //     .android.createChannels([
+        //         defaultChannel,
+        //     ])
+            
         // 		this.checkUserSignedIn();
         // 		this.checkPermission();
-        this.createNotificationListeners()
+        // this.createNotificationListeners()
     }
 
     componentWillUnmount() {
         // 		this.notificationListener();
-        this.notificationOpenedListener()
+        // this.notificationOpenedListener()
     }
 
     async createNotificationListeners() {
@@ -310,7 +354,7 @@ export default class App extends Component {
                 const {title, body} = notification
                 console.log(notification)
 
-                firebase.notifications().displayNotification(notification)
+                firebase.messaging().displayNotification(notification)
                 //       this.showAlert(title, body);
             })
 
@@ -322,9 +366,9 @@ export default class App extends Component {
             .onNotificationOpened(notificationOpen => {
                 console.log('onBackgroundNotificationOpened')
                 const {title, body} = notificationOpen.notification
-//                 firebase.notifications().displayNotification(JSON.stringify(notificationOpen))
+//                 firebase.messaging().displayNotification(JSON.stringify(notificationOpen))
                       this.showAlert(title, body);
-								firebase.notifications().removeAllDeliveredNotifications()
+								firebase.messaging().removeAllDeliveredNotifications()
             })
 
         /*
@@ -342,7 +386,7 @@ export default class App extends Component {
 //             const {title, body} = notificationOpen.notification
 //         }
 
-				firebase.notifications().removeAllDeliveredNotifications()
+				firebase.messaging().removeAllDeliveredNotifications()
 
         /*
          * Triggered for data only payload in foreground
@@ -357,12 +401,12 @@ export default class App extends Component {
         // To remove and use Notification on both server and app.
 
         this.messageListener = firebase.messaging().onMessage(message => {
-//         	const navigation = useNavigation;
+    //         	const navigation = useNavigation;
             console.log('App.js METHOD: onMessage')
             // Process your message as required
             console.log('message: ', message)
 
-            const newNotification = new firebase.notifications.Notification()
+            const newNotification = new firebase.messaging.Notification()
                 .setNotificationId(message.messageId)
                 .setTitle(message.data.title)
                 .setBody(message.data.body)
@@ -401,26 +445,26 @@ export default class App extends Component {
             } else {
                 newNotification.setSound('default')
             }
-// 
-//             if (message.data.title === 'SOS!') {
-//                 if (Platform.OS === 'android') {
-//                     newNotification
-//                         .setSound(sosChannel.sound)
-//                         .android.setChannelId(sosChannel.channelId)
-//                 } else {
-//                     newNotification.setSound('sos.wav')
-//                 }
-//             }
-//             
-//             if (message.data.title === 'ALERT!') {
-//                 if (Platform.OS === 'android') {
-//                     newNotification
-//                         .setSound(sosChannel.sound)
-//                         .android.setChannelId(geofenceChannel.channelId)
-//                 } else {
-//                     newNotification.setSound('geofence.wav')
-//                 }
-//             }
+    // 
+    //             if (message.data.title === 'SOS!') {
+    //                 if (Platform.OS === 'android') {
+    //                     newNotification
+    //                         .setSound(sosChannel.sound)
+    //                         .android.setChannelId(sosChannel.channelId)
+    //                 } else {
+    //                     newNotification.setSound('sos.wav')
+    //                 }
+    //             }
+    //             
+    //             if (message.data.title === 'ALERT!') {
+    //                 if (Platform.OS === 'android') {
+    //                     newNotification
+    //                         .setSound(sosChannel.sound)
+    //                         .android.setChannelId(geofenceChannel.channelId)
+    //                 } else {
+    //                     newNotification.setSound('geofence.wav')
+    //                 }
+    //             }
 
 
             console.log(
@@ -432,11 +476,11 @@ export default class App extends Component {
 						
             if (message.data.title === 'Notification') {
             						console.log('Notification',message.data.title)
-                firebase.notifications().displayNotification(newNotification)
+                firebase.messaging().displayNotification(newNotification)
             }else{
             	console.log(message.data.title)
             	this.showAlert(message.data.title, message.data.body)
-//             	navigation.navigate('Home')
+    //             	navigation.navigate('Home')
             }
         })
         // end onMessage
