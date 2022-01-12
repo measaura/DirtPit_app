@@ -55,13 +55,13 @@
 		171F765A261BDEF400EB1A58 /* CircularStd-Book.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "CircularStd-Book.otf"; sourceTree = "<group>"; };
 		171F765B261BDEF400EB1A58 /* Circular Std Font.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Circular Std Font.otf"; sourceTree = "<group>"; };
 		6D3A432EB05F4A91B039CC11 /* Pods-DirtPit_app.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DirtPit_app.debug.xcconfig"; path = "Target Support Files/Pods-DirtPit_app/Pods-DirtPit_app.debug.xcconfig"; sourceTree = "<group>"; };
-		7CB5C26524B3055D006E02B4 /* Gotham-Thin.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Gotham-Thin.otf"; sourceTree = SOURCE_ROOT; };
-		7CB5C26624B3055D006E02B4 /* Gotham-Bold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Gotham-Bold.otf"; sourceTree = SOURCE_ROOT; };
-		7CB5C26724B3055D006E02B4 /* Gotham-Italic.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Gotham-Italic.otf"; sourceTree = SOURCE_ROOT; };
-		7CB5C26824B3055D006E02B4 /* Gotham-Medium.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Gotham-Medium.otf"; sourceTree = SOURCE_ROOT; };
-		7CB5C26924B3055D006E02B4 /* Gotham-Book.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Gotham-Book.otf"; sourceTree = SOURCE_ROOT; };
-		7CB5C26A24B3055D006E02B4 /* Gotham-Light.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Gotham-Light.otf"; sourceTree = SOURCE_ROOT; };
-		7CB5C26B24B3055D006E02B4 /* Gotham-Regular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Gotham-Regular.otf"; sourceTree = SOURCE_ROOT; };
+		7CB5C26524B3055D006E02B4 /* Gotham-Thin.otf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Gotham-Thin.otf"; path = "../Gotham-Thin.otf"; sourceTree = "<group>"; };
+		7CB5C26624B3055D006E02B4 /* Gotham-Bold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Gotham-Bold.otf"; path = "../Gotham-Bold.otf"; sourceTree = "<group>"; };
+		7CB5C26724B3055D006E02B4 /* Gotham-Italic.otf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Gotham-Italic.otf"; path = "../Gotham-Italic.otf"; sourceTree = "<group>"; };
+		7CB5C26824B3055D006E02B4 /* Gotham-Medium.otf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Gotham-Medium.otf"; path = "../Gotham-Medium.otf"; sourceTree = "<group>"; };
+		7CB5C26924B3055D006E02B4 /* Gotham-Book.otf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Gotham-Book.otf"; path = "../Gotham-Book.otf"; sourceTree = "<group>"; };
+		7CB5C26A24B3055D006E02B4 /* Gotham-Light.otf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Gotham-Light.otf"; path = "../Gotham-Light.otf"; sourceTree = "<group>"; };
+		7CB5C26B24B3055D006E02B4 /* Gotham-Regular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Gotham-Regular.otf"; path = "../Gotham-Regular.otf"; sourceTree = "<group>"; };
 		7CB5C27524B30E5B006E02B4 /* DirtPit_app.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = DirtPit_app.entitlements; path = DirtPit_app/DirtPit_app.entitlements; sourceTree = "<group>"; };
 		7CB5C27624B323EC006E02B4 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		ABC188513C4BFA24E115D5F7 /* Pods-DirtPit_appTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DirtPit_appTests.release.xcconfig"; path = "Target Support Files/Pods-DirtPit_appTests/Pods-DirtPit_appTests.release.xcconfig"; sourceTree = "<group>"; };
@@ -150,6 +150,10 @@
 		7CB5C26424B3053F006E02B4 /* fonts */ = {
 			isa = PBXGroup;
 			children = (
+				171F765B261BDEF400EB1A58 /* Circular Std Font.otf */,
+				171F7659261BDEF400EB1A58 /* CircularStd-Black.otf */,
+				171F7658261BDEF400EB1A58 /* CircularStd-Bold.otf */,
+				171F765A261BDEF400EB1A58 /* CircularStd-Book.otf */,
 				7CB5C26624B3055D006E02B4 /* Gotham-Bold.otf */,
 				7CB5C26924B3055D006E02B4 /* Gotham-Book.otf */,
 				7CB5C26724B3055D006E02B4 /* Gotham-Italic.otf */,
@@ -171,10 +175,6 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
-				171F765B261BDEF400EB1A58 /* Circular Std Font.otf */,
-				171F7659261BDEF400EB1A58 /* CircularStd-Black.otf */,
-				171F7658261BDEF400EB1A58 /* CircularStd-Bold.otf */,
-				171F765A261BDEF400EB1A58 /* CircularStd-Book.otf */,
 				7CB5C27624B323EC006E02B4 /* GoogleService-Info.plist */,
 				7CB5C26424B3053F006E02B4 /* fonts */,
 				13B07FAE1A68108700A75B9A /* DirtPit_app */,
@@ -568,7 +568,7 @@
 				CODE_SIGN_ENTITLEMENTS = DirtPit_app/DirtPit_app.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 3;
 				DEAD_CODE_STRIPPING = NO;
 				DEVELOPMENT_TEAM = VNJL987Z9J;
 				INFOPLIST_FILE = DirtPit_app/Info.plist;
@@ -594,7 +594,7 @@
 				CODE_SIGN_ENTITLEMENTS = DirtPit_app/DirtPit_app.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 3;
 				DEVELOPMENT_TEAM = VNJL987Z9J;
 				INFOPLIST_FILE = DirtPit_app/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;

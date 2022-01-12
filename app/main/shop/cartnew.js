@@ -12,6 +12,7 @@ import {
   Dimensions,
   TouchableOpacity,
   ActivityIndicator,
+  Alert,
   Animated,
   Easing,
 } from 'react-native';
@@ -23,6 +24,7 @@ import NumberFormat from 'react-number-format'
 import { NavigationEvents } from 'react-navigation'
 import API from "../../helper/APIController";
 import DeviceInfo from 'react-native-device-info'
+import { isTemplateMiddle } from 'typescript';
 var iPhoneX = DeviceInfo.hasNotch()
 
 const {width, height} = Dimensions.get('window')
@@ -33,75 +35,6 @@ const randomHexColor = () => {
   });
 };
 
-const list =[
-  {
-    "totals": [
-      {
-        "text": "RM3,109.00", 
-        "title": "Sub-Total"
-      }, 
-      {
-        "text": "RM3,109.00", 
-        "title": "Total"
-      }
-    ], 
-    "products": [
-      {
-        "total": "RM96.00", 
-        "option": [], 
-        "price": "RM48.00", 
-        "thumb": "https://ftwventures.com.my/image/cache/catalog/Motorex/Bike%20Clean%20500ml-47x47.jpg", 
-        "model": "CLEAN AND CARE", 
-        "quantity": "2", 
-        "recurring": "", 
-        "cart_id": "47", 
-        "name": "MOTOREX BIKE CLEAN 500ml"
-      }, 
-      {
-        "total": "RM1,998.00", 
-        "option": [
-          {
-            "type": "select", 
-            "name": "Size", 
-            "value": "11 - 13"
-          }
-        ], 
-        "price": "RM999.00", 
-        "thumb": "https://ftwventures.com.my/image/cache/catalog/LIFESTYLE/JACKET/LEGION%20JACKET%20[BLK]%20-1-47x47.jpeg", 
-        "model": "JACKETS", 
-        "quantity": "2", 
-        "recurring": "", 
-        "cart_id": "53", 
-        "name": "LEGION JACKET [BLK] "
-      }, 
-      {
-        "total": "RM516.00", 
-        "option": [], 
-        "price": "RM129.00", 
-        "thumb": "https://ftwventures.com.my/image/cache/catalog/LIFESTYLE/TEES/TLD/ADDICT%20TEE;%20ONYX%20SNOW/ADDICT%20TEE-47x47.jpg", 
-        "model": "SHORT SLEEVES", 
-        "quantity": "4", 
-        "recurring": "", 
-        "cart_id": "56", 
-        "name": "ADDICT TEE; ONYX SNOW LG"
-      }, 
-      {
-        "total": "RM499.00", 
-        "option": [], 
-        "price": "RM499.00", 
-        "thumb": "https://ftwventures.com.my/image/cache/catalog/MX%20APPARELS/HELMET/FLY/FLY%20KINETIC%20FLEX%20PINK.BK.WH/Untitled-1-07-47x47.jpg", 
-        "model": "FLY KINETIC", 
-        "quantity": "1", 
-        "recurring": "", 
-        "cart_id": "57", 
-        "name": "FLY KINETIC FLEX PINK/BK/WH "
-      }
-    ], 
-    "vouchers": [], 
-    "text_items": "9 item(s) - RM3,109.00", 
-    "item_count": 9
-  }
-];
 export default class CartNewScreen extends Component {
   constructor(props) {
      super(props);
@@ -226,7 +159,8 @@ export default class CartNewScreen extends Component {
 					.then(result =>{
             // console.log('ewcart getcartitem', result)
 						this.setState({
-							newCart: result[0].products,
+              asyncCart: result[0].products,
+							// newCart: result[0].products,
 							cartTotal: result[0].totals,
               isLoading: false,
 						})
@@ -256,11 +190,11 @@ export default class CartNewScreen extends Component {
 		// this.getCartItems()
   	this.spin()
 		// this.checkLogin();
-    console.warn('componentDidMount');
+    // console.warn('componentDidMount');
     AsyncStorage.getItem('cart', (err,value) => {
       if(!err && value != null){
         const asCart = JSON.parse(value)
-        console.log('cart', asCart[0].products)
+        // console.log('cart', asCart[0].products)
         this.setState({
           isLoading: false,
           asyncCart: asCart[0].products,
@@ -269,7 +203,7 @@ export default class CartNewScreen extends Component {
     });
 		AsyncStorage.getItem("tokenKey", (err, value) => {
 				if (!err && value != null) {
-          console.log('tokenKey: '+value);
+          // console.log('tokenKey: '+value);
 						this.setState({ tokenKey: value });
 				} else {
 				}
@@ -300,7 +234,7 @@ export default class CartNewScreen extends Component {
 							newCart: result[0].products,
 							cartTotal: result[0].totals,
 						})
-					console.log(result[0].products)
+					// console.log(result[0].products)
 					})
 					.catch(error => console.log('error', error));
 					
@@ -313,10 +247,54 @@ export default class CartNewScreen extends Component {
   //     navigation.state.params.updateCount({itemCount:4});
   }
   
+  saveCart(item) {
+    const {  navigation, route  } = this.props;
+    
+    console.log('saveCart items', item)
+    navigation.navigate('Checkout')
+  }
+
+  editCart(cart_id, quantity){
+    console.log('cart_id',cart_id)
+    console.log('quantity',quantity)
+    var dataForm = new FormData();
+    if(quantity==0){
+      func="remove";
+      dataForm.append("key", cart_id);
+    }else{
+      func="edit";
+      dataForm.append("key", cart_id);
+      dataForm.append("quantity", quantity);
+    }
+    //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+			
+      var myHeaders = new Headers();
+      var requestOptions = {
+        method: 'POST',
+        headers: myHeaders,
+        redirect: 'follow',
+        body: dataForm
+      };
+
+      fetch("https://ftwventures.com.my/index.php?route=api/usercart/"+func, requestOptions)
+        .then(response =>response.json())
+        .then(result =>{
+
+          // this.setState({
+          //   newCart: result[0].products,
+          //   cartTotal: result[0].totals,
+          // })
+        console.log(result)
+        })
+        .catch(error => console.log('error', error));
+            
+    //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++	
+  }
+
   renderOptions(item) {
-    console.log('options' ,item.item)
+    // console.log('options' ,item.item)
   	if (item.item.option.length > 0) {
-  	console.log(item.item.option[0].name)
+  	// console.log(item.item.option[0].name)
 			return(
 					<Text allowFontScaling={false} style={styles.rowQty}>
 						{item.item.option[0].name}{': '}{item.item.option[0].value}
@@ -343,6 +321,8 @@ export default class CartNewScreen extends Component {
 	const {navigate} = this.props.navigation
   //   var rmTotal=this.state.cartTotal.toFixed(2)
  const grandTotal = []
+ const grandQtyTotal = []
+//  var qtyTotal = 0
   //  var list = this.state.newCart.filter(item => item.products)
     if(!this.state.isLoading){
       if (this.state.asyncCart.length >0){
@@ -372,13 +352,25 @@ export default class CartNewScreen extends Component {
                 data={this.state.asyncCart}
                 contentContainerStyle={{ flexGrow: 1 }}
                 ItemSeparatorComponent = { this.FlatListItemSeparator }
-                keyExtractor={item=>item.cart_id}
-                renderItem={item => (
-        // 							if ({item.item.top} == 1){
-                      <TouchableOpacity
-                          onPress={() =>
-                              console.log(item.item.name)
-                          }
+                keyExtractor={(item,index)=>item.cart_id}
+                renderItem={(item, index) => {
+                    var price = Number(item.item.price.replace(/^RM|,/g,""))*Number(item.item.quantity);
+                    // console.log('price '+Number(item.item.price.replace(/^RM|,/g,"")))
+                    var itemprice = price;
+                    const total = {
+                      prodTot: itemprice,
+                    }
+
+                    grandTotal.push(total)
+                    // console.log('graTotal '+JSON.stringify(grandTotal))
+                    const productsTotal = grandTotal.reduce((total, meal) => total + Number(meal.prodTot), 0)
+                    // console.log('total '+productsTotal); // 45 calories
+                    rmTotal = productsTotal.toFixed(2);
+                    // console.log('rmTotal: '+rmTotal.replace(/\B(?=(\d{3})+(?!\d))/g, ","));
+
+                    // AsyncStorage.setItem('totalQty',qtyTotal)
+                    return (
+                      <View
                           style={styles.rowWrap}>
                           <Image
                               source={{uri: item.item.thumb}}
@@ -388,36 +380,57 @@ export default class CartNewScreen extends Component {
                               <Text allowFontScaling={false} style={styles.rowMessage}>
                                 {item.item.name}{' '}
                               </Text>
-                              <Text allowFontScaling={false} style={styles.rowQty}>
-                                Quantity: {item.item.quantity}{' '}
+
+                         <View style={{flexDirection:'row'}}>
+                              <Text allowFontScaling={false} style={{ fontSize:15, color:'black',textAlignVertical:'center'}}>
+                                Quantity: {' '}
                               </Text>
+                           <TouchableOpacity onPress={()=>this.onChangeQuan(item.index,false)}>
+                             <Ionicons name="ios-remove-circle-outline" size={20} color={"#33c37d"} />
+                           </TouchableOpacity>
+                           <Text style={{paddingHorizontal:6,fontSize:16}}>{item.item.quantity}</Text>
+                           <TouchableOpacity onPress={()=>this.onChangeQuan(item.index,true)}>
+                             <Ionicons name="ios-add-circle-outline" size={20} color={"#33c37d"} />
+                           </TouchableOpacity>
+                         </View>
+
                               {this.renderOptions(item)}
                               <Text allowFontScaling={false} style={styles.rowTime}>
-                                {item.item.total}{' '}
+                                RM{itemprice.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}{' '}
                               </Text>
                           </View>
 
-                      </TouchableOpacity>							
+                      </View>							
 
-                  )}
+                  )}}
               />
                 <View style={styles.footerBar}>
-                  {this.state.cartTotal.map((item)=>{
-                    return(
-                      <View key={item.title} style={{flex:1, width: width+3, height:40,  flexDirection:'row', alignItems: 'center', justifyContent: 'flex-end', marginBottom:-1, marginLeft:-1, borderWidth:1, borderColor: 'black'}} >
-                        <Text allowFontScaling={false} style={{fontFamily: 'Gotham-Medium', color: 'black', justifyContent: 'flex-start', paddingRight: 10}}>{item.title}: </Text>
-                        <Text allowFontScaling={false} style={{fontFamily: 'Gotham-Bold', color: 'black', justifyContent: 'flex-end', paddingRight: 10}}>{item.text}</Text>
-                      </View>
-                    )
-                  })}
-                  <View style={{ width: width, height:50, flexDirection:'row',justifyContent: 'space-around', alignItems: 'center',}} >
-                    <TouchableOpacity 
-                      onPress={()=>navigate('Checkout')} >
-                        <View style={{flex:1, width: width+5, marginLeft:1,  flexDirection:'row',justifyContent: 'space-around', alignItems: 'center', backgroundColor: 'yellow', borderWidth: 2, borderColor: 'black'}} >
-                          <Text allowFontScaling={false} style={{fontFamily: 'Gotham-Bold',fontSize: 18, color: 'black'}}>CHECKOUT</Text>
+                  {this.state.asyncCart.map((item)=>{
+                    // console.log('syncCart', this.state.asyncCart.length)
+                    var itemcount = Number(item.quantity);
+                    // console.log('itemcout',itemcount)
+                    const qtyCount = {qtyTot: itemcount,}
+                    grandQtyTotal.push(qtyCount)
+                    // console.log('grandQtyTotal',JSON.stringify(grandQtyTotal))
+                    const qtyTotal = grandQtyTotal.reduce((qtotal, basket) => qtotal + Number(basket.qtyTot), 0)
+                    // console.log('qtyTotal '+qtyTotal);
+                    if(grandQtyTotal.length == this.state.asyncCart.length){return(
+                      <View>
+                        <View key={item.title} style={{flex:1, width: width+3, height:40,  flexDirection:'row', alignItems: 'center', justifyContent: 'flex-end', marginBottom:-1, marginLeft:-1, borderWidth:1, borderColor: 'black'}} >
+                          <Text allowFontScaling={false} style={{fontFamily: 'Gotham-Medium', color: 'black', justifyContent: 'flex-start', paddingRight: 10}}>{item.title}: </Text>
+                          <Text allowFontScaling={false} style={{fontFamily: 'Gotham-Bold', color: 'black', justifyContent: 'flex-end', paddingRight: 10}}>{item.text}</Text>
                         </View>
-                    </TouchableOpacity>
-                  </View>
+                        <View style={{ width: width, height:50, flexDirection:'row',justifyContent: 'space-around', alignItems: 'center',bottom:0,}} >
+                          <TouchableOpacity 
+                            onPress={()=>this.saveCart(item)} >
+                              <View style={{flex:1, width: width+5, marginLeft:1,  flexDirection:'row',justifyContent: 'space-around', alignItems: 'center', backgroundColor: 'yellow', borderWidth: 2, borderColor: 'black'}} >
+                                <Text allowFontScaling={false} style={{fontFamily: 'Gotham-Bold',fontSize: 18, color: 'black'}}>CHECKOUT ({qtyTotal})</Text>
+                              </View>
+                          </TouchableOpacity>
+                        </View>
+                      </View>
+                    )}
+                  })}
                 </View>
 
             </View>
@@ -472,22 +485,44 @@ export default class CartNewScreen extends Component {
 
   onChangeQuan(i,type)
   {
-    const dataCar = this.state.dataCart
-    let cantd = dataCar[i].quantity;
+    const dataCar = this.state.asyncCart
+    // console.log('i',i)
+    let cantd = Number(dataCar[i].quantity);
 
     if (type) {
      cantd = cantd + 1
      dataCar[i].quantity = cantd
      this.setState({dataCart:dataCar})
+     this.editCart(dataCar[i].cart_id,cantd)
     }
     else if (type==false&&cantd>=2){
      cantd = cantd - 1
      dataCar[i].quantity = cantd
      this.setState({dataCart:dataCar})
+     this.editCart(dataCar[i].cart_id,cantd)
     }
     else if (type==false&&cantd==1){
-     dataCar.splice(i,1)
-     this.setState({dataCart:dataCar})
+      return Alert.alert(
+        "Confirm",
+        "Are you sure you want to remove this item from your cart?",
+        [
+          // The "Yes" button
+          {
+            text: "Yes",
+            onPress: () => {
+              cantd = 0
+              this.editCart(dataCar[i].cart_id,cantd)
+              dataCar.splice(i,1)
+              this.setState({dataCart:dataCar})
+            },
+          },
+          // The "No" button
+          // Does nothing but dismiss the dialog when tapped
+          {
+            text: "No",
+          },
+        ]
+      );
     }
 	 AsyncStorage.setItem('cart',JSON.stringify(dataCar));
   }
@@ -645,7 +680,8 @@ const styles = StyleSheet.create({
 		footerBar: {
 			left: 0,
 			bottom: 0,
-			height: Platform.OS == 'ios' ? iPhoneX ? 100:90 : 120,
+			height: Platform.OS == 'ios' ? iPhoneX ? 100:50 : 120,
 			flexDirection: 'column',
+      backgroundColor: 'green',
 		},
 });

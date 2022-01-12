@@ -125,7 +125,7 @@ export default class PaymentScreen extends Component {
 			const {navigate} = this.props.navigation
 			return (
 					<TouchableOpacity onPress={()=>this.goBack()}>
-							<Ionicons name={'ios-arrow-dropleft-circle'} size={30} color={'yellow'} style={{paddingTop: 0}} />
+							<Ionicons name={'ios-arrow-back-circle'} size={30} color={'yellow'} style={{paddingTop: 0}} />
 					</TouchableOpacity>
 			);
 	}

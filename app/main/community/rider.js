@@ -57,6 +57,7 @@ export default class CommunityRidersScreen extends Component {
 			{
 				toValue: 1,
 				duration: 1500,
+				useNativeDriver: true,
 				easing: Easing.linear
 			}
 		).start(() => this.spin())
@@ -270,7 +271,7 @@ export default class CommunityRidersScreen extends Component {
 			const {navigate} = this.props.navigation
 			return (
 					<TouchableOpacity onPress={() => this.props.navigation.goBack()}>
-							<Ionicons name={'ios-arrow-dropleft-circle'} size={30} color={'yellow'} style={{paddingTop: 0}} />
+							<Ionicons name={'ios-arrow-back-circle'} size={30} color={'yellow'} style={{paddingTop: 0}} />
 					</TouchableOpacity>
 			);
 	}
@@ -317,9 +318,9 @@ export default class CommunityRidersScreen extends Component {
 									source={{uri: this.state.modalimg}}
 									style={styles.imageLarge}
 							/>
-							<View style={{height:(height*0.15)+10}} >
+							<View style={{height:(height*0.15)}} >
 								<FlatList
-										style={{flex:1, flexDirection: 'row', width: width, paddingTop: 0, paddingBottom: 0, backgroundColor: "#ffffff"}}
+										style={{flex:1, flexDirection: 'row', width: width, paddingTop: 0, paddingBottom: 0, backgroundColor: "#ccc"}}
 										horizontal={true}
 										data={this.state.riderGallery}
 										renderItem={({item,index}) => 
@@ -451,7 +452,7 @@ export default class CommunityRidersScreen extends Component {
 											Platform.OS == 'ios' ? 0 : -20,
 									top:
 											Platform.OS == 'ios' ? (iPhoneX ? -10 : 0) : -5,
-									height: Platform.OS == 'ios' ? (iPhoneX ? 90 : 0) : 70,
+									height: Platform.OS == 'ios' ? (iPhoneX ? 90 : 95) : 70,
 							}}
 					/>
 
@@ -515,7 +516,7 @@ export default class CommunityRidersScreen extends Component {
 										<Text allowFontScaling={false} style={{fontFamily: 'Gotham-Bold', fontSize: 16, paddingTop: 20, paddingRight: 5}}>
 												MORE...
 										</Text>
-										<Ionicons name={'ios-arrow-dropright-circle'} size={30} color={'black'} style={{top: -6, paddingTop: 20, paddingRight:10}} />
+										<Ionicons name={'ios-arrow-forward-circle'} size={30} color={'black'} style={{top: -6, paddingTop: 20, paddingRight:10}} />
 									</View>
 								</TouchableOpacity>
 							</View>
@@ -706,18 +707,18 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     height: height*0.5,
-    width: '95%',
+    width: '98%',
     padding: 2,
-    margin: 8
+    margin: 4
   },
   imageThumb: {
     justifyContent: 'center',
     alignItems: 'center',
     height: height*0.15,
     width: height*0.15,
-    padding: 2,
-    marginTop: 5,
-    borderWidth: 5,
+    padding: 1,
+    marginTop: 0,
+    borderWidth: 1,
     borderColor: '#fff',
   },
   imageMenu: {
@@ -747,6 +748,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#fff',
+	top: 35,
   },
   closeButtonStyle: {
     width: 40,

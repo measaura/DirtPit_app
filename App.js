@@ -75,6 +75,7 @@ import CommunityRidersScreen from './app/main/community/rider'
 import ConceptList from './app/main/concept'
 import ConceptScreen from './app/main/concept/conceptshop'
 import Profile from './app/main/profile'
+import EditDetailsScreen from './app/auth/edit_details';
 import Notifications from './app/main/notifications'
 // import Slider from './app/main/component'
 
@@ -271,24 +272,8 @@ const AppModalStack = createStackNavigator(
         CartNew: CartNewScreen,
         Checkout: CheckoutScreen,
         Payment: PaymentScreen,
-//         Slider: Slider,
-//         UserList: UserList,
-//         TrackingHistory: TrackingHistory,
-//         EditProfile: EditProfile,
-//         UserSettings: UserSettings,
-//         Contact: Contact,
-//         AddContact: AddContact,
-//         AboutDevice: AboutDevice,
-//         EditContact: EditContact,
-//         EditManager: EditManager,
-//         AddDevice: AddDevice,
-//         AddDeviceDetail: AddDeviceDetail,
-//         UserDetailHide: UserDetailHide,
-//         Geofence: Geofence,
         Login: Login,
-//         QrScanner: QrScanner,
-//         TZFlatList: TZFlatList,
-//         AddZone: AddZone,
+        EditDetails: EditDetailsScreen,
     },
     {
         mode: 'modal',

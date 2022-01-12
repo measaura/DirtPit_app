@@ -53,6 +53,7 @@ export default class CommunityGnsScreen extends Component {
 			{
 				toValue: 1,
 				duration: 1500,
+				useNativeDriver: true,
 				easing: Easing.linear
 			}
 		).start(() => this.spin())
@@ -105,7 +106,7 @@ export default class CommunityGnsScreen extends Component {
 			const {navigate} = this.props.navigation
 			return (
 					<TouchableOpacity onPress={() => this.props.navigation.goBack()}>
-							<Ionicons name={'ios-arrow-dropleft-circle'} size={30} color={'yellow'} style={{paddingTop: 0}} />
+							<Ionicons name={'ios-arrow-back-circle'} size={30} color={'yellow'} style={{paddingTop: 0}} />
 					</TouchableOpacity>
 			);
 	}
@@ -160,7 +161,7 @@ console.log(this.state.dataSource[0].image)
 								onPress={() => {
 									this.showModal(!this.state.ModalVisibleStatus,'');
 								}}>
-								<Ionicons name={'ios-close-circle'} size={40} color={'yellow'} style={{ width: 40, height: 40,  right: -4, alignItem: 'center', justifyContent: 'center',  }} />
+								<Ionicons name={'ios-close-circle'} size={40} color={'yellow'} style={{ width: 40, height: 40,  right: -4, top:30, alignItem: 'center', justifyContent: 'center',  }} />
 							</TouchableOpacity>
 						</View>
 					</Modal>
@@ -179,7 +180,7 @@ console.log(this.state.dataSource[0].image)
 												Platform.OS == 'ios' ? 0 : -20,
 										top:
 												Platform.OS == 'ios' ? (iPhoneX ? -10 : 0) : -5,
-										height: Platform.OS == 'ios' ? (iPhoneX ? 90 : 0) : 70,
+										height: Platform.OS == 'ios' ? (iPhoneX ? 90 : 95) : 70,
 								}}
 						/>
 

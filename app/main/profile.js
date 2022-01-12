@@ -59,7 +59,9 @@ export default class Profile extends React.Component {
         BackHandler.addEventListener("backPress", this.handleBackButton);
         AsyncStorage.getItem("tokenKey", (err, value) => {
             if (!err && value != null) {
-                this.setState({ tokenKey: value }, this.connectAPI);
+                this.setState(
+                    { tokenKey: value },
+                    this.connectAPI);
             } else {
             }
         });

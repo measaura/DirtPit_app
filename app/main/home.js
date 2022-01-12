@@ -30,6 +30,8 @@ import {
   ReloadInstructions,
 } from '../NewAppScreen';
 
+import ProgressiveImage from '../helper/ProgressiveImage';
+
 import { Header } from "react-native-elements";
 import { SliderBox } from "react-native-image-slider-box"
 import Ionicons from 'react-native-vector-icons/Ionicons'
@@ -66,7 +68,6 @@ export default class HomeScreen extends React.Component {
 			loading: true,
 			images: []
 		};
-		this.getCartItems();
 	}
 
     getCartItems() {
@@ -168,6 +169,7 @@ export default class HomeScreen extends React.Component {
 	
 	componentDidMount() {
   	this.spin()
+	  this.getCartItems();
 	console.log('\nwidth: '+width+'\nheight: '+height+'\nStatusBar: '+statusBarHeight)
 // 	console.log('statusbar height '+StatusBar.currentHeight+', navbarHeight: '+navbarHeight)
 
@@ -193,7 +195,10 @@ export default class HomeScreen extends React.Component {
 	// TODO _renderItem()
 	_renderItem({item, index}) {
 // 	console.warn(item.image); 
-		return <Image source={{uri: item.image}} style={{ width: width, height: sliderHeight, resizeMode: 'stretch'}} />
+		return <ProgressiveImage 
+			thumbnailSource={require('../images/DirtPit_thumb_350.png')}
+			source={{uri: item.image}} 
+			style={{ width: width, height: sliderHeight, resizeMode: 'stretch'}} />
 	}
 	// TODO _keyExtractor()
 	_keyExtractor(item, index) {

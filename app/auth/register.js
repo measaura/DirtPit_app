@@ -42,7 +42,7 @@ export default class Register extends React.Component {
             statefield: '',
             zonedone: false,
             countrybefore: '',
-            submitBtn: true
+            submitBtn: false
         };
     }
 
@@ -52,6 +52,7 @@ export default class Register extends React.Component {
 		};
 
     filterField() {
+        console.log('in filterfield')
         let passedFirstname = this.state.firstnamefield;
         let passedLastname = this.state.lastnamefield;
         let passedEmail = this.state.emailfield;
@@ -75,9 +76,9 @@ export default class Register extends React.Component {
             this.refs.emailfieldRef.focus();
         } else if (!this.validateEmail(passedEmail)) {
 			Alert.alert("Please enter a valid email address")
-		}else if (passedPhone == "") {
-            Alert.alert("Please enter your phone number.");
-            this.refs.phonefieldRef.focus();
+		// }else if (passedPhone == "") {
+        //     Alert.alert("Please enter your phone number.");
+        //     this.refs.phonefieldRef.focus();
         } else if (passedPassword == "") {
             Alert.alert("Please enter your password.");
             this.refs.passwordfieldRef.focus();
@@ -89,23 +90,24 @@ export default class Register extends React.Component {
         } else if (passedPassword.length < 4 || passedPassword.length >20) {
             Alert.alert("Password must be between 4 and 20 characters!");
             this.refs.passwordfieldRef.focus();
-        } else if (passedAddress1 == "") {
-            Alert.alert("Please enter your address.");
-            this.refs.address1fieldRef.focus();
-        } else if (passedAddress1.length < 3 || passedAddress1.length >128) {
-            Alert.alert("Address 1 must be between 3 and 128 characters!");
-            this.refs.address1fieldRef.focus();
-        } else if (passedCity == "") {
-            Alert.alert("Please enter your city.");
-            this.refs.cityfieldRef.focus();
-        } else if (passedCity.length < 2 || passedCity.length >128) {
-            Alert.alert("City must be between 2 and 128 characters!");
-            this.refs.cityfieldRef.focus();
-        } else if (passedCountry == "") {
-            Alert.alert("Please select your country.");
-        } else if ((this.state.stateoption.length > 0) && passedState == "") {
-            Alert.alert("Please select your state.");
+        // } else if (passedAddress1 == "") {
+        //     Alert.alert("Please enter your address.");
+        //     this.refs.address1fieldRef.focus();
+        // } else if (passedAddress1.length < 3 || passedAddress1.length >128) {
+        //     Alert.alert("Address 1 must be between 3 and 128 characters!");
+        //     this.refs.address1fieldRef.focus();
+        // } else if (passedCity == "") {
+        //     Alert.alert("Please enter your city.");
+        //     this.refs.cityfieldRef.focus();
+        // } else if (passedCity.length < 2 || passedCity.length >128) {
+        //     Alert.alert("City must be between 2 and 128 characters!");
+        //     this.refs.cityfieldRef.focus();
+        // } else if (passedCountry == "") {
+        //     Alert.alert("Please select your country.");
+        // } else if ((this.state.stateoption.length > 0) && passedState == "") {
+        //     Alert.alert("Please select your state.");
         } else {
+            console.log('passed filter')
         	this.validateEmail(passedEmail);
             this.validate();
         }
@@ -150,7 +152,7 @@ export default class Register extends React.Component {
 			body: formdata,
 			redirect: 'follow'
 		};
-// console.log('submit', formdata)
+        // console.log('submit', formdata)
 		fetch("https://ftwventures.com.my/index.php?route=api/userregister", requestOptions)
 			.then(response => response.json())
 			.then(json =>{
@@ -207,7 +209,7 @@ export default class Register extends React.Component {
 								value: item.zone_id
 						})
 					)
-// console.log('zone',zonetemp.length)
+                    // console.log('zone',zonetemp.length)
 
 					this.setState({
 						stateoption: zonetemp,
@@ -229,11 +231,11 @@ export default class Register extends React.Component {
 							fontFamily: 'Gotham-Bold',
 							fontSize: 18,
 							textAlign: 'left',
-							color: 'dark-grey'
+							color: 'darkgrey'
 					}}
 					onChangeItem={item => this.setState({
 							statefield: item.value,
-							submitBtn: false
+							// submitBtn: false
 					})}
 			/>
 				)
@@ -280,7 +282,7 @@ export default class Register extends React.Component {
 												Platform.OS == 'ios' ? 0 : -20,
 										top:
 												Platform.OS == 'ios' ? (notch ? -10 : 0) : 0,
-										height: Platform.OS == 'ios' ? (notch ? 90 : 0) : 70,
+										height: Platform.OS == 'ios' ? (notch ? 90 : 95) : 70,
 								}}
 						/>
                 <ScrollView
@@ -307,7 +309,7 @@ export default class Register extends React.Component {
                             style={styles.inputStyles}
                             placeholder="First Name *"
                             underlineColorAndroid="transparent"
-                            placeholderTextColor="dark-grey"
+                            placeholderTextColor="darkgrey"
                         />
                     </View>
                     <View style={styles.wrapField}>
@@ -324,7 +326,7 @@ export default class Register extends React.Component {
                             style={styles.inputStyles}
                             placeholder="Last Name *"
                             underlineColorAndroid="transparent"
-                            placeholderTextColor="dark-grey"
+                            placeholderTextColor="darkgrey"
                         />
                     </View>
                     <View style={styles.wrapField}>
@@ -341,11 +343,11 @@ export default class Register extends React.Component {
                             style={styles.inputStyles}
                             placeholder="Email *"
                             underlineColorAndroid="transparent"
-                            placeholderTextColor="dark-grey"
+                            placeholderTextColor="darkgrey"
                             keyboardType="email-address"
                         />
                     </View>
-                    <View style={styles.wrapField}>
+                    {/* <View style={styles.wrapField}>
                         <Image
                             source={require("../images/icoPhone.png")}
                             style={styles.fieldIco}
@@ -359,10 +361,10 @@ export default class Register extends React.Component {
                             style={styles.inputStyles}
                             placeholder="Mobile Number *"
                             underlineColorAndroid="transparent"
-                            placeholderTextColor="dark-grey"
+                            placeholderTextColor="darkgrey"
                             keyboardType="phone-pad"
                         />
-                    </View>
+                    </View> */}
                     <View style={styles.wrapField}>
                         <Image
                             source={require("../images/icoPassword.png")}
@@ -378,7 +380,7 @@ export default class Register extends React.Component {
                             style={styles.inputStyles}
                             placeholder="Password *"
                             underlineColorAndroid="transparent"
-                            placeholderTextColor="dark-grey"
+                            placeholderTextColor="darkgrey"
                         />
                     </View>
                     <View style={styles.wrapField}>
@@ -396,12 +398,12 @@ export default class Register extends React.Component {
                             style={styles.inputStyles}
                             placeholder="Confirm Password *"
                             underlineColorAndroid="transparent"
-                            placeholderTextColor="dark-grey"
+                            placeholderTextColor="darkgrey"
                         />
                     </View>
-										<View>
-											<Text style={{fontFamily: 'Gotham-Bold', fontSize: 16, paddingTop:15,}}>Address</Text>
-										</View>		
+                    {/* <View>
+                        <Text style={{fontFamily: 'Gotham-Bold', fontSize: 16, paddingTop:15,}}>Address</Text>
+                    </View>		
                     <View style={styles.wrapField}>
                         <Image
                             source={require("../images/icoUser.png")}
@@ -416,7 +418,7 @@ export default class Register extends React.Component {
                             style={styles.inputStyles}
                             placeholder="Company"
                             underlineColorAndroid="transparent"
-                            placeholderTextColor="dark-grey"
+                            placeholderTextColor="darkgrey"
                         />
                     </View>
                     <View style={styles.wrapField}>
@@ -433,7 +435,7 @@ export default class Register extends React.Component {
                             style={styles.inputStyles}
                             placeholder="Address 1 *"
                             underlineColorAndroid="transparent"
-                            placeholderTextColor="dark-grey"
+                            placeholderTextColor="darkgrey"
                         />
                     </View>
                     <View style={styles.wrapField}>
@@ -450,7 +452,7 @@ export default class Register extends React.Component {
                             style={styles.inputStyles}
                             placeholder="Address 2"
                             underlineColorAndroid="transparent"
-                            placeholderTextColor="dark-grey"
+                            placeholderTextColor="darkgrey"
                         />
                     </View>
                     <View style={styles.wrapField}>
@@ -467,7 +469,7 @@ export default class Register extends React.Component {
                             style={styles.inputStyles}
                             placeholder="City *"
                             underlineColorAndroid="transparent"
-                            placeholderTextColor="dark-grey"
+                            placeholderTextColor="darkgrey"
                         />
                     </View>
                     <View style={styles.wrapField}>
@@ -484,7 +486,7 @@ export default class Register extends React.Component {
                             style={styles.inputStyles}
                             placeholder="Postcode"
                             underlineColorAndroid="transparent"
-                            placeholderTextColor="dark-grey"
+                            placeholderTextColor="darkgrey"
                             keyboardType="number-pad"
                         />
                     </View>
@@ -500,7 +502,7 @@ export default class Register extends React.Component {
 								fontFamily: 'Gotham-Bold',
 								fontSize: 18,
 								textAlign: 'left',
-								color: 'dark-grey'
+								color: 'darkgrey'
 						}}
 						onChangeItem={item => this.setState({
 								countryfield: item.value,
@@ -508,10 +510,10 @@ export default class Register extends React.Component {
 						})}
 					/>
 					
-					{this.renderZone()}
+					{this.renderZone()} */}
 
                     <TouchableOpacity
-                    		disabled={this.state.submitBtn}
+                        disabled={this.state.submitBtn}
                         style={styles.signInBut}
                         onPress={this.filterField.bind(this)}
                     >

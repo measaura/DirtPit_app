@@ -149,7 +149,7 @@ export default class ProductScreen extends Component {
 			price: itemprice
 		}
 		
-		console.log(this.state.didSelected)
+		console.log('didSelected',this.state.didSelected)
 		if (this.state.optionItems.length > 0) {
 		console.log('option selected',JSON.stringify(this.state.optionSelected.selected))
 			if (this.state.optionSelected.selected){
@@ -159,7 +159,8 @@ export default class ProductScreen extends Component {
 // 					 console.log(datacart)
 					 const cart = JSON.parse(datacart)
 						const existingItem = cart.find((item) => {
-							return itemcart.shop.product_id === item.shop.product_id;
+							console.log(item)
+							return itemcart.shop.product_id === item.product_id;
 						});
 
 						if(existingItem) {
@@ -237,10 +238,10 @@ export default class ProductScreen extends Component {
 				AsyncStorage.getItem('cart').then((datacart)=>{
 				 if (datacart !== null) {
 					 // We have data!!
-					 console.log(datacart)
+					 console.log('datecart',datacart)
 					 const cart = JSON.parse(datacart)
 						const existingItem = cart.find((item) => {
-							return itemcart.shop.product_id === item.shop.product_id;
+							return itemcart.shop.product_id === item.product_id;
 						});
 
 						if(existingItem) {
@@ -563,7 +564,7 @@ console.log('statusbar',navbarHeight)
 								 <TouchableOpacity onPress={()=>this.onChangeQuan('neg')}>
 									 <Ionicons name="ios-remove-circle-outline" size={30} color={"black"} />
 								 </TouchableOpacity>
-								 <Text style={{paddingHorizontal:8, fontWeight:'bold', fontSize:20, backgroundColor: Colors.lighter, border:1}}>{this.state.quantity}</Text>
+								 <Text style={{paddingHorizontal:8, fontWeight:'bold', fontSize:20, backgroundColor: Colors.lighter, borderWidth:1}}>{this.state.quantity}</Text>
 								 <TouchableOpacity onPress={()=>this.onChangeQuan('pos')}>
 									 <Ionicons name="ios-add-circle-outline" size={30} color={"black"} backgroundColor={'black'}/>
 								 </TouchableOpacity>

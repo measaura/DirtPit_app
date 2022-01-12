@@ -8,6 +8,7 @@ import {
   Easing,
   View,
   Text,
+  Alert,
   StatusBar,
   Image,
   ImageBackground,
@@ -22,6 +23,7 @@ import AsyncStorage from '@react-native-community/async-storage'
 import NumberFormat from 'react-number-format'
 import { NavigationEvents } from 'react-navigation'
 import DeviceInfo from 'react-native-device-info'
+// import { timeStamp } from 'console';
 var iPhoneX = DeviceInfo.hasNotch()
 
 const {width, height} = Dimensions.get('window')
@@ -67,12 +69,12 @@ export default class CheckoutScreen extends Component {
 	}
 
   componentDidMount() {
-  	this.spin()
-		this.checkCartItems()
+  	this.spin();
+	this.checkCartItems();
   }
 
 	listCartItems() {
-//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+		//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 				var myHeaders = new Headers();
 				var requestOptions = {
 					method: 'POST',
@@ -88,29 +90,30 @@ export default class CheckoutScreen extends Component {
 							newCart: result[0].products,
 							cartTotal: result[0].totals,
 						})
-					console.log('didmount',JSON.stringify(result[0].products))
+					console.log('checkout listCartItems',JSON.stringify(result[0].products))
 			    this.getPaymentAddress()
 					})
 					.catch(error => console.log('error', error));
-//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++	
-//     AsyncStorage.getItem('cart').then((cart)=>{
-//       if (cart !== null) {
-//         // We have data!!
-//         const shopcart = JSON.parse(cart)
-//         this.setState({dataCart:shopcart})
-// 
-// 
-// //         AsyncStorage.getItem('cart').then((res) => console.log(res))
-//       }
-//     })
-//     .catch((err)=>{
-//       alert(err)
-//     })
+		//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++	
+		//     AsyncStorage.getItem('cart').then((cart)=>{
+		//       if (cart !== null) {
+		//         // We have data!!
+		//         const shopcart = JSON.parse(cart)
+		//         this.setState({dataCart:shopcart})
+		// 
+		// 
+		// //         AsyncStorage.getItem('cart').then((res) => console.log(res))
+		//       }
+		//     })
+		//     .catch((err)=>{
+		//       alert(err)
+		//     })
 
 	}
 	
 	checkCartItems() {
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+		console.log('checkout checkCartItems')
 // 				let mySession = AsyncStorage.getItem('tokenKey');
 				var myHeaders = new Headers();
 // 				myHeaders.append("Cookie", "language=en-gb;");
@@ -128,8 +131,8 @@ export default class CheckoutScreen extends Component {
 				fetch("https://ftwventures.com.my/index.php?route=api/usercart/products", requestOptions)
 					.then(response =>response.json())
 					.then(result =>{
-						console.log('getCartItems',result)
-						console.log('stock error',result.error? true:false)
+						console.log('checkout getCartItems',result)
+						console.log('checkout stock error',result.error? true:false)
 						if(result.error) {
 							    const {  navigation, route  } = this.props;
 									navigation.navigate('Cart')
@@ -226,8 +229,29 @@ export default class CheckoutScreen extends Component {
 							shipping_addr_id: result.address_id,
 						})
 						
-					console.log('shipping',result)
-					this.saveShippingAddress()
+						console.log('shipping',result)
+						var addressVar = result.addresses
+						// console.warn('addr1', result.addresses[result.address_id])
+						if(addressVar[result.address_id].address_1!=''){
+							this.saveShippingAddress()
+						}else{
+							console.error('No Shipping Adress')
+							Alert.alert(
+								'Shipping Address',
+								'Please update your shipping address',
+								[
+									{
+										text: 'Okay',
+										// onPress: () => navigate('CartNew'),
+										style: 'cancel',
+									},
+								],
+							)
+							// const {  navigation, route  } = this.props;
+							// 	navigation.navigate('EditDetails', {
+							// 		prevScreenTitle: 'CartNew'})
+							this.saveShippingAddress()
+						}
 					})
 					.catch(error => console.log('error', error));
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++	
@@ -451,13 +475,13 @@ export default class CheckoutScreen extends Component {
   let shipping = this.state.shipping_addr_save;
   console.log('selected shipping', shipping.address_1)
   	return(
-			<View style={{height:100,  backgroundColor:'#accecd'}}>
-				<ImageBackground source={require('../../images/airmail_border.png')} style={{ resizeMode: 'cover',justifyContent:'center'}}>
-					<Text style={{fontFamily:'Gotham-Bold',color:"black",fontSize:10, paddingLeft:10}}>Shipping Address:</Text>
-					<Text style={{fontFamily:'Gotham-Bold',color:"black",fontSize:12, paddingLeft:10, paddingTop:2}}>{shipping.firstname} {shipping.lastname}</Text>
-					<Text style={{fontFamily:'Gotham-Bold',color:"black",fontSize:12, paddingLeft:10}}>{shipping.address_1}, {shipping.address_2}</Text>
-					<Text style={{fontFamily:'Gotham-Bold',color:"black",fontSize:12, paddingLeft:10}}>{shipping.postcode} {shipping.city}</Text>
-					<Text style={{fontFamily:'Gotham-Bold',color:"black",fontSize:12, paddingLeft:10}}>{shipping.country}</Text>
+			<View style={{height:100,  backgroundColor:'lightgrey',}}>
+				<ImageBackground source={require('../../images/airmail_border.png')} style={{ resizeMode:'center' ,justifyContent:'center', height:100}}>
+					<Text style={{fontFamily:'Gotham-Bold',color:"#444",fontSize:12, paddingLeft:15, paddingTop:5}}>Delivery Address:</Text>
+					<Text style={{fontFamily:'Gotham-Bold',color:"black",fontSize:18, paddingLeft:15, paddingTop:2}}>{shipping.firstname} {shipping.lastname}</Text>
+					<Text style={{fontFamily:'Gotham-Bold',color:"black",fontSize:14, paddingLeft:15}}>{shipping.address_1}, {shipping.address_2}</Text>
+					<Text style={{fontFamily:'Gotham-Bold',color:"black",fontSize:14, paddingLeft:15}}>{shipping.postcode} {shipping.city}</Text>
+					<Text style={{fontFamily:'Gotham-Bold',color:"black",fontSize:14, paddingLeft:15}}>{shipping.country}</Text>
 				</ImageBackground>
 			</View>
   	)
@@ -477,117 +501,124 @@ export default class CheckoutScreen extends Component {
 	}
 	
   render() {
-//   var rmTotal=this.state.cartTotal.toFixed(2)
- const grandTotal = []
+	//   var rmTotal=this.state.cartTotal.toFixed(2)
+	const grandTotal = []
 
-console.log('newCart',this.state.newCart)
-if (!this.state.isLoading){
-    return (
-      <View style={{flex:1,alignItems: 'center', justifyContent: 'center'}}>
-					<Header
-							innerContainerStyles={styles.headerInnerContainer}
-							outerContainerStyles={styles.headerOuterContainer}
-							leftComponent={this.renderLeft()}
-							centerComponent={this.renderCenter()}
-							containerStyle={{
-									backgroundColor: '#000',
-									marginTop:
-											Platform.OS == 'ios' ? 0 : -20,
-									top:
-											Platform.OS == 'ios' ? (iPhoneX ? -10 : 0) : -5,
-									height: Platform.OS == 'ios' ? (iPhoneX ? 90 : 95) : 70,
-							}}
+	console.log('checkout newCart',this.state.newCart)
+	if (!this.state.isLoading){
+		return (
+			<View style={{flex:1,alignItems: 'center', justifyContent: 'center'}}>
+							<Header
+									innerContainerStyles={styles.headerInnerContainer}
+									outerContainerStyles={styles.headerOuterContainer}
+									leftComponent={this.renderLeft()}
+									centerComponent={this.renderCenter()}
+									containerStyle={{
+											backgroundColor: '#000',
+											marginTop:
+													Platform.OS == 'ios' ? 0 : -20,
+											top:
+													Platform.OS == 'ios' ? (iPhoneX ? -10 : 0) : -5,
+											height: Platform.OS == 'ios' ? (iPhoneX ? 90 : 95) : 70,
+									}}
+							/>
+
+				<View style={{flex:1}}>
+									<NavigationEvents
+						onDidFocus={() => console.log('Refreshed')}
 					/>
+					{this.renderShippingAddress()}
+				<ScrollView>
 
-         <View style={{flex:1}}>
-							<NavigationEvents
-                onDidFocus={() => console.log('Refreshed')}
-              />
-          	{this.renderShippingAddress()}
-           <ScrollView>
+					{
 
-             {
+					this.state.newCart.map((item,i)=>{
+						var price = Number(item.price*item.quantity);
+						var itemprice = price.toFixed(2);
+										const total = {
+											prodTot: itemprice,
+										}
 
-               this.state.newCart.map((item,i)=>{
-               	var price = Number(item.price*item.quantity);
-               	var itemprice = price.toFixed(2);
-								const total = {
-									prodTot: itemprice,
-								}
-
-								grandTotal.push(total)
-								console.log(grandTotal)
-							const productsTotal = grandTotal.reduce((itemTotal, meal) => itemTotal + Number(meal.prodTot), 0)
-		console.log('total '+productsTotal); // 45 calories
-// 		rmTotal = productsTotal.toFixed(2)
-                 return(
-                   <View style={{width:width-20, height:90,backgroundColor:'transparent', flexDirection:'row', borderBottomWidth:2, borderColor:"#cccccc", paddingBottom:2}}>
-                     <Image resizeMode={"contain"} style={{width: 70, height:70, marginTop:3}} source={{uri: item.thumb}} />
-                     <View style={{flex:1, backgroundColor:'trangraysparent', padding:10, justifyContent:"space-between"}}>
-                       <View>
-                         <Text style={{fontWeight:"bold", fontSize:16, fontFamily: "Gotham-Bold"}}>{item.name}</Text>
-                         {this.renderOptions(item)}
-                       </View>
-                       <View style={{flexDirection:'row',justifyContent:'space-between'}}>
-                         <Text style={{fontWeight:'bold',color:"#33c37d",fontSize:14}}>{item.total}</Text>
-                         <View style={{flexDirection:'row', alignItems:'center'}}>
-                           <Text style={{paddingHorizontal:8, fontWeight:'bold', fontSize:16}}>x {item.quantity}</Text>
-                         </View>
-                       </View>
-                     </View>
-                   </View>
-                 )
-
-		this.setState({cartTotal:productsTotal})
-               })
-
-             }
-
-           </ScrollView>
-						<View style={styles.footerBar}>
-							{this.state.cartTotal.map((item)=>{
-								return(
-									<View style={{flex:1, width: width+3, height:40,  flexDirection:'row', alignItems: 'center', justifyContent: 'flex-end', marginBottom:-1, marginLeft:-1, borderWidth:1, borderColor: 'black'}} >
-										<Text allowFontScaling={false} style={{fontFamily: 'Gotham-Medium', color: 'black', alignItems: 'center',justifyContent: 'flex-end', paddingRight: 10}}>{item.title}: </Text>
-										<View style={{width:width*0.25,flexDirection:'row', alignItems: 'center', justifyContent: 'flex-end',}}>										
-											<Text allowFontScaling={false} style={{fontFamily: 'Gotham-Bold', color: 'black', alignItems: 'center',justifyContent: 'flex-end', paddingRight: 10, }}>{item.text}</Text>
-										</View>
-									</View>
-								)
-							})}
-							<View style={{ width: width, height:50, flexDirection:'row',justifyContent: 'space-around', alignItems: 'center',}} >
-								<TouchableOpacity 
-									onPress={()=>this.makePayment()} >
-																<View style={{flex:1, width: width,  flexDirection:'row',justifyContent: 'space-around', alignItems: 'center', backgroundColor: 'yellow',width:width+4, borderWidth: 2, borderColor: 'black'}} >
-
-										<Text allowFontScaling={false} style={{fontFamily: 'Gotham-Bold', color: 'black'}}>PROCEED</Text>
-																</View>
-								</TouchableOpacity>
+										grandTotal.push(total)
+										console.log(grandTotal)
+									const productsTotal = grandTotal.reduce((itemTotal, meal) => itemTotal + Number(meal.prodTot), 0)
+				console.log('total '+productsTotal); // 45 calories
+				// 		rmTotal = productsTotal.toFixed(2)
+						return(
+						<View style={{width:width, height:80,backgroundColor:'white', flexDirection:'row', borderBottomWidth:2, borderColor:"#cccccc", paddingBottom:2}}>
+							<Image resizeMode={"contain"} style={{width: 70, height:70, marginTop:3}} source={{uri: item.thumb}} />
+							<View style={{flex:1, backgroundColor:'trangraysparent', padding:10, justifyContent:"space-between"}}>
+							<View>
+								<Text style={{fontWeight:"bold", fontSize:16, fontFamily: "Gotham-Bold"}}>{item.name}</Text>
+								{this.renderOptions(item)}
+							</View>
+							<View style={{flexDirection:'row',justifyContent:'space-between'}}>
+								<Text style={{fontWeight:'bold',color:"#555",fontSize:14}}>{item.total}</Text>
+								<View style={{flexDirection:'row', alignItems:'center'}}>
+								<Text style={{paddingHorizontal:8, fontWeight:'bold', fontSize:16}}>x {item.quantity}</Text>
+								</View>
+							</View>
 							</View>
 						</View>
+						)
 
-         </View>
+				this.setState({cartTotal:productsTotal})
+					})
 
-      </View>
-    )
-		}else{
-			const spin = this.spinValue.interpolate({
-				inputRange: [0, 1],
-				outputRange: ['0deg', '360deg']
-			})
-	
-			return(
-					<View style={{flex:1,alignItems: 'center', justifyContent: 'center',backgroundColor:'black'}}>
-							<Animated.Image
-						style={{
-							width: 100,
-							height: 100,
-							transform: [{rotate: spin}] }}
-							source={require('../../images/DirtPit_icon_1024.png')}
+					}
+
+				</ScrollView>
+								<View style={styles.footerBar}>
+									{this.state.cartTotal.map((item)=>{
+										return(
+											<View style={{flex:1, width: width+3, height:40,  flexDirection:'row', alignItems: 'center', justifyContent: 'flex-end', marginBottom:-1, marginLeft:-1, borderWidth:1, borderColor: 'black', backgroundColor:'white'}} >
+												<Text allowFontScaling={false} style={{fontFamily: 'Gotham-Medium', color: 'black', alignItems: 'center',justifyContent: 'flex-end', paddingRight: 10}}>{item.title}: </Text>
+												<View style={{width:width*0.25,flexDirection:'row', alignItems: 'center', justifyContent: 'flex-end',}}>										
+													<Text allowFontScaling={false} style={{fontFamily: 'Gotham-Bold', color: 'black', alignItems: 'center',justifyContent: 'flex-end', paddingRight: 10, }}>{item.text}</Text>
+												</View>
+											</View>
+										)
+									})}
+									<View style={{ width: width, height:50, flexDirection:'row',justifyContent: 'space-around', alignItems: 'center',}} >
+										<TouchableOpacity 
+											onPress={()=>this.makePayment()} >
+																		<View style={{flex:1, width: width,  flexDirection:'row',justifyContent: 'space-around', alignItems: 'center', backgroundColor: 'yellow',width:width+4, borderWidth: 2, borderColor: 'black'}} >
+
+												<Text allowFontScaling={false} style={{fontFamily: 'Gotham-Bold', color: 'black'}}>PROCEED</Text>
+																		</View>
+										</TouchableOpacity>
+									</View>
+								</View>
+
+				</View>
+
+			</View>
+		)
+	}else{
+		console.info('Checkout Loading') 
+		const spin = this.spinValue.interpolate({
+			inputRange: [0, 1],
+			outputRange: ['0deg', '360deg']
+		})
+
+		return(
+				<View style={{flex:1,alignItems: 'center', justifyContent: 'center',backgroundColor:'black'}}>
+					<NavigationEvents
+						onDidFocus={() => {
+							console.log('Checkout Refreshed');
+							// this.checkCartItems()
+						}}
 					/>
-					</View>
-			)
-		}
+						<Animated.Image
+					style={{
+						width: 100,
+						height: 100,
+						transform: [{rotate: spin}] }}
+						source={require('../../images/DirtPit_icon_1024.png')}
+				/>
+				</View>
+		)
+	}
   }
 
   onChangeQuan(i,type)

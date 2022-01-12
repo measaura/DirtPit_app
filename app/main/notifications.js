@@ -10,6 +10,7 @@ import {
     BackHandler,
     TouchableOpacity,
     Dimensions,
+    TouchableHighlightBase,
 } from 'react-native'
 import AsyncStorage from '@react-native-community/async-storage'
 import {Header} from 'react-native-elements'
@@ -100,13 +101,14 @@ export default class Notifications extends React.Component {
 				};
 				console.log('type',this.state.serviceType)
 				fetch("https://ftwventures.com.my/index.php?route=api/notification/orderhistory" )
-					.then(response => response.text())
+					.then(response => response.json())
 					.then(result =>{
-						console.log(result)
+						console.log('orderhistory',result)
 						if (result.success) {
-							console.log(result.success)
+							console.log('success',result.success)
 							
 						}
+                        this.setState({orderHistory: result.orders})
 					})
 					.catch(error => console.log('error in testFetch', error));
 		}
@@ -194,7 +196,8 @@ export default class Notifications extends React.Component {
 
     render() {
         const {navigate} = this.props.navigation
-        if (this.state.dataStatus) {
+        if (this.state.orderHistory) {
+            console.info('reder orderhistory', this.state.orderHistory)
             return (
                 <View style={styles.container}>
 						<Header
@@ -207,13 +210,13 @@ export default class Notifications extends React.Component {
 									marginTop:
 											Platform.OS == 'ios' ? 0 : -20,
 									top:
-											Platform.OS == 'ios' ? (iPhoneX ? -10 : 0) : -5,
-									height: Platform.OS == 'ios' ? (iPhoneX ? 90 : 95) : 70,
+											Platform.OS == 'ios' ? (notch ? -10 : 0) : -5,
+									height: Platform.OS == 'ios' ? (notch ? 90 : 95) : 70,
 								}}
 						/>
                     <View style={styles.flatContent}>
                         <FlatList
-                            data={this.state.fetchedData}
+                            data={this.state.orderHistory}
                             keyExtractor={(item, index) => item.hashid}
                             renderItem={item => (
                                 <TouchableOpacity
@@ -226,21 +229,24 @@ export default class Notifications extends React.Component {
                                     style={styles.rowWrap}>
                                     {this.renderNotificationIcon(item.item)}
                                     <View style={styles.rowTextContent}>
+                                        <Text style={{fontSize:14}}>
+                                            Order ID: {item.item.order_id}{' '}
+                                        </Text>
                                         <Text style={styles.rowMessage}>
-                                            {item.item.device.assignee.name}{' '}
-                                            {this.renderNotificationText(
-                                                item.item,
-                                            )}
+                                            Amount: {item.item.total}
+                                        </Text>
+                                        <Text style={{fontSize:15}}>
+                                            Status: {item.item.status}
                                         </Text>
                                         <Text style={styles.rowTime}>
                                             {Moment(
-                                                item.item.tracked_at +
+                                                item.item.date_added +
                                                     ' UTC+0000',
                                                 'YYYY-MM-DD HH:mm:ss ZZ',
                                             )
                                                 .tz(Moment.tz.guess())
                                                 .format(
-                                                    'DD MMMM YYYY, hh:mm:ss A',
+                                                    'DD MMMM YYYY',
                                                 )}
                                         </Text>
                                     </View>

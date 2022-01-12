@@ -31,13 +31,13 @@ export default class SeerviceListScreen extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-						serviceType: this.props.navigation.state.params.serviceType,
-						serviceId: this.props.navigation.state.params.serviceId,
-						serviceName: this.props.navigation.state.params.serviceName,
-						serviceDesc: this.props.navigation.state.params.serviceDesc,
-						serviceImg: this.props.navigation.state.params.serviceImg,
-						showAlert: false,
-						alertMessage: '',
+            serviceType: this.props.navigation.state.params.serviceType,
+            serviceId: this.props.navigation.state.params.serviceId,
+            serviceName: this.props.navigation.state.params.serviceName,
+            serviceDesc: this.props.navigation.state.params.serviceDesc,
+            serviceImg: this.props.navigation.state.params.serviceImg,
+            showAlert: false,
+            alertMessage: '',
             timeslotfield:'',
             statefield: '',
             zonedone: false,
@@ -65,7 +65,6 @@ export default class SeerviceListScreen extends React.Component {
         this.setState({ isTimePickerVisible: false });
         
     _handleDatePicked = date => {
-    console.log('ok click')
 //         var todayDate = MomentTimezone.tz(date, Moment.tz.guess()).format();
         var todayDate = MomentTimezone.tz(date, timeZone).format();
         var today = Moment(todayDate)
@@ -75,8 +74,9 @@ export default class SeerviceListScreen extends React.Component {
 //             startDate: today,
 //             endDate: today
 //         });
-        console.log(this.state.startDate);
-        console.log(this.state.endDate);
+        console.log('Date picked', today)
+        // console.log(this.state.startDate);
+        // console.log(this.state.endDate);
         this.setState(
             {
                 selectedDateStar: today,
@@ -392,10 +392,11 @@ console.log("today date: ",today)
             <View style={styles.container}>
                 <DateTimePicker
                     mode={"date"}
-										date={new Date(this.state.todayDate)}
+                    date={new Date(this.state.todayDate)}
                     isVisible={this.state.isDatePickerVisible}
+                    display={Platform.OS === 'ios' ? 'inline' : 'spinner'}
                     onConfirm={this._handleDatePicked}
-                    onCancel={this._hideDateTimePicker}
+                    onCancel={this._hideDatePicker}
                 />
 
 						<Header
@@ -409,7 +410,7 @@ console.log("today date: ",today)
 												Platform.OS == 'ios' ? 0 : -20,
 										top:
 												Platform.OS == 'ios' ? (notch ? -10 : 0) : 0,
-										height: Platform.OS == 'ios' ? (notch ? 90 : 0) : 70,
+										height: Platform.OS == 'ios' ? (notch ? 90 : 95) : 70,
 								}}
 						/>
                 <ScrollView
